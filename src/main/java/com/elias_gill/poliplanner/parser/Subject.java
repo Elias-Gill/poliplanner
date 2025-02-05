@@ -4,7 +4,6 @@ import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvRecurse;
 
 public class Subject {
-    // Campos básicos
     @CsvBindByPosition(position = 0)
     public String item;
 
