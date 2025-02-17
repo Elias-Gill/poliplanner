@@ -1,16 +1,21 @@
 package com.elias_gill.poliplanner.parser;
 
+import com.elias_gill.poliplanner.models.*;
+
 import java.io.FileReader;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
 public class Parser {
     public static List<Subject> parseFile() {
-        String inputFile = "output.csv"; // TODO: Archivo de entrada
+        String home = System.getProperty("user.home");
+        Path inputFile = Paths.get(home, "output.csv").toAbsolutePath();
 
         try {
-            List<Subject> beans = new CsvToBeanBuilder<Subject>(new FileReader(inputFile))
+            List<Subject> beans = new CsvToBeanBuilder<Subject>(new FileReader(inputFile.toString()))
                     .withType(Subject.class)
                     .build()
                     .parse();

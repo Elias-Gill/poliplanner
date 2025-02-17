@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.parser;
+package com.elias_gill.poliplanner.models;
 
 import java.util.Date;
 
@@ -9,7 +9,7 @@ import com.opencsv.bean.processor.PreAssignmentProcessor;
 public class Final1 {
     @CsvBindByPosition(position = 21)
     @CsvDate("dd/MM/yyyy")
-    @PreAssignmentProcessor(processor = CustomDateSanitizer.class)
+    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
     public Date fecha;
 
     @CsvBindByPosition(position = 22)
@@ -20,7 +20,7 @@ public class Final1 {
 
     @CsvBindByPosition(position = 24)
     @CsvDate("dd/MM/yyyy")
-    @PreAssignmentProcessor(processor = CustomDateSanitizer.class)
+    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
     public Date fechaRevisión;
 
     @CsvBindByPosition(position = 25)

@@ -1,0 +1,27 @@
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <!-- Database connection settings -->
+    <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
+    <property name="hibernate.connection.url">jdbc:sqlite:database.db</property>
+    <property name="hibernate.connection.username"></property>
+    <property name="hibernate.connection.password"></property>
+    <!-- SQL dialect -->
+    <property name="hibernate.dialect">org.hibernate.dialect.SQLiteDialect</property>
+    <!-- Echo all executed SQL to stdout -->
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.format_sql">true</property>
+    <!-- Automatically create/update the database schema -->
+    <property name="hibernate.hbm2ddl.auto">update</property>
+    <!-- Specify annotated entity classes -->
+    <mapping class="com.elias_gill.poliplanner.models.Comite"></mapping>
+    <mapping class="com.elias_gill.poliplanner.models.Exams"></mapping>
+    <mapping class="com.elias_gill.poliplanner.models.Final1"></mapping>
+    <mapping class="com.elias_gill.poliplanner.models.Final2"></mapping>
+    <mapping class="com.elias_gill.poliplanner.models.HorarioSemana"></mapping>
+    <mapping class="com.elias_gill.poliplanner.models.Parcial1"></mapping>
+    <mapping class="com.elias_gill.poliplanner.models.Parcial2"></mapping>
+    <mapping class="com.elias_gill.poliplanner.models.Subject"></mapping>
+    <!-- Add other entity classes here -->
+  </session-factory>
+</hibernate-configuration>

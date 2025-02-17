@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.parser;
+package com.elias_gill.poliplanner.models;
 
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvRecurse;
