@@ -2,34 +2,59 @@ package com.elias_gill.poliplanner.models;
 
 import com.opencsv.bean.CsvBindByPosition;
 
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Column;
+
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Column;
+
+@Embeddable
 public class HorarioSemana {
+    @Column(name = "lunes")
     @CsvBindByPosition(position = 35)
     public String lunes;
+
+    @Column(name = "aula_lunes")
     @CsvBindByPosition(position = 36)
     public String aulaLunes;
 
+    @Column(name = "martes")
     @CsvBindByPosition(position = 37)
     public String martes;
+
+    @Column(name = "aula_martes")
     @CsvBindByPosition(position = 38)
     public String aulaMartes;
 
+    @Column(name = "miercoles")
     @CsvBindByPosition(position = 39)
     public String miercoles;
+
+    @Column(name = "aula_miercoles")
     @CsvBindByPosition(position = 40)
     public String aulaMiercoles;
 
+    @Column(name = "jueves")
     @CsvBindByPosition(position = 41)
     public String jueves;
+
+    @Column(name = "aula_jueves")
     @CsvBindByPosition(position = 42)
     public String aulaJueves;
 
+    @Column(name = "viernes")
     @CsvBindByPosition(position = 43)
     public String viernes;
+
+    @Column(name = "aula_viernes")
     @CsvBindByPosition(position = 44)
     public String aulaViernes;
 
+    @Column(name = "sabado")
     @CsvBindByPosition(position = 45)
     public String sabado;
+
+    @Column(name = "fechas_sabado_noche")
     @CsvBindByPosition(position = 46)
     public String fechasSabadoNoche;
 
