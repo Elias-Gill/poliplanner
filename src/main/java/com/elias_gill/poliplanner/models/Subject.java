@@ -5,6 +5,8 @@ import com.opencsv.bean.CsvRecurse;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
@@ -15,6 +17,10 @@ public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "subject_career")
+    Career carrera;
 
     //@Column(name = "subject_item")
     //@CsvBindByPosition(position = 0)

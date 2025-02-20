@@ -23,6 +23,7 @@
     <mapping class="com.elias_gill.poliplanner.models.Parcial2"></mapping>
     <mapping class="com.elias_gill.poliplanner.models.Subject"></mapping>
     <mapping class="com.elias_gill.poliplanner.models.User"></mapping>
+    <mapping class="com.elias_gill.poliplanner.models.Career"></mapping>
     <!-- Add other entity classes here -->
   </session-factory>
 </hibernate-configuration>
