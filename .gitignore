@@ -1,0 +1,73 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+database.db
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Eclipse
+.metadata/
+.classpath
+.project
+.settings/
+
+# NetBeans
+nbproject/private/
+
+# Maven
+.mvn/
+target/
+.idea/
+
+# Archivos binarios y paquetes
+*.class
+*.jar
+*.war
+*.ear
+
+# SQLite database
+*.db
+database.db
+
+# Node.js dependencies
+node_modules/
+npm-debug.log
+
+# Docker
+.docker/
+Dockerfile*
+
+# Archivos de configuración sensibles
+application.properties
+persistence.properties
+.env
+*.properties

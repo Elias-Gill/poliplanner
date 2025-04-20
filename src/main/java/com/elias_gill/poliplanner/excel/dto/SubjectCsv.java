@@ -1,0 +1,184 @@
+package com.elias_gill.poliplanner.excel.dto;
+
+import java.util.Date;
+
+import com.elias_gill.poliplanner.excel.CustomDateSanitizer_;
+import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvDate;
+import com.opencsv.bean.processor.PreAssignmentProcessor;
+
+public class SubjectCsv {
+
+    @CsvBindByPosition(position = 1)
+    public String departamento;
+
+    @CsvBindByPosition(position = 2)
+    public String nombreAsignatura;
+
+    @CsvBindByPosition(position = 4)
+    public String semestre;
+
+    @CsvBindByPosition(position = 9)
+    public String seccion;
+
+    @CsvBindByPosition(position = 11)
+    public String tituloProfesor;
+
+    @CsvBindByPosition(position = 12)
+    public String apellidoProfesor;
+
+    @CsvBindByPosition(position = 13)
+    public String nombreProfesor;
+
+    @CsvBindByPosition(position = 14)
+    public String emailProfesor;
+
+    // Exámenes compactados
+    @CsvDate("dd/MM/yyyy")
+    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @CsvBindByPosition(position = 15)
+    public Date parcial1Fecha;
+    @CsvBindByPosition(position = 16)
+    public String parcial1Hora;
+    @CsvBindByPosition(position = 17)
+    public String parcial1Aula;
+
+    @CsvDate("dd/MM/yyyy")
+    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @CsvBindByPosition(position = 18)
+    public Date parcial2Fecha;
+    @CsvBindByPosition(position = 19)
+    public String parcial2Hora;
+    @CsvBindByPosition(position = 20)
+    public String parcial2Aula;
+
+    @CsvDate("dd/MM/yyyy")
+    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @CsvBindByPosition(position = 21)
+    public Date final1Fecha;
+    @CsvBindByPosition(position = 22)
+    public String final1Hora;
+    @CsvBindByPosition(position = 23)
+    public String final1Aula;
+    @CsvDate("dd/MM/yyyy")
+    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @CsvBindByPosition(position = 24)
+    public Date final1RevFecha;
+    @CsvBindByPosition(position = 25)
+    public String final1RevHora;
+
+    @CsvDate("dd/MM/yyyy")
+    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @CsvBindByPosition(position = 26)
+    public Date final2Fecha;
+    @CsvBindByPosition(position = 27)
+    public String final2Hora;
+    @CsvBindByPosition(position = 28)
+    public String final2Aula;
+    @CsvDate("dd/MM/yyyy")
+    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @CsvBindByPosition(position = 29)
+    public Date final2RevFecha;
+    @CsvBindByPosition(position = 30)
+    public String final2RevHora;
+
+    @CsvBindByPosition(position = 31)
+    public String comitePresidente;
+    @CsvBindByPosition(position = 32)
+    public String comiteMiembro1;
+    @CsvBindByPosition(position = 33)
+    public String comiteMiembro2;
+    @CsvBindByPosition(position = 34)
+    public String comiteAula;
+
+    @CsvBindByPosition(position = 35)
+    public String lunes;
+
+    @CsvBindByPosition(position = 36)
+    public String aulaLunes;
+
+    @CsvBindByPosition(position = 37)
+    public String martes;
+
+    @CsvBindByPosition(position = 38)
+    public String aulaMartes;
+
+    @CsvBindByPosition(position = 39)
+    public String miercoles;
+
+    @CsvBindByPosition(position = 40)
+    public String aulaMiercoles;
+
+    @CsvBindByPosition(position = 41)
+    public String jueves;
+
+    @CsvBindByPosition(position = 42)
+    public String aulaJueves;
+
+    @CsvBindByPosition(position = 43)
+    public String viernes;
+
+    @CsvBindByPosition(position = 44)
+    public String aulaViernes;
+
+    @CsvBindByPosition(position = 45)
+    public String sabado;
+
+    @CsvBindByPosition(position = 46)
+    public String fechasSabadoNoche;
+
+    // Método auxiliar opcional (no se persiste, solo para depurar o mostrar)
+    public String semanaToString() {
+        StringBuilder sb = new StringBuilder("Horario:\n");
+
+        if (lunes != null && !lunes.isEmpty()) {
+            sb.append("Lunes: ").append(lunes);
+            if (aulaLunes != null && !aulaLunes.isEmpty()) {
+                sb.append(" (Aula: ").append(aulaLunes).append(")");
+            }
+            sb.append("\n");
+        }
+
+        if (martes != null && !martes.isEmpty()) {
+            sb.append("Martes: ").append(martes);
+            if (aulaMartes != null && !aulaMartes.isEmpty()) {
+                sb.append(" (Aula: ").append(aulaMartes).append(")");
+            }
+            sb.append("\n");
+        }
+
+        if (miercoles != null && !miercoles.isEmpty()) {
+            sb.append("Miércoles: ").append(miercoles);
+            if (aulaMiercoles != null && !aulaMiercoles.isEmpty()) {
+                sb.append(" (Aula: ").append(aulaMiercoles).append(")");
+            }
+            sb.append("\n");
+        }
+
+        if (jueves != null && !jueves.isEmpty()) {
+            sb.append("Jueves: ").append(jueves);
+            if (aulaJueves != null && !aulaJueves.isEmpty()) {
+                sb.append(" (Aula: ").append(aulaJueves).append(")");
+            }
+            sb.append("\n");
+        }
+
+        if (viernes != null && !viernes.isEmpty()) {
+            sb.append("Viernes: ").append(viernes);
+            if (aulaViernes != null && !aulaViernes.isEmpty()) {
+                sb.append(" (Aula: ").append(aulaViernes).append(")");
+            }
+            sb.append("\n");
+        }
+
+        if (sabado != null && !sabado.isEmpty()) {
+            sb.append("Sábado: ").append(sabado).append("\n");
+        }
+
+        if (fechasSabadoNoche != null && !fechasSabadoNoche.isEmpty()) {
+            sb.append("Fechas Sábado Noche: ").append(fechasSabadoNoche).append("\n");
+        }
+
+        return sb.toString().trim();
+    }
+}
