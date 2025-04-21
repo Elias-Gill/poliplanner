@@ -8,7 +8,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -82,8 +82,7 @@ public class ExcelServiceTest {
         assertEquals("18:00:00", last.final1Hora);
 
         // Parsear la fecha esperada (Jue 19/06/25)
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd/MM/yy");
-        Date fechaEsperada = dateFormat.parse("Jue 19/06/2025");
+        LocalDate fechaEsperada = LocalDate.of(2025, 6, 19);
         assertEquals(fechaEsperada, last.final1Fecha);
 
         assertEquals(null, last.parcial1Fecha);

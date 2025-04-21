@@ -18,10 +18,10 @@ public class CustomDateSanitizer_ implements StringProcessor {
 
         Matcher matcher = DATE_PATTERN.matcher(value.trim());
         if (matcher.matches()) {
-            // Extraer solo la parte de la fecha (19/06/25)
-            return matcher.group(2);
+            // Convertir a formato ISO para java.time
+            String[] parts = matcher.group(2).split("/");
+            return "20" + parts[2] + "-" + parts[1] + "-" + parts[0];
         }
-
         return value.trim();
     }
 
