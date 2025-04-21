@@ -5,9 +5,6 @@ import com.opencsv.bean.CsvBindByPosition;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Column;
 
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Column;
-
 @Embeddable
 public class HorarioSemana {
     @Column(name = "lunes")

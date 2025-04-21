@@ -8,7 +8,6 @@ import com.opencsv.bean.CsvDate;
 import com.opencsv.bean.processor.PreAssignmentProcessor;
 
 public class SubjectCsv {
-
     @CsvBindByPosition(position = 1)
     public String departamento;
 
@@ -34,7 +33,7 @@ public class SubjectCsv {
     public String emailProfesor;
 
     // Exámenes compactados
-    @CsvDate("dd/MM/yyyy")
+    @CsvDate("dd/MM/yy")
     @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
     @CsvBindByPosition(position = 15)
     public Date parcial1Fecha;
@@ -43,7 +42,7 @@ public class SubjectCsv {
     @CsvBindByPosition(position = 17)
     public String parcial1Aula;
 
-    @CsvDate("dd/MM/yyyy")
+    @CsvDate("dd/MM/yy")
     @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
     @CsvBindByPosition(position = 18)
     public Date parcial2Fecha;
@@ -52,7 +51,7 @@ public class SubjectCsv {
     @CsvBindByPosition(position = 20)
     public String parcial2Aula;
 
-    @CsvDate("dd/MM/yyyy")
+    @CsvDate("dd/MM/yy")
     @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
     @CsvBindByPosition(position = 21)
     public Date final1Fecha;
@@ -60,14 +59,14 @@ public class SubjectCsv {
     public String final1Hora;
     @CsvBindByPosition(position = 23)
     public String final1Aula;
-    @CsvDate("dd/MM/yyyy")
+    @CsvDate("dd/MM/yy")
     @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
     @CsvBindByPosition(position = 24)
     public Date final1RevFecha;
     @CsvBindByPosition(position = 25)
     public String final1RevHora;
 
-    @CsvDate("dd/MM/yyyy")
+    @CsvDate("dd/MM/yy")
     @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
     @CsvBindByPosition(position = 26)
     public Date final2Fecha;
@@ -75,7 +74,7 @@ public class SubjectCsv {
     public String final2Hora;
     @CsvBindByPosition(position = 28)
     public String final2Aula;
-    @CsvDate("dd/MM/yyyy")
+    @CsvDate("dd/MM/yy")
     @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
     @CsvBindByPosition(position = 29)
     public Date final2RevFecha;
@@ -88,44 +87,42 @@ public class SubjectCsv {
     public String comiteMiembro1;
     @CsvBindByPosition(position = 33)
     public String comiteMiembro2;
+
     @CsvBindByPosition(position = 34)
-    public String comiteAula;
+    public String aulaLunes;
 
     @CsvBindByPosition(position = 35)
     public String lunes;
 
     @CsvBindByPosition(position = 36)
-    public String aulaLunes;
+    public String aulaMartes;
 
     @CsvBindByPosition(position = 37)
     public String martes;
 
     @CsvBindByPosition(position = 38)
-    public String aulaMartes;
+    public String aulaMiercoles;
 
     @CsvBindByPosition(position = 39)
     public String miercoles;
 
     @CsvBindByPosition(position = 40)
-    public String aulaMiercoles;
+    public String aulaJueves;
 
     @CsvBindByPosition(position = 41)
     public String jueves;
 
     @CsvBindByPosition(position = 42)
-    public String aulaJueves;
+    public String aulaViernes;
 
     @CsvBindByPosition(position = 43)
     public String viernes;
 
     @CsvBindByPosition(position = 44)
-    public String aulaViernes;
+    public String fechasSabadoNoche;
 
     @CsvBindByPosition(position = 45)
     public String sabado;
-
-    @CsvBindByPosition(position = 46)
-    public String fechasSabadoNoche;
 
     // Método auxiliar opcional (no se persiste, solo para depurar o mostrar)
     public String semanaToString() {

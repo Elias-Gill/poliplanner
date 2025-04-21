@@ -8,7 +8,7 @@ import com.opencsv.bean.processor.StringProcessor;
 public class CustomDateSanitizer_ implements StringProcessor {
     String defaultValue;
     private static final Pattern DATE_PATTERN = Pattern
-            .compile("^(Lun|Mar|Mié|Mie|Jue|Vie|Sáb|Sab|Dom) (\\d{2}/\\d{2}/\\d{2})$");
+            .compile("^(?i)(Lun|Mar|Mi[ée]|Jue|Vie|S[áa]b|Dom)\\s+(\\d{2}/\\d{2}/\\d{2})$");
 
     @Override
     public String processString(String value) {
@@ -18,10 +18,11 @@ public class CustomDateSanitizer_ implements StringProcessor {
 
         Matcher matcher = DATE_PATTERN.matcher(value.trim());
         if (matcher.matches()) {
-            return matcher.group(2); // Devuelve solo la parte de la fecha
+            // Extraer solo la parte de la fecha (19/06/25)
+            return matcher.group(2);
         }
 
-        return value.trim(); // Si no es una fecha, devuelve el valor original
+        return value.trim();
     }
 
     @Override
