@@ -113,7 +113,7 @@ public class ExcelService {
     }
 
     static Path downloadFile(String fileUrl) throws IOException, URISyntaxException {
-        URL url = URL.of(new URI(fileUrl), null);
+        URL url = new URL(fileUrl);
         InputStream in = url.openStream();
 
         Path tempFile = Files.createTempFile("horario_", ".xlsx");
@@ -153,7 +153,7 @@ public class ExcelService {
                 "ssconvert",
                 "--export-file-per-sheet",
                 excelFile.toString(),
-                outputDir.toString() + "%s.csv");
+                outputDir.toString() + "/%s.csv");
 
         pb.redirectErrorStream(true);
 
@@ -168,12 +168,16 @@ public class ExcelService {
         // Listar los archivos generados e ignorar el archivo de codigos de carrera
         try (Stream<Path> files = Files.list(outputDir)) {
             return files.filter(path -> path.toString().endsWith(".csv") &&
-                    !path.toString().equalsIgnoreCase("codigos") &&
+                    !path.toString().contains("odigos") &&
+                    !path.toString().contains("ódigos") &&
+                    !path.toString().contains("Asignaturas") &&
+                    !path.toString().contains("Homologadas") &&
+                    !path.toString().contains("Homólogas") &&
                     !path.toString().equalsIgnoreCase("códigos")).sorted().collect(Collectors.toList());
         }
     }
 
-    private static boolean isSsconvertAvailable() {
+    static boolean isSsconvertAvailable() {
         try {
             Process p = new ProcessBuilder("ssconvert", "--version").start();
             return p.waitFor() == 0;
