@@ -3,7 +3,6 @@ package com.elias_gill.poliplanner.excel;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -24,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.elias_gill.poliplanner.excel.dto.SubjectCsv;
 import com.elias_gill.poliplanner.models.Career;
 import com.elias_gill.poliplanner.models.Subject;
+import com.elias_gill.poliplanner.services.CareerService;
 import com.elias_gill.poliplanner.services.SubjectService;
 import com.opencsv.bean.CsvToBeanBuilder;
 
@@ -33,6 +33,9 @@ public class ExcelService {
 
     @Autowired
     private SubjectService subjectService;
+
+    @Autowired
+    private CareerService careerService;
 
     public void SyncronizeExcel() {
         try {
@@ -50,12 +53,11 @@ public class ExcelService {
                 List<SubjectCsv> subjectscsv = extractSubjects(sheet);
 
                 // map parsed csv to actual models in the database
-                Career carrera = new Career(sheet.getFileName().toString());
-
+                Career carrera = careerService.findOrCreate(sheet.getFileName().toString());
                 for (SubjectCsv subjectcsv : subjectscsv) {
                     Subject subject = SubjectMapper.mapToSubject(subjectcsv);
                     subject.setCarrera(carrera);
-                    subjectService.createSubject(subject);
+                    subjectService.create(subject);
                 }
             }
 

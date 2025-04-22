@@ -1,8 +1,8 @@
 test:
-	mvn test
+	mvn test -Dgroups=unit
 
 integration-test:
-	mvn test -Dspring.profiles.active=integracion
+	mvn test -Dgroups=integration
 
 run:
 	mvn spring-boot:run

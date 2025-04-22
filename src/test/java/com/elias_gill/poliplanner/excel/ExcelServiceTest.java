@@ -9,9 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import com.elias_gill.poliplanner.excel.dto.SubjectCsv;
@@ -19,6 +19,7 @@ import com.elias_gill.poliplanner.excel.dto.SubjectCsv;
 public class ExcelServiceTest {
 
     @Test
+    @Tag("unit")
     void testCleanCsv() throws Exception {
         // Preparar archivo temporal copiando el input de prueba
         Path inputPath = Path.of("src/test/resources/input.csv");
@@ -46,6 +47,7 @@ public class ExcelServiceTest {
     }
 
     @Test
+    @Tag("unit")
     void testExtractSubjects() throws Exception {
         // Archivo de prueba ya sanitizado
         File testFile = new File("src/test/resources/output.csv");

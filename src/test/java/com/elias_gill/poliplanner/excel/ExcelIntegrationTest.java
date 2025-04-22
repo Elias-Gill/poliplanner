@@ -14,10 +14,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
 
 public class ExcelIntegrationTest {
 
     @Test
+    @Tag("integration")
     void testExcelDownload() throws Exception {
         // Tratar de descargar un excel cualquiera y ver si es que funciona
         // correctamente
@@ -35,6 +37,7 @@ public class ExcelIntegrationTest {
     }
 
     @Test
+    @Tag("integration")
     void testExcelToCsvConversion() throws Exception {
         if (!ExcelService.isSsconvertAvailable()) {
             System.out.println("Test ignorado. 'Gnumeric' no instalado");

@@ -1,14 +1,15 @@
 package com.elias_gill.poliplanner.models;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import java.util.Date;
 
 @Embeddable
 public class ExamsCompact {
 
     @Column(name = "parcial1_fecha")
-    private Date parcial1Fecha;
+    private LocalDate parcial1Fecha;
 
     @Column(name = "parcial1_hora")
     private String parcial1Hora;
@@ -17,7 +18,7 @@ public class ExamsCompact {
     private String parcial1Aula;
 
     @Column(name = "parcial2_fecha")
-    private Date parcial2Fecha;
+    private LocalDate parcial2Fecha;
 
     @Column(name = "parcial2_hora")
     private String parcial2Hora;
@@ -26,7 +27,7 @@ public class ExamsCompact {
     private String parcial2Aula;
 
     @Column(name = "final1_fecha")
-    private Date final1Fecha;
+    private LocalDate final1Fecha;
 
     @Column(name = "final1_hora")
     private String final1Hora;
@@ -35,13 +36,13 @@ public class ExamsCompact {
     private String final1Aula;
 
     @Column(name = "final1_rev_fecha")
-    private Date final1RevFecha;
+    private LocalDate final1RevFecha;
 
     @Column(name = "final1_rev_hora")
     private String final1RevHora;
 
     @Column(name = "final2_fecha")
-    private Date final2Fecha;
+    private LocalDate final2Fecha;
 
     @Column(name = "final2_hora")
     private String final2Hora;
@@ -50,7 +51,7 @@ public class ExamsCompact {
     private String final2Aula;
 
     @Column(name = "final2_rev_fecha")
-    private Date final2RevFecha;
+    private LocalDate final2RevFecha;
 
     @Column(name = "final2_rev_hora")
     private String final2RevHora;
@@ -69,11 +70,11 @@ public class ExamsCompact {
 
     // --- Getters y setters ---
 
-    public Date getParcial1Fecha() {
+    public LocalDate getParcial1Fecha() {
         return parcial1Fecha;
     }
 
-    public void setParcial1Fecha(Date parcial1Fecha) {
+    public void setParcial1Fecha(LocalDate parcial1Fecha) {
         this.parcial1Fecha = parcial1Fecha;
     }
 
@@ -93,11 +94,11 @@ public class ExamsCompact {
         this.parcial1Aula = parcial1Aula;
     }
 
-    public Date getParcial2Fecha() {
+    public LocalDate getParcial2Fecha() {
         return parcial2Fecha;
     }
 
-    public void setParcial2Fecha(Date parcial2Fecha) {
+    public void setParcial2Fecha(LocalDate parcial2Fecha) {
         this.parcial2Fecha = parcial2Fecha;
     }
 
@@ -117,11 +118,11 @@ public class ExamsCompact {
         this.parcial2Aula = parcial2Aula;
     }
 
-    public Date getFinal1Fecha() {
+    public LocalDate getFinal1Fecha() {
         return final1Fecha;
     }
 
-    public void setFinal1Fecha(Date final1Fecha) {
+    public void setFinal1Fecha(LocalDate final1Fecha) {
         this.final1Fecha = final1Fecha;
     }
 
@@ -141,11 +142,11 @@ public class ExamsCompact {
         this.final1Aula = final1Aula;
     }
 
-    public Date getFinal1RevFecha() {
+    public LocalDate getFinal1RevFecha() {
         return final1RevFecha;
     }
 
-    public void setFinal1RevFecha(Date final1RevFecha) {
+    public void setFinal1RevFecha(LocalDate final1RevFecha) {
         this.final1RevFecha = final1RevFecha;
     }
 
@@ -157,11 +158,11 @@ public class ExamsCompact {
         this.final1RevHora = final1RevHora;
     }
 
-    public Date getFinal2Fecha() {
+    public LocalDate getFinal2Fecha() {
         return final2Fecha;
     }
 
-    public void setFinal2Fecha(Date final2Fecha) {
+    public void setFinal2Fecha(LocalDate final2Fecha) {
         this.final2Fecha = final2Fecha;
     }
 
@@ -181,11 +182,11 @@ public class ExamsCompact {
         this.final2Aula = final2Aula;
     }
 
-    public Date getFinal2RevFecha() {
+    public LocalDate getFinal2RevFecha() {
         return final2RevFecha;
     }
 
-    public void setFinal2RevFecha(Date final2RevFecha) {
+    public void setFinal2RevFecha(LocalDate final2RevFecha) {
         this.final2RevFecha = final2RevFecha;
     }
 
