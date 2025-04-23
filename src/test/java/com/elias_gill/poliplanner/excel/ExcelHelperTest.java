@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -147,6 +150,20 @@ public class ExcelHelperTest {
                 .collect(Collectors.toSet());
 
         assertEquals(nombresEsperados, nombresGenerados, "Los archivos generados no coinciden con los esperados");
+    }
+
+    @Test
+    @Tag("unit")
+    void testFindLatestExcelUrlFromLocalHtml() throws IOException {
+        Path htmlPath = Path.of("src/test/resources/pagina_facultad.html");
+        String htmlContent = Files.readString(htmlPath);
+
+        Document doc = Jsoup.parse(htmlContent);
+        String latestUrl = ExcelHelper.extractUrlFromDoc(doc);
+
+        assertEquals(
+                "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx",
+                latestUrl);
     }
 
     // TODO: test de que se carguen a la base de datos correctamente

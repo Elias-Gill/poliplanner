@@ -46,6 +46,10 @@ public class ExcelHelper {
                 .timeout(10000)
                 .get();
 
+        return extractUrlFromDoc(doc);
+    }
+
+    static String extractUrlFromDoc(Document doc) throws IOException {
         Pattern datePattern = Pattern.compile("(\\d{2})(\\d{2})(\\d{4})\\.xlsx?$",
                 Pattern.CASE_INSENSITIVE);
 
