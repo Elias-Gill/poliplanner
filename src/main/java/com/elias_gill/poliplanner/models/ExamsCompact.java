@@ -65,9 +65,6 @@ public class ExamsCompact {
     @Column(name = "comite_miembro2")
     private String comiteMiembro2;
 
-    @Column(name = "comite_aula")
-    private String comiteAula;
-
     // --- Getters y setters ---
 
     public LocalDate getParcial1Fecha() {
@@ -220,13 +217,5 @@ public class ExamsCompact {
 
     public void setComiteMiembro2(String comiteMiembro2) {
         this.comiteMiembro2 = comiteMiembro2;
-    }
-
-    public String getComiteAula() {
-        return comiteAula;
-    }
-
-    public void setComiteAula(String comiteAula) {
-        this.comiteAula = comiteAula;
     }
 }

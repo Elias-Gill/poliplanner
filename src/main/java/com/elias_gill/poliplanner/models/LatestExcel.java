@@ -1,5 +1,7 @@
 package com.elias_gill.poliplanner.models;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,31 +9,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Career {
+public class LatestExcel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "career_name")
-    private String name;
+    @Column(name = "fileName")
+    private String fileName;
 
-    @Column(name = "sheet_version")
-    private SheetVersion version;
+    @Column(name = "latest_update")
+    private LocalDate latestUpdate;
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public SheetVersion getVersion() {
-		return version;
-	}
-
-	public void setVersion(SheetVersion version) {
-		this.version = version;
-	}
-
-	public Career(String name) {
-        this.name = name;
+    public LatestExcel(String fileName) {
+        this.fileName = fileName;
     }
 
     public long getId() {
@@ -39,6 +29,6 @@ public class Career {
     }
 
     public String getName() {
-        return name;
+        return fileName;
     }
 }

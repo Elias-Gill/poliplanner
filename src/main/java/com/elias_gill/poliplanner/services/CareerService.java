@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.elias_gill.poliplanner.models.Career;
+import com.elias_gill.poliplanner.models.SheetVersion;
 import com.elias_gill.poliplanner.repositories.CareerRepository;
 
 import jakarta.transaction.Transactional;
@@ -15,12 +16,13 @@ public class CareerService {
     @Autowired
     private CareerRepository careerRepository;
 
-    public Career findOrCreate(String name) {
-        Career aux = careerRepository.findByNameIgnoreCase(name);
-        // Crear si no existe
-        if (aux == null) {
-            return careerRepository.save(new Career(name));
-        }
-        return aux;
+    public Career find(String name) {
+        return careerRepository.findByNameIgnoreCase(name);
+    }
+
+    public Career create(String name, SheetVersion version) {
+        Career aux = new Career(name);
+        aux.setVersion(version);
+        return careerRepository.save(aux);
     }
 }

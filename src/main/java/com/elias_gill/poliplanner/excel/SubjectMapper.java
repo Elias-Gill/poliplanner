@@ -65,7 +65,6 @@ public class SubjectMapper {
         exams.setComitePresidente(subjectCsv.comitePresidente);
         exams.setComiteMiembro1(subjectCsv.comiteMiembro1);
         exams.setComiteMiembro2(subjectCsv.comiteMiembro2);
-        exams.setComiteAula(subjectCsv.comiteAula);
 
         // Asignar el objeto ExamsCompact al Subject
         subject.setExams(exams);
