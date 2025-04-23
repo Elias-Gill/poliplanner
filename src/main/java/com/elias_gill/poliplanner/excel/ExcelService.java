@@ -43,27 +43,34 @@ public class ExcelService {
             }
 
             Path excelFile = ExcelHelper.downloadFile(url);
-            List<Path> sheets = ExcelHelper.convertExcelToCsv(excelFile);
 
-            SheetVersion version = versionService.create(excelFile.toString(), url);
+            persistSubjectsFromExcel(excelFile, url);
 
-            // Cada "sheet" representa el horario de una carrera diferente
-            for (Path sheet : sheets) {
-                ExcelHelper.cleanCsv(sheet);
-                List<SubjectCsv> subjectscsv = ExcelHelper.extractSubjects(sheet);
-
-                String careerName = sheet.getFileName().toString();
-                Career carrera = careerService.create(careerName, version);
-
-                for (SubjectCsv subjectcsv : subjectscsv) {
-                    Subject subject = SubjectMapper.mapToSubject(subjectcsv);
-                    subject.setCarrera(carrera);
-                    subjectService.create(subject);
-                }
-            }
-
-        } catch (IOException | URISyntaxException | InterruptedException e) {
+        } catch (InterruptedException | IOException | URISyntaxException e) {
             throw new RuntimeException("Error sincronizando Excel. Rollback iniciado", e);
+        }
+    }
+
+    void persistSubjectsFromExcel(Path excelFile, String url)
+            throws IOException, InterruptedException, URISyntaxException {
+
+        List<Path> sheets = ExcelHelper.convertExcelToCsv(excelFile);
+
+        SheetVersion version = versionService.create(excelFile.toString(), url);
+
+        // Cada "sheet" representa el horario de una carrera diferente
+        for (Path sheet : sheets) {
+            ExcelHelper.cleanCsv(sheet);
+            List<SubjectCsv> subjectscsv = ExcelHelper.extractSubjects(sheet);
+
+            String careerName = sheet.getFileName().toString();
+            Career carrera = careerService.create(careerName, version);
+
+            for (SubjectCsv subjectcsv : subjectscsv) {
+                Subject subject = SubjectMapper.mapToSubject(subjectcsv);
+                subject.setCarrera(carrera);
+                subjectService.create(subject);
+            }
         }
     }
 }

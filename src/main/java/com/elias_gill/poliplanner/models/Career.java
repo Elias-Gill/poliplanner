@@ -2,9 +2,12 @@ package com.elias_gill.poliplanner.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Career {
@@ -15,22 +18,23 @@ public class Career {
     @Column(name = "career_name")
     private String name;
 
-    @Column(name = "sheet_version")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sheet_version")
     private SheetVersion version;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public SheetVersion getVersion() {
-		return version;
-	}
+    public SheetVersion getVersion() {
+        return version;
+    }
 
-	public void setVersion(SheetVersion version) {
-		this.version = version;
-	}
+    public void setVersion(SheetVersion version) {
+        this.version = version;
+    }
 
-	public Career(String name) {
+    public Career(String name) {
         this.name = name;
     }
 

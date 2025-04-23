@@ -119,10 +119,13 @@ public class SubjectCsv {
     public String viernes;
 
     @CsvBindByPosition(position = 44)
-    public String fechasSabadoNoche;
+    public String aulaSabado;
 
     @CsvBindByPosition(position = 45)
     public String sabado;
+
+    @CsvBindByPosition(position = 46)
+    public String fechasSabadoNoche;
 
     // Método auxiliar opcional (no se persiste, solo para depurar o mostrar)
     public String semanaToString() {

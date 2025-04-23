@@ -26,18 +26,17 @@ public class ExcelHelper {
 
     private static final String targetUrl = "https://www.pol.una.py/academico/horarios-de-clases-y-examenes/";
 
-    static List<SubjectCsv> extractSubjects(Path csvFile) {
+    static List<SubjectCsv> extractSubjects(Path csvFile) throws RuntimeException {
         try {
             List<SubjectCsv> beans = new CsvToBeanBuilder<SubjectCsv>(new FileReader(csvFile.toString()))
                     .withType(SubjectCsv.class)
+                    .withSeparator(',')
+                    .withIgnoreLeadingWhiteSpace(true)
                     .build()
                     .parse();
             return beans;
         } catch (Exception e) {
-            // FIX: mensajes de error y logs
-            System.out.println("exploto todito");
-            System.out.println(e.toString());
-            return null;
+            throw new RuntimeException("No se pudo realizar la conversion del archivo '" + csvFile.toString() + "': " + e);
         }
     }
 
@@ -134,6 +133,10 @@ public class ExcelHelper {
                     !path.toString().contains("ódigos") &&
                     !path.toString().contains("Asignaturas") &&
                     !path.toString().contains("Homologadas") &&
+                    !path.toString().contains("oviedo") &&
+                    !path.toString().contains("Oviedo") &&
+                    !path.toString().contains("Villarrica") &&
+                    !path.toString().contains("villarrica") &&
                     !path.toString().contains("Homólogas") &&
                     !path.toString().equalsIgnoreCase("códigos")).sorted().collect(Collectors.toList());
         }
