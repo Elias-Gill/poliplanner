@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -72,33 +73,42 @@ public class ExcelHelperTest {
         assertEquals("Algebra Lineal", first.nombreAsignatura);
         assertEquals("2", first.semestre);
         assertEquals("MI", first.seccion);
-        assertEquals("", first.tituloProfesor);
-        assertEquals("A CONFIRMAR", first.apellidoProfesor);
-        assertEquals("", first.nombreProfesor);
+        assertEquals("Lic.", first.tituloProfesor);
+        assertEquals("Villasanti Flores", first.apellidoProfesor);
+        assertEquals("Richard Adrián", first.nombreProfesor);
         assertEquals("", first.emailProfesor);
-        assertEquals("F16", first.aulaViernes);
 
         // Verificar última entrada
         SubjectCsv last = subjects.get(subjects.size() - 1);
+
         assertEquals("DG", last.departamento);
-        assertEquals("Técnicas de Organización y Métodos (*)", last.nombreAsignatura);
+        assertEquals("Técnicas de Organización y Métodos", last.nombreAsignatura);
         assertEquals("5", last.semestre);
-        assertEquals("TR", last.seccion);
-        assertEquals("Lic.", last.tituloProfesor);
-        assertEquals("Demattei Ortiz", last.apellidoProfesor);
-        assertEquals("Zulma Lucía", last.nombreProfesor);
-        assertEquals("zdematei@pol.una.py", last.emailProfesor);
-        assertEquals("18:00:00", last.final1Hora);
+        assertEquals("NA", last.seccion);
+        assertEquals("Ms.", last.tituloProfesor);
+        assertEquals("Ramírez Barboza", last.apellidoProfesor);
+        assertEquals("Estela Mary", last.nombreProfesor);
+        assertEquals("emramirez@pol.una.py", last.emailProfesor);
 
-        // Parsear la fecha esperada (Jue 19/06/25)
-        LocalDate fechaEsperada = LocalDate.of(2025, 6, 19);
-        assertEquals(fechaEsperada, last.final1Fecha);
+        LocalDate fechaEsperada = LocalDate.of(2024, 9, 17);
+        assertEquals(fechaEsperada, last.parcial1Fecha);
 
-        assertEquals(null, last.parcial1Fecha);
-        assertEquals("Lic. Zulma Lucía Demattei Ortiz", last.comitePresidente);
-        assertEquals("F16", last.final1Aula);
-        assertEquals("Ms. Estela Mary Ramírez Barboza", last.comiteMiembro1);
+        assertEquals("Ms. Estela Mary Ramírez Barboza", last.comitePresidente);
+        assertEquals("Lic. Zulma Lucía Demattei Ortíz", last.comiteMiembro1);
         assertEquals("Lic. Osvaldo David Sosa Cabrera", last.comiteMiembro2);
+
+        assertEquals("E01", last.aulaMartes);
+        assertEquals("20:45 - 22:15", last.martes);
+
+        assertEquals("E01", last.aulaJueves);
+        assertEquals("19:00 - 20:30", last.jueves);
+
+        assertEquals("E01", last.aulaSabado);
+        assertEquals("07:30 - 11:30", last.sabado);
+
+        assertEquals("05/10, 23/11", last.fechasSabadoNoche);
+
+        assertEquals("", last.aulaMiercoles);
     }
 
     @Test
@@ -140,9 +150,8 @@ public class ExcelHelperTest {
 
         // Esperados
         Set<String> nombresEsperados = Set.of(
-                "Cnel. Oviedo.csv", "IAE.csv", "ICM.csv", "IEK.csv",
-                "IEL.csv", "IEN.csv", "IIN.csv", "IMK.csv", "ISP.csv", "LCA.csv",
-                "LCI.csv", "LCIk.csv", "LEL.csv", "LGH.csv", "TSE.csv", "Villarrica.csv");
+                "IAE.csv", "ICM.csv", "IEK.csv", "IEL.csv", "IEN.csv", "IIN.csv", "IMK.csv", 
+                "ISP.csv", "LCA.csv", "LCI.csv", "LCIk.csv", "LEL.csv", "LGH.csv", "TSE.csv");
 
         // Extraer nombres reales
         Set<String> nombresGenerados = csvFiles.stream()
@@ -150,6 +159,24 @@ public class ExcelHelperTest {
                 .collect(Collectors.toSet());
 
         assertEquals(nombresEsperados, nombresGenerados, "Los archivos generados no coinciden con los esperados");
+
+        // Cargar el archivo IIN.csv generado y el archivo input.csv de resources para
+        // comparar
+        Path iinCsvGenerated = csvFiles.stream()
+                .filter(p -> p.getFileName().toString().equals("IIN.csv"))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("No se generó el archivo IIN.csv"));
+
+        Path inputCsvExpected = Path.of("src/test/resources/input.csv");
+
+        // Comparar el contenido de ambos archivos
+        List<String> generatedLines = Files.readAllLines(iinCsvGenerated);
+        List<String> expectedLines = Files.readAllLines(inputCsvExpected);
+
+        for (int i = 0; i < generatedLines.size(); i++) {
+            assertEquals(expectedLines.get(i), generatedLines.get(i),
+                    "Las lineas '" + i + "' no son iguales: \n" + expectedLines.get(i) + "\n\n" + generatedLines.get(i) + "\n\n");
+        }
     }
 
     @Test
