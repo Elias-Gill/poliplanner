@@ -37,7 +37,7 @@ class ExcelServiceIntegrationTest {
 
     @Test
     @Tag("integration")
-    void testImportSchedulesFromExcel_createsEntitiesCorrectly() throws Exception {
+    void testExcelParsingPersistency() throws Exception {
         Path testExcel = Paths.get("src/test/resources/testExcel.xlsx");
         String dummyUrl = "https://example.com/test_excel";
 

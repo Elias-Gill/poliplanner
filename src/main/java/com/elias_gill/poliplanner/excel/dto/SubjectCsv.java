@@ -2,7 +2,6 @@ package com.elias_gill.poliplanner.excel.dto;
 
 import java.time.LocalDate;
 
-import com.elias_gill.poliplanner.excel.CustomDateSanitizer_;
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvDate;
 import com.opencsv.bean.processor.PreAssignmentProcessor;
@@ -34,7 +33,7 @@ public class SubjectCsv {
 
     // Exámenes compactados
     @CsvDate("yyyy-MM-dd")
-    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @PreAssignmentProcessor(processor = CustomDateSanitizer.class)
     @CsvBindByPosition(position = 15)
     public LocalDate parcial1Fecha;
     @CsvBindByPosition(position = 16)
@@ -43,7 +42,7 @@ public class SubjectCsv {
     public String parcial1Aula;
 
     @CsvDate("yyyy-MM-dd")
-    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @PreAssignmentProcessor(processor = CustomDateSanitizer.class)
     @CsvBindByPosition(position = 18)
     public LocalDate parcial2Fecha;
     @CsvBindByPosition(position = 19)
@@ -52,7 +51,7 @@ public class SubjectCsv {
     public String parcial2Aula;
 
     @CsvDate("yyyy-MM-dd")
-    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @PreAssignmentProcessor(processor = CustomDateSanitizer.class)
     @CsvBindByPosition(position = 21)
     public LocalDate final1Fecha;
     @CsvBindByPosition(position = 22)
@@ -60,14 +59,14 @@ public class SubjectCsv {
     @CsvBindByPosition(position = 23)
     public String final1Aula;
     @CsvDate("yyyy-MM-dd")
-    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @PreAssignmentProcessor(processor = CustomDateSanitizer.class)
     @CsvBindByPosition(position = 24)
     public LocalDate final1RevFecha;
     @CsvBindByPosition(position = 25)
     public String final1RevHora;
 
     @CsvDate("yyyy-MM-dd")
-    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @PreAssignmentProcessor(processor = CustomDateSanitizer.class)
     @CsvBindByPosition(position = 26)
     public LocalDate final2Fecha;
     @CsvBindByPosition(position = 27)
@@ -75,7 +74,7 @@ public class SubjectCsv {
     @CsvBindByPosition(position = 28)
     public String final2Aula;
     @CsvDate("yyyy-MM-dd")
-    @PreAssignmentProcessor(processor = CustomDateSanitizer_.class)
+    @PreAssignmentProcessor(processor = CustomDateSanitizer.class)
     @CsvBindByPosition(position = 29)
     public LocalDate final2RevFecha;
     @CsvBindByPosition(position = 30)

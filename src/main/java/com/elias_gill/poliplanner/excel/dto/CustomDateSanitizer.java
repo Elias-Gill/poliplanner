@@ -1,11 +1,11 @@
-package com.elias_gill.poliplanner.excel;
+package com.elias_gill.poliplanner.excel.dto;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.opencsv.bean.processor.StringProcessor;
 
-public class CustomDateSanitizer_ implements StringProcessor {
+public class CustomDateSanitizer implements StringProcessor {
     String defaultValue;
     private static final Pattern DATE_PATTERN = Pattern
             .compile("^(?i)(Lun|Mar|Mi[ée]|Jue|Vie|S[áa]b|Dom)\\s+(\\d{2}/\\d{2}/\\d{2})$");
