@@ -51,7 +51,7 @@ public class ExcelService {
         }
     }
 
-    void persistSubjectsFromExcel(Path excelFile, String url)
+    public void persistSubjectsFromExcel(Path excelFile, String url)
             throws IOException, InterruptedException, URISyntaxException {
 
         List<Path> sheets = ExcelHelper.convertExcelToCsv(excelFile);

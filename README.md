@@ -23,14 +23,14 @@ descargar los excel y subirlos a la app de manera manual).
    (credenciales de base de datos, `UPDATEKEY`, etc.)  
 3. Levantar la base de datos PostgreSQL si aún no lo hiciste  
 4. Correr el proyecto:
-
+   
 ```bash
-make run
+make seed # cargar los datos semilla
+make run # correr el proyecto
 ```
-
-o directamente con:
-
+o 
 ```bash
+mvn spring-boot:run -Dspring-boot.run.arguments=--seed
 mvn spring-boot:run
 ```
 
