@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Entity(name = "app_user")  // Quotes allow using reserved keywords
+@Entity(name = "app_user") // Quotes allow using reserved keywords
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    // Default constructor (required by Hibernate)
     public User() {
     }
 

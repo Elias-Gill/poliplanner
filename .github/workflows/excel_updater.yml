@@ -1,0 +1,14 @@
+name: Actualizar Excel cada 6h
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Cada 6 horas (UTC)
+
+jobs:
+  actualizar-excel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Llamar al endpoint protegido
+        run: |
+          # TODO: cambiar el url
+          curl -X POST https://tuapp.fly.dev/admin/actualizar-excel \
+          -d "password=${{ secrets.ADMIN_PASSWORD }}"
