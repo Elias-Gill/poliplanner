@@ -5,25 +5,30 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.elias_gill.poliplanner.excel.ExcelService;
+import com.elias_gill.poliplanner.models.SheetVersion;
+import com.elias_gill.poliplanner.services.SheetVersionService;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
 
     @Autowired
-    ExcelService service;
+    ExcelService excelService;
+
+    @Autowired
+    SheetVersionService versionService;
 
     @Override
     public void run(String... args) {
         if (Arrays.asList(args).contains("--seed")) {
-            Path excelFile = Path.of("src/test/resources/testExcel.xlsx");
+            Path excelFile = Path.of("src/test/resources/output.csv");
             System.out.println("Cargando los datos semilla desde: " + excelFile.toString() + "\n");
 
             try {
-                service.persistSubjectsFromExcel(excelFile, excelFile.toString());
+                SheetVersion version = versionService.create(excelFile.toString(), excelFile.toString());
+                excelService.parseAndPersistCsv(excelFile, version);
             } catch (Exception e) {
                 System.out.println("No se pudo cargar los datos semilla: \n" + e);
                 System.exit(1);

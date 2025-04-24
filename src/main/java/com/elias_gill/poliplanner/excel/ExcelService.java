@@ -75,27 +75,33 @@ public class ExcelService {
         // Cada "sheet" representa el horario de una carrera diferente
         for (Path sheet : sheets) {
             try {
-                logger.info("Parseando csv: {}", sheet.toString());
-
-                logger.info("Limpiando");
-                ExcelHelper.cleanCsv(sheet);
-
-                logger.info("Extrayendo materias");
-                List<SubjectCsv> subjectscsv = ExcelHelper.extractSubjects(sheet);
-
-                logger.info("Enlazando la carrera y persistiendo");
-                String careerName = sheet.getFileName().toString();
-                Career carrera = careerService.create(careerName, version);
-
-                for (SubjectCsv subjectcsv : subjectscsv) {
-                    Subject subject = SubjectMapper.mapToSubject(subjectcsv);
-                    subject.setCarrera(carrera);
-                    subjectService.create(subject);
-                }
+                parseAndPersistCsv(sheet, version);
             } catch (Exception e) {
                 logger.error("Error procesando el archivo CSV: {}", sheet, e);
                 throw new CsvParsingException("Error procesando el archivo: " + sheet, e);
             }
+        }
+
+    }
+
+    @Transactional
+    public void parseAndPersistCsv(Path sheet, SheetVersion version)
+            throws IOException, InterruptedException, URISyntaxException {
+        logger.info("Parseando csv: {}", sheet.toString());
+        logger.info("Limpiando");
+        ExcelHelper.cleanCsv(sheet);
+
+        logger.info("Extrayendo materias");
+        List<SubjectCsv> subjectscsv = ExcelHelper.extractSubjects(sheet);
+
+        logger.info("Enlazando la carrera y persistiendo");
+        String careerName = sheet.getFileName().toString();
+        Career carrera = careerService.create(careerName, version);
+
+        for (SubjectCsv subjectcsv : subjectscsv) {
+            Subject subject = SubjectMapper.mapToSubject(subjectcsv);
+            subject.setCarrera(carrera);
+            subjectService.create(subject);
         }
     }
 }

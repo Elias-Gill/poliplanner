@@ -16,8 +16,25 @@ public class ExcelSyncController {
     ExcelService service;
 
     @PostMapping("/sync")
+
+    /**
+     * Sincroniza el archivo Excel más reciente disponible desde la web de origen.
+     * <p>
+     * Este endpoint está protegido mediante autenticación con un token tipo Bearer
+     * pasado en el header `Authorization`. El valor esperado debe coincidir con la
+     * variable de entorno {@code UPDATE_KEY}.
+     * <p>
+     * Al recibir una solicitud válida, descarga el nuevo Excel, lo convierte a CSV,
+     * lo parsea, y actualiza la base de datos con la nueva información.
+     *
+     * @param authHeader Header HTTP de autorización con el token Bearer.
+     * @return {@code 200 OK} si la sincronización fue exitosa,
+     *         {@code 403 Forbidden} si el token es incorrecto o no está presente,
+     *         {@code 500 Internal Server Error} si ocurre un error durante la
+     *         sincronización.
+     */
     public ResponseEntity<?> syncExcel(@RequestHeader("Authorization") String authHeader) {
-        String expectedKey = System.getenv("UPDATE_KEY");
+        String expectedKey = System.getenv("UPDATEKEY");
         if (!authHeader.trim().equals("Bearer " + expectedKey)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
