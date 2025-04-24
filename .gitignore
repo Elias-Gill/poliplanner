@@ -67,7 +67,4 @@ npm-debug.log
 Dockerfile*
 
 # Archivos de configuración sensibles
-application.properties
-persistence.properties
 .env
-*.properties
