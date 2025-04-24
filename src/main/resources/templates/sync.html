@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <title>Actualizar Excel</title>
+  </head>
+  <body>
+    <h1>Actualizar Excel</h1>
+    <form id="syncForm">
+      <label for="token">Token de autenticación:</label>
+      <input type="password" id="token" name="token" required>
+      <button type="submit" id="submitBtn">Actualizar</button>
+    </form>
+    <div id="respuesta"></div>
+    <script>
+      const form = document.getElementById("syncForm");
+      const button = document.getElementById("submitBtn");
+      const respuestaDiv = document.getElementById("respuesta");
+
+      form.addEventListener("submit", async function(e) {
+          e.preventDefault();
+
+          button.disabled = true;
+          respuestaDiv.textContent = "Actualizando...";
+
+          const token = document.getElementById("token").value;
+
+          // settear el token bearer
+          try {
+              const response = await fetch("/sync", {
+                  method: "POST",
+                  headers: {
+                      "Authorization": "Bearer " + token
+                  }
+              });
+
+              message = response.ok ? "Actualización completada." :
+                  `Error ${response.status}: ${response.body}`;
+
+              respuestaDiv.textContent = message;
+
+          } catch (error) {
+              respuestaDiv.textContent = `Error de red o del servidor: ${error.message}`;
+          } finally {
+              button.disabled = false;
+          }
+      });
+    </script>
+  </body>
+</html>
