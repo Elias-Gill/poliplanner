@@ -5,10 +5,14 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.elias_gill.poliplanner.excel.dto.SubjectCsv;
+import com.elias_gill.poliplanner.exception.CsvParsingException;
+import com.elias_gill.poliplanner.exception.ExcelSynchronizationException;
 import com.elias_gill.poliplanner.models.Career;
 import com.elias_gill.poliplanner.models.SheetVersion;
 import com.elias_gill.poliplanner.models.Subject;
@@ -20,6 +24,8 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ExcelService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExcelService.class);
 
     @Autowired
     private SubjectService subjectService;
@@ -33,43 +39,62 @@ public class ExcelService {
     @Transactional
     public void SyncronizeExcel() {
         try {
+            logger.info("Iniciando actualizacion de excel");
             String url = ExcelHelper.findLatestExcelUrl();
-
             SheetVersion latestVersion = versionService.findLatest();
+
             if (latestVersion != null) {
                 if (latestVersion.getUrl().equals(url)) {
+                    logger.info("Excel ya se encuentra en su ultima version");
                     return;
                 }
             }
 
+            logger.info("Descargando latest url: {}", url);
             Path excelFile = ExcelHelper.downloadFile(url);
 
+            logger.info("Descarga exitosa. Iniciando parseo y persistencia");
             persistSubjectsFromExcel(excelFile, url);
-
+            logger.info("Actualizacion exitosa");
         } catch (InterruptedException | IOException | URISyntaxException e) {
-            throw new RuntimeException("Error sincronizando Excel. Rollback iniciado", e);
+            String message = "Error sincronizando el archivo Excel. Se inició el rollback";
+            logger.error(message, e);
+            throw new ExcelSynchronizationException(message, e);
         }
     }
 
+    @Transactional
     public void persistSubjectsFromExcel(Path excelFile, String url)
             throws IOException, InterruptedException, URISyntaxException {
 
+        logger.info("Iniciando conversion a csv");
         List<Path> sheets = ExcelHelper.convertExcelToCsv(excelFile);
+        logger.info("Conversion exitosa");
 
         SheetVersion version = versionService.create(excelFile.toString(), url);
-
         // Cada "sheet" representa el horario de una carrera diferente
         for (Path sheet : sheets) {
-            ExcelHelper.cleanCsv(sheet);
-            List<SubjectCsv> subjectscsv = ExcelHelper.extractSubjects(sheet);
+            try {
+                logger.info("Parseando csv: {}", sheet.toString());
 
-            String careerName = sheet.getFileName().toString();
-            Career carrera = careerService.create(careerName, version);
+                logger.info("Limpiando");
+                ExcelHelper.cleanCsv(sheet);
 
-            for (SubjectCsv subjectcsv : subjectscsv) {
-                Subject subject = SubjectMapper.mapToSubject(subjectcsv);
-                subject.setCarrera(carrera);
-                subjectService.create(subject);
+                logger.info("Extrayendo materias");
+                List<SubjectCsv> subjectscsv = ExcelHelper.extractSubjects(sheet);
+
+                logger.info("Enlazando la carrera y persistiendo");
+                String careerName = sheet.getFileName().toString();
+                Career carrera = careerService.create(careerName, version);
+
+                for (SubjectCsv subjectcsv : subjectscsv) {
+                    Subject subject = SubjectMapper.mapToSubject(subjectcsv);
+                    subject.setCarrera(carrera);
+                    subjectService.create(subject);
+                }
+            } catch (Exception e) {
+                logger.error("Error procesando el archivo CSV: {}", sheet, e);
+                throw new CsvParsingException("Error procesando el archivo: " + sheet, e);
             }
         }
     }

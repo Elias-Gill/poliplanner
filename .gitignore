@@ -68,3 +68,5 @@ Dockerfile*
 
 # Archivos de configuración sensibles
 .env
+logs/
+*.log
