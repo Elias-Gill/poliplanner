@@ -21,7 +21,7 @@ descargar los excel y subirlos a la app de manera manual).
 1. Clonar el repositorio  
 2. Copiar el archivo `.env.example` a `.env` y configurarlo con tus valores locales
    (credenciales de base de datos, `UPDATEKEY`, etc.)  
-3. Levantar la base de datos PostgreSQL si aún no lo hiciste  
+3. Crear una DB en PostgreSQL llamada `poliplanner`
 4. Correr el proyecto:
    
 ```bash
@@ -37,6 +37,7 @@ mvn spring-boot:run
 ## Testing
 
 Este proyecto cuenta con pruebas **unitarias** y **de integración**.
+Los tests de integracion se corren en una base de datos en memoria.
 
 - Tests unitarios (requieren Gnumeric instalado):
 

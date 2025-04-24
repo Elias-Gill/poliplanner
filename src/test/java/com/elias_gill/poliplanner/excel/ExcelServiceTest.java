@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.elias_gill.poliplanner.models.Career;
@@ -20,7 +21,7 @@ import com.elias_gill.poliplanner.repositories.SheetVersionRepository;
 import com.elias_gill.poliplanner.repositories.SubjectRepository;
 
 @SpringBootTest
-@Transactional
+@ActiveProfiles("test")
 class ExcelServiceIntegrationTest {
 
     @Autowired

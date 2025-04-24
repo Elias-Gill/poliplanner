@@ -22,6 +22,9 @@ public class Career {
     @JoinColumn(name = "sheet_version")
     private SheetVersion version;
 
+    public Career() {
+    }
+
     public void setName(String name) {
         this.name = name;
     }
