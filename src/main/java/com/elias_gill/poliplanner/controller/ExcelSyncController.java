@@ -17,7 +17,7 @@ public class ExcelSyncController {
 
     @PostMapping("/sync")
     public ResponseEntity<?> syncExcel(@RequestHeader("Authorization") String authHeader) {
-        String expectedKey = System.getenv("UPDATEKEY");
+        String expectedKey = System.getenv("UPDATE_KEY");
         if (!authHeader.trim().equals("Bearer " + expectedKey)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

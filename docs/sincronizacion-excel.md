@@ -38,7 +38,7 @@ más reciente del archivo Excel, que luego se parsea y se guarda en la base de d
 6. **Automatización**:
 - La actualización automática se programa utilizando **GitHub Actions** con un cron job
   configurado para ejecutarse cada 6 horas.
-- Un endpoint protegido con contraseña (almacenada en la variable de entorno `UPDATEKEY`) es
+- Un endpoint protegido con contraseña (almacenada en la variable de entorno `UPDATE_KEY`) es
   llamado para disparar el proceso de sincronización.
 
 ## Diagramas de flujo

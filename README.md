@@ -20,7 +20,7 @@ descargar los excel y subirlos a la app de manera manual).
 
 1. Clonar el repositorio  
 2. Copiar el archivo `.env.example` a `.env` y configurarlo con tus valores locales
-   (credenciales de base de datos, `UPDATEKEY`, etc.)  
+   (credenciales de base de datos, `UPDATE_KEY`, etc.)  
 3. Crear una DB en PostgreSQL llamada `poliplanner`
 4. Correr el proyecto:
    
@@ -89,7 +89,7 @@ mvn test -Dgroups=unit,integration
 
 - Las credenciales y claves sensibles se definen mediante variables de entorno  
 - El sistema puede actualizar automáticamente los datos al llamar a un endpoint protegido con
-  una contraseña (`UPDATEKEY`), usado en conjunción con GitHub Actions para tareas programadas
+  una contraseña (`UPDATE_KEY`), usado en conjunción con GitHub Actions para tareas programadas
 
 ---
 
