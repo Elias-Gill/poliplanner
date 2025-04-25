@@ -36,6 +36,12 @@ public class ExcelService {
     @Autowired
     private SheetVersionService versionService;
 
+    /*
+     * Esta función se divide en tres partes para facilitar el testeo de componentes
+     * específicos
+     * y permitir reutilizar la lógica en herramientas como el seeder para entornos
+     * de desarrollo.
+     */
     @Transactional
     public void SyncronizeExcel() {
         try {
