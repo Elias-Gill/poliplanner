@@ -8,21 +8,39 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "careers")
 public class Career {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "career_id")
     private long id;
 
-    @Column(name = "career_name")
+    @Column(name = "career_name", nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sheet_version")
+    @JoinColumn(name = "sheet_version_id")
     private SheetVersion version;
 
+    // --- Constructores ---
     public Career() {
+    }
+
+    public Career(String name) {
+        this.name = name;
+    }
+
+    // --- Getters y Setters ---
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
@@ -35,17 +53,5 @@ public class Career {
 
     public void setVersion(SheetVersion version) {
         this.version = version;
-    }
-
-    public Career(String name) {
-        this.name = name;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
     }
 }

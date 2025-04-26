@@ -16,15 +16,16 @@ import jakarta.persistence.Table;
 public class SheetVersion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "version_id")
     private Long id;
 
-    @Column(name = "file_name")
+    @Column(name = "file_name", nullable = false)
     private String fileName;
 
-    @Column(name = "url")
+    @Column(name = "url", nullable = false)
     private String url;
 
-    @Column(name = "parsedAt")
+    @Column(name = "parsed_at", nullable = false)
     @CreationTimestamp
     private LocalDate parsedAt;
 

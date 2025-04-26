@@ -13,16 +13,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 
-@Entity(name = "app_user")
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id") // NOMBRE EXPLÍCITO
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -30,7 +35,7 @@ public class User {
     @Column(name = "role")
     private Set<String> roles = new HashSet<>();
 
-    // toString method for debugging
+    // toString para debug
     @Override
     public String toString() {
         return "User{" +
@@ -40,7 +45,7 @@ public class User {
                 '}';
     }
 
-    // --- Getters y setters ---
+    // Getters y Setters
 
     public Long getId() {
         return id;
