@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<main layout:fragment="content">
+    <h2 class="mb-4">Mis horarios</h2>
+
+    <div class="table-responsive mb-5">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Hora</th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miércoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Reemplazar con Thymeleaf si es dinámico -->
+                <tr>
+                    <th>08:00 - 10:00</th>
+                    <td>Matemática</td>
+                    <td></td>
+                    <td>Física</td>
+                    <td></td>
+                    <td>Química</td>
+                </tr>
+                <tr>
+                    <th>10:00 - 12:00</th>
+                    <td></td>
+                    <td>Programación</td>
+                    <td></td>
+                    <td>Álgebra</td>
+                    <td></td>
+                </tr>
+                <!-- ... -->
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="mb-3">Próximos exámenes</h2>
+    <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Matemática
+            <span class="badge bg-primary rounded-pill">15/05/2025</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Programación
+            <span class="badge bg-primary rounded-pill">20/05/2025</span>
+        </li>
+        <!-- ... -->
+    </ul>
+</main>
+</html>

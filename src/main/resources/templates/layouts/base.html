@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+  <head>
+    <meta charset="UTF-8">
+    <title>Mi Horario</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="/js/htmx.min.js"></script>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="bg-dark text-white py-3 mb-4">
+      <div class="container d-flex justify-content-between align-items-center">
+        <h1 class="h4 mb-0">Armador de Horarios</h1>
+        <nav>
+          <a href="#" class="text-white me-3">Inicio</a>
+          <a href="#" class="text-white me-3">Armar horario</a>
+          <a href="#" class="text-white">Cerrar sesión</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main layout:fragment="content" class="container mb-5"></main>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center py-3 mt-auto border-top">
+      <small>© 2025 Armador de Horarios - Desarrollado por [Tu Nombre] | Contacto: tu@email.com</small>
+    </footer>
+    <!-- Scripts comunes -->
+    <script th:inline="javascript">
+      document.addEventListener('DOMContentLoaded', function () {
+          var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+          tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+              new bootstrap.Tooltip(tooltipTriggerEl)
+          });
+      });
+    </script>
+    <th:block layout:fragment="scripts"></th:block>
+  </body>
+</html>

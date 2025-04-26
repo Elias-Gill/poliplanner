@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<main layout:fragment="content">
+    <h2 class="mb-4">Iniciar Sesión</h2>
+
+    <form th:action="@{/login}" method="post" class="mx-auto" style="max-width: 400px;">
+        <div class="mb-3">
+            <label for="username" class="form-label">Usuario:</label>
+            <input type="text" id="username" name="username" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña:</label>
+            <input type="password" id="password" name="password" class="form-control" required />
+        </div>
+        <div class="d-grid mb-3">
+            <button type="submit" class="btn btn-primary">Entrar</button>
+        </div>
+
+        <div th:if="${param.error}" class="alert alert-danger">Usuario o contraseña inválidos</div>
+        <div th:if="${param.logout}" class="alert alert-success">Sesión cerrada exitosamente</div>
+    </form>
+
+    <p class="text-center mt-3">
+        ¿No tenés cuenta? <a th:href="@{/signup}">Registrate acá</a>
+    </p>
+</main>
+</html>

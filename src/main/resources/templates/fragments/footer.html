@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <!-- Fragmento de footer con año dinámico -->
+    <footer th:fragment="footer" class="bg-light mt-5 py-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <p class="mb-0">&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2023</span> Mi Aplicación</p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <a th:href="@{/privacidad}" class="text-decoration-none me-3">Política de Privacidad</a>
+            <a th:href="@{/terminos}" class="text-decoration-none">Términos de Servicio</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
