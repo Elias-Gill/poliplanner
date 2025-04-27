@@ -2,12 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}">
-<main layout:fragment="content">
-    <h2 class="mb-4">Mis horarios</h2>
+
+<main layout:fragment="content" class="container py-5">
+
+    <h2 class="section">Mis horarios</h2>
 
     <div class="table-responsive mb-5">
-        <table class="table table-bordered text-center align-middle">
-            <thead class="table-light">
+        <table class="table custom-table text-center align-middle">
+            <thead>
                 <tr>
                     <th>Hora</th>
                     <th>Lunes</th>
@@ -18,9 +20,8 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Reemplazar con Thymeleaf si es dinámico -->
                 <tr>
-                    <th>08:00 - 10:00</th>
+                    <td class="fw-bold">08:00 - 10:00</td>
                     <td>Matemática</td>
                     <td></td>
                     <td>Física</td>
@@ -28,29 +29,29 @@
                     <td>Química</td>
                 </tr>
                 <tr>
-                    <th>10:00 - 12:00</th>
+                    <td class="fw-bold">10:00 - 12:00</td>
                     <td></td>
                     <td>Programación</td>
                     <td></td>
                     <td>Álgebra</td>
                     <td></td>
                 </tr>
-                <!-- ... -->
             </tbody>
         </table>
     </div>
 
-    <h2 class="mb-3">Próximos exámenes</h2>
-    <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center">
+    <h2 class="section">Próximos exámenes</h2>
+
+    <div class="list-group elegant-list">
+        <div class="list-group-item d-flex justify-content-between align-items-center">
             Matemática
-            <span class="badge bg-primary rounded-pill">15/05/2025</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span class="date-badge">15/05/2025</span>
+        </div>
+        <div class="list-group-item d-flex justify-content-between align-items-center">
             Programación
-            <span class="badge bg-primary rounded-pill">20/05/2025</span>
-        </li>
-        <!-- ... -->
-    </ul>
+            <span class="date-badge">20/05/2025</span>
+        </div>
+    </div>
+
 </main>
 </html>
