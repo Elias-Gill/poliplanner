@@ -1,0 +1,50 @@
+/* Estilos adicionales del Navbar */
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.25rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-link {
+    color: #ffffff;
+    margin-left: 1rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #0d6efd;
+    transform: translateY(-2px);
+    text-decoration: underline;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+/* Animación de apertura del botón hamburguesa */
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Hover sobre el nombre */
+.navbar-brand:hover {
+    color: #0d6efd;
+}
+
+/* Responsive: menos separación en móviles */
+@media (max-width: 992px) {
+    .nav-link {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+}

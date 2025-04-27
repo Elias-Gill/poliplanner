@@ -23,6 +23,7 @@
     display: block;
     margin: 0 auto 20px auto;
     width: 100px;
+    animation: slideUp 0.8s ease forwards;
 }
 
 /* Título */
@@ -33,18 +34,69 @@
     color: #2c3e50;
 }
 
+.login-title-main, .login-title-sub {
+    display: block;
+}
+
+.login-title-main {
+    font-size: 1.5rem;
+}
+
+.login-title-sub {
+    font-size: 1.2rem;
+    margin-top: 0.2rem;
+    animation: fadeIn 1s ease forwards;
+    animation-delay: 0.5s;
+    opacity: 0;
+}
+
 /* Botón */
 .login-container .btn-primary {
     background-color: #0056b3;
     border: none;
+    transition: all 0.2s ease-in-out;
 }
 
 /* Hover del botón */
 .login-container .btn-primary:hover {
     background-color: #003d80;
+    transform: translateY(-2px);
+}
+
+/* Efecto click (pulsado) */
+.login-container .btn-primary:active {
+    transform: scale(0.95);
+    background-color: #002752;
 }
 
 /* Mensajes */
 .login-container .alert {
     margin-top: 10px;
+}
+
+/* Efecto focus en los inputs */
+.login-container .form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Animaciones */
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

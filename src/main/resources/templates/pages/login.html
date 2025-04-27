@@ -2,22 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}">
-      <head>
-        <link rel="stylesheet" th:href="@{/css/login.css}">
-      </head>
+<head>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css}">
+</head>
 <main layout:fragment="content">
     <div class="login-page">
         <div class="login-container">
             <img th:src="@{/img/fpuna_logo_institucional.svg}" alt="Logo Facultad Politécnica UNA" class="login-logo">
-            <h2 class="login-title">Facultad Politécnica UNA<br>Iniciar Sesión</h2>
+            <h2 class="login-title">
+                <span class="login-title-main">Facultad Politécnica UNA</span><br>
+                <span class="login-title-sub">Iniciar Sesión</span>
+            </h2>
             <form th:action="@{/login}" method="post" class="mx-auto" style="max-width: 400px;">
                 <div class="mb-3">
                     <label for="username" class="form-label">Usuario:</label>
-                    <input type="text" id="username" name="username" class="form-control" required />
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" id="username" name="username" class="form-control" required />
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña:</label>
-                    <input type="password" id="password" name="password" class="form-control" required />
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input type="password" id="password" name="password" class="form-control" required />
+                    </div>
                 </div>
                 <div class="d-grid mb-3">
                     <button type="submit" class="btn btn-primary">Entrar</button>
@@ -33,4 +43,4 @@
         </div>
     </div>
 </main>
-
+</html>
