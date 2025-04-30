@@ -1,0 +1,40 @@
+.footer-custom {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.05);
+    animation: fadeInUp 0.6s ease-in-out;
+}
+
+.footer-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+    transition: color 0.3s ease;
+}
+
+.footer-text strong {
+    color: #343a40;
+}
+
+.footer-link {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.footer-link:hover {
+    color: #003580;
+    text-decoration: underline;
+}
+
+/* Animación suave de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
