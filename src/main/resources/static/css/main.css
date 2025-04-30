@@ -1,0 +1,75 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.section {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 8px;
+}
+
+.custom-table {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.custom-table thead {
+    background-color: #3498db;
+    color: white;
+}
+
+.custom-table th, .custom-table td {
+    padding: 18px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.custom-table th {
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+
+.custom-table td {
+    font-size: 0.95rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.list-group.elegant-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.list-group.elegant-list .list-group-item {
+    background: linear-gradient(to right, #ffffff, #f1f9ff);
+    border: 1px solid #d0e3f1;
+    border-radius: 10px;
+    padding: 20px 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.list-group.elegant-list .list-group-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    background: linear-gradient(to right, #e3f2fd, #f8fbff);
+}
+
+.date-badge {
+    background-color: #3498db;
+    padding: 8px 16px;
+    border-radius: 50px;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
