@@ -1,5 +1,13 @@
 package com.elias_gill.poliplanner.excel;
 
+import com.elias_gill.poliplanner.excel.dto.SubjectCsv;
+import com.opencsv.bean.CsvToBeanBuilder;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,43 +22,39 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import com.elias_gill.poliplanner.excel.dto.SubjectCsv;
-import com.opencsv.bean.CsvToBeanBuilder;
-
 public class ExcelHelper {
 
-    private static final String targetUrl = "https://www.pol.una.py/academico/horarios-de-clases-y-examenes/";
+    private static final String targetUrl =
+            "https://www.pol.una.py/academico/horarios-de-clases-y-examenes/";
 
     static List<SubjectCsv> extractSubjects(Path csvFile) throws RuntimeException {
         try {
-            List<SubjectCsv> beans = new CsvToBeanBuilder<SubjectCsv>(new FileReader(csvFile.toString()))
-                    .withType(SubjectCsv.class)
-                    .withSeparator(',')
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build()
-                    .parse();
+            List<SubjectCsv> beans =
+                    new CsvToBeanBuilder<SubjectCsv>(new FileReader(csvFile.toString()))
+                            .withType(SubjectCsv.class)
+                            .withSeparator(',')
+                            .withIgnoreLeadingWhiteSpace(true)
+                            .build()
+                            .parse();
             return beans;
         } catch (Exception e) {
-            throw new RuntimeException("No se pudo realizar la conversion del archivo '" + csvFile.toString() + "': " + e);
+            throw new RuntimeException(
+                    "No se pudo realizar la conversion del archivo '"
+                            + csvFile.toString()
+                            + "': "
+                            + e);
         }
     }
 
     static String findLatestExcelUrl() throws IOException {
-        Document doc = Jsoup.connect(targetUrl)
-                .timeout(10000)
-                .get();
+        Document doc = Jsoup.connect(targetUrl).timeout(10000).get();
 
         return extractUrlFromDoc(doc);
     }
 
     static String extractUrlFromDoc(Document doc) throws IOException {
-        Pattern datePattern = Pattern.compile("(\\d{2})(\\d{2})(\\d{4})\\.xlsx?$",
-                Pattern.CASE_INSENSITIVE);
+        Pattern datePattern =
+                Pattern.compile("(\\d{2})(\\d{2})(\\d{4})\\.xlsx?$", Pattern.CASE_INSENSITIVE);
 
         String latestUrl = "";
         String latestDate = "00000000";
@@ -61,7 +65,8 @@ public class ExcelHelper {
             if (url.toLowerCase().matches(".*\\.xls[x]?$") && url.toLowerCase().contains("exame")) {
                 Matcher dateMatcher = datePattern.matcher(url);
                 if (dateMatcher.find()) {
-                    String fileDate = dateMatcher.group(3) + dateMatcher.group(2) + dateMatcher.group(1);
+                    String fileDate =
+                            dateMatcher.group(3) + dateMatcher.group(2) + dateMatcher.group(1);
                     if (fileDate.compareTo(latestDate) > 0) {
                         latestDate = fileDate;
                         latestUrl = url;
@@ -91,9 +96,7 @@ public class ExcelHelper {
         List<String> lines = Files.readAllLines(path);
 
         // Ignorar encabezados
-        List<String> cleanedLines = lines.stream()
-                .skip(11)
-                .collect(Collectors.toList());
+        List<String> cleanedLines = lines.stream().skip(11).collect(Collectors.toList());
 
         // Sobreescribir el archivo original
         Files.write(path, cleanedLines);
@@ -110,11 +113,12 @@ public class ExcelHelper {
         Path outputDir = Files.createTempDirectory(excelFile.getFileName().toString());
 
         // Convertir todas las "hojas" del documento a csv
-        ProcessBuilder pb = new ProcessBuilder(
-                "ssconvert",
-                "--export-file-per-sheet",
-                excelFile.toString(),
-                outputDir.resolve("%s.csv").toString());
+        ProcessBuilder pb =
+                new ProcessBuilder(
+                        "ssconvert",
+                        "--export-file-per-sheet",
+                        excelFile.toString(),
+                        outputDir.resolve("%s.csv").toString());
 
         pb.redirectErrorStream(true);
 
@@ -128,17 +132,21 @@ public class ExcelHelper {
 
         // Listar los archivos generados e ignorar el archivo de codigos de carrera
         try (Stream<Path> files = Files.list(outputDir)) {
-            return files.filter(path -> path.toString().endsWith(".csv") &&
-                    !path.toString().contains("odigos") &&
-                    !path.toString().contains("ódigos") &&
-                    !path.toString().contains("Asignaturas") &&
-                    !path.toString().contains("Homologadas") &&
-                    !path.toString().contains("oviedo") &&
-                    !path.toString().contains("Oviedo") &&
-                    !path.toString().contains("Villarrica") &&
-                    !path.toString().contains("villarrica") &&
-                    !path.toString().contains("Homólogas") &&
-                    !path.toString().equalsIgnoreCase("códigos")).sorted().collect(Collectors.toList());
+            return files.filter(
+                            path ->
+                                    path.toString().endsWith(".csv")
+                                            && !path.toString().contains("odigos")
+                                            && !path.toString().contains("ódigos")
+                                            && !path.toString().contains("Asignaturas")
+                                            && !path.toString().contains("Homologadas")
+                                            && !path.toString().contains("oviedo")
+                                            && !path.toString().contains("Oviedo")
+                                            && !path.toString().contains("Villarrica")
+                                            && !path.toString().contains("villarrica")
+                                            && !path.toString().contains("Homólogas")
+                                            && !path.toString().equalsIgnoreCase("códigos"))
+                    .sorted()
+                    .collect(Collectors.toList());
         }
     }
 

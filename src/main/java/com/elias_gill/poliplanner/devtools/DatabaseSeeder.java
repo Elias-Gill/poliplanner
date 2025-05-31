@@ -1,24 +1,22 @@
 package com.elias_gill.poliplanner.devtools;
 
-import java.nio.file.Path;
-import java.util.Arrays;
+import com.elias_gill.poliplanner.excel.ExcelService;
+import com.elias_gill.poliplanner.models.SheetVersion;
+import com.elias_gill.poliplanner.services.SheetVersionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.elias_gill.poliplanner.excel.ExcelService;
-import com.elias_gill.poliplanner.models.SheetVersion;
-import com.elias_gill.poliplanner.services.SheetVersionService;
+import java.nio.file.Path;
+import java.util.Arrays;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
 
-    @Autowired
-    ExcelService excelService;
+    @Autowired ExcelService excelService;
 
-    @Autowired
-    SheetVersionService versionService;
+    @Autowired SheetVersionService versionService;
 
     @Override
     public void run(String... args) {
@@ -27,7 +25,8 @@ public class DatabaseSeeder implements CommandLineRunner {
             System.out.println("Cargando los datos semilla desde: " + excelFile.toString() + "\n");
 
             try {
-                SheetVersion version = versionService.create(excelFile.toString(), excelFile.toString());
+                SheetVersion version =
+                        versionService.create(excelFile.toString(), excelFile.toString());
                 excelService.parseAndPersistCsv(excelFile, version);
             } catch (Exception e) {
                 System.out.println("No se pudo cargar los datos semilla: \n" + e);

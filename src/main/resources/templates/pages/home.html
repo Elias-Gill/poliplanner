@@ -2,56 +2,51 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}">
-
-<main layout:fragment="content" class="container py-5">
-
+  <main layout:fragment="content" class="container py-5">
     <h2 class="section">Mis horarios</h2>
-
     <div class="table-responsive mb-5">
-        <table class="table custom-table text-center align-middle">
-            <thead>
-                <tr>
-                    <th>Hora</th>
-                    <th>Lunes</th>
-                    <th>Martes</th>
-                    <th>Miércoles</th>
-                    <th>Jueves</th>
-                    <th>Viernes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="fw-bold">08:00 - 10:00</td>
-                    <td>Matemática</td>
-                    <td></td>
-                    <td>Física</td>
-                    <td></td>
-                    <td>Química</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold">10:00 - 12:00</td>
-                    <td></td>
-                    <td>Programación</td>
-                    <td></td>
-                    <td>Álgebra</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+      <table class="table table-bordered text-center align-middle">
+        <!-- este va a ser un componente de htmx que se retorna de un endpoint -->
+        <thead class="table-light">
+          <tr>
+            <th>Hora</th>
+            <th>Lunes</th>
+            <th>Martes</th>
+            <th>Miércoles</th>
+            <th>Jueves</th>
+            <th>Viernes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="fw-bold">08:00 - 10:00</td>
+            <td>Matemática</td>
+            <td></td>
+            <td>Física</td>
+            <td></td>
+            <td>Química</td>
+          </tr>
+          <tr>
+            <td class="fw-bold">10:00 - 12:00</td>
+            <td></td>
+            <td>Programación</td>
+            <td></td>
+            <td>Álgebra</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
     <h2 class="section">Próximos exámenes</h2>
-
     <div class="list-group elegant-list">
-        <div class="list-group-item d-flex justify-content-between align-items-center">
-            Matemática
-            <span class="date-badge">15/05/2025</span>
-        </div>
-        <div class="list-group-item d-flex justify-content-between align-items-center">
-            Programación
-            <span class="date-badge">20/05/2025</span>
-        </div>
+      <div class="list-group-item d-flex justify-content-between align-items-center">
+        Matemática
+        <span class="date-badge">15/05/2025</span>
+      </div>
+      <div class="list-group-item d-flex justify-content-between align-items-center">
+        Programación
+        <span class="date-badge">20/05/2025</span>
+      </div>
     </div>
-
-</main>
+  </main>
 </html>

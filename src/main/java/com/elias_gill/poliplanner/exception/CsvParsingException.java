@@ -5,4 +5,3 @@ public class CsvParsingException extends RuntimeException {
         super(message, cause);
     }
 }
-

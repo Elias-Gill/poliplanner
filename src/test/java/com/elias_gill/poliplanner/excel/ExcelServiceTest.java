@@ -2,16 +2,6 @@ package com.elias_gill.poliplanner.excel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-
 import com.elias_gill.poliplanner.models.Career;
 import com.elias_gill.poliplanner.models.SheetVersion;
 import com.elias_gill.poliplanner.models.Subject;
@@ -19,21 +9,27 @@ import com.elias_gill.poliplanner.repositories.CareerRepository;
 import com.elias_gill.poliplanner.repositories.SheetVersionRepository;
 import com.elias_gill.poliplanner.repositories.SubjectRepository;
 
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
 @SpringBootTest
 @ActiveProfiles("test")
 class ExcelServiceIntegrationTest {
 
-    @Autowired
-    private ExcelService excelService;
+    @Autowired private ExcelService excelService;
 
-    @Autowired
-    private SheetVersionRepository sheetVersionRepository;
+    @Autowired private SheetVersionRepository sheetVersionRepository;
 
-    @Autowired
-    private CareerRepository careerRepository;
+    @Autowired private CareerRepository careerRepository;
 
-    @Autowired
-    private SubjectRepository subjectRepository;
+    @Autowired private SubjectRepository subjectRepository;
 
     @Test
     @Tag("integration")
@@ -50,10 +46,10 @@ class ExcelServiceIntegrationTest {
 
         // Verificamos que se hayan creado carreras
         List<Career> careers = careerRepository.findAll();
-        assert(!careers.isEmpty());
+        assert (!careers.isEmpty());
 
         // Verificamos que se hayan creado materias
         List<Subject> subjects = subjectRepository.findAll();
-        assert(!subjects.isEmpty());
+        assert (!subjects.isEmpty());
     }
 }

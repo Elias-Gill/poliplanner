@@ -5,4 +5,3 @@ public class ExcelSynchronizationException extends RuntimeException {
         super(message, cause);
     }
 }
-

@@ -6,6 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+import com.elias_gill.poliplanner.excel.dto.SubjectCsv;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,13 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import com.elias_gill.poliplanner.excel.dto.SubjectCsv;
 
 public class ExcelHelperTest {
     @Test
@@ -41,12 +41,11 @@ public class ExcelHelperTest {
         List<String> cleanedLines = Files.readAllLines(tempFile);
         List<String> expectedLines = Files.readAllLines(expectedPath);
 
-        assertEquals(expectedLines.size(), cleanedLines.size(),
-                "El número de líneas no coincide");
+        assertEquals(expectedLines.size(), cleanedLines.size(), "El número de líneas no coincide");
 
         for (int i = 0; i < expectedLines.size(); i++) {
-            assertEquals(expectedLines.get(i), cleanedLines.get(i),
-                    "Línea " + (i + 1) + " no coincide");
+            assertEquals(
+                    expectedLines.get(i), cleanedLines.get(i), "Línea " + (i + 1) + " no coincide");
         }
 
         // Limpieza
@@ -116,8 +115,9 @@ public class ExcelHelperTest {
         // Tratar de descargar un excel cualquiera y ver si es que funciona
         // correctamente
         try {
-            Path file = ExcelHelper.downloadFile(
-                    "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx");
+            Path file =
+                    ExcelHelper.downloadFile(
+                            "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx");
 
             assertNotNull(file);
             assertTrue(Files.exists(file));
@@ -148,23 +148,39 @@ public class ExcelHelperTest {
         List<Path> csvFiles = ExcelHelper.convertExcelToCsv(excelFile);
 
         // Esperados
-        Set<String> nombresEsperados = Set.of(
-                "IAE.csv", "ICM.csv", "IEK.csv", "IEL.csv", "IEN.csv", "IIN.csv", "IMK.csv", 
-                "ISP.csv", "LCA.csv", "LCI.csv", "LCIk.csv", "LEL.csv", "LGH.csv", "TSE.csv");
+        Set<String> nombresEsperados =
+                Set.of(
+                        "IAE.csv",
+                        "ICM.csv",
+                        "IEK.csv",
+                        "IEL.csv",
+                        "IEN.csv",
+                        "IIN.csv",
+                        "IMK.csv",
+                        "ISP.csv",
+                        "LCA.csv",
+                        "LCI.csv",
+                        "LCIk.csv",
+                        "LEL.csv",
+                        "LGH.csv",
+                        "TSE.csv");
 
         // Extraer nombres reales
-        Set<String> nombresGenerados = csvFiles.stream()
-                .map(p -> p.getFileName().toString())
-                .collect(Collectors.toSet());
+        Set<String> nombresGenerados =
+                csvFiles.stream().map(p -> p.getFileName().toString()).collect(Collectors.toSet());
 
-        assertEquals(nombresEsperados, nombresGenerados, "Los archivos generados no coinciden con los esperados");
+        assertEquals(
+                nombresEsperados,
+                nombresGenerados,
+                "Los archivos generados no coinciden con los esperados");
 
         // Cargar el archivo IIN.csv generado y el archivo input.csv de resources para
         // comparar
-        Path iinCsvGenerated = csvFiles.stream()
-                .filter(p -> p.getFileName().toString().equals("IIN.csv"))
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("No se generó el archivo IIN.csv"));
+        Path iinCsvGenerated =
+                csvFiles.stream()
+                        .filter(p -> p.getFileName().toString().equals("IIN.csv"))
+                        .findFirst()
+                        .orElseThrow(() -> new AssertionError("No se generó el archivo IIN.csv"));
 
         Path inputCsvExpected = Path.of("src/test/resources/input.csv");
 
@@ -173,8 +189,16 @@ public class ExcelHelperTest {
         List<String> expectedLines = Files.readAllLines(inputCsvExpected);
 
         for (int i = 0; i < generatedLines.size(); i++) {
-            assertEquals(expectedLines.get(i), generatedLines.get(i),
-                    "Las lineas '" + i + "' no son iguales: \n" + expectedLines.get(i) + "\n\n" + generatedLines.get(i) + "\n\n");
+            assertEquals(
+                    expectedLines.get(i),
+                    generatedLines.get(i),
+                    "Las lineas '"
+                            + i
+                            + "' no son iguales: \n"
+                            + expectedLines.get(i)
+                            + "\n\n"
+                            + generatedLines.get(i)
+                            + "\n\n");
         }
     }
 

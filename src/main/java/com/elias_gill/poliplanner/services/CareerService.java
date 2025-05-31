@@ -1,20 +1,19 @@
 package com.elias_gill.poliplanner.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.elias_gill.poliplanner.models.Career;
 import com.elias_gill.poliplanner.models.SheetVersion;
 import com.elias_gill.poliplanner.repositories.CareerRepository;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 @Service
 @Transactional
 public class CareerService {
 
-    @Autowired
-    private CareerRepository careerRepository;
+    @Autowired private CareerRepository careerRepository;
 
     public Career find(String name) {
         return careerRepository.findByNameIgnoreCase(name);

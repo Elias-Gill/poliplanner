@@ -1,9 +1,9 @@
 package com.elias_gill.poliplanner.models;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+
+import java.time.LocalDate;
 
 @Embeddable
 public class ExamsCompact {

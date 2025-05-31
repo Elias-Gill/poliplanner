@@ -2,6 +2,8 @@ package com.elias_gill.poliplanner.models;
 
 import java.util.List;
 
+// WTF, JDTLS no que si se utiliza el import en el codigo.
+// NOTE: no correr la code action "organize imports".
 import com.elias_gill.poliplanner.models.Subject;
 
 import jakarta.persistence.Column;
@@ -28,6 +30,9 @@ public class Schedule {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "schedule_id")
+    private String name;
+
     @ManyToMany
     @JoinTable(name = "schedule_subjects", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<Subject> materias;
@@ -45,12 +50,16 @@ public class Schedule {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public String getName() {
+        return this.name;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public List<Subject> getMaterias() {

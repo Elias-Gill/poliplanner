@@ -47,8 +47,7 @@ public class Subject {
     @Column(name = "subject_teacher_mail")
     private String emailProfesor;
 
-    @Embedded
-    private ExamsCompact exams;
+    @Embedded private ExamsCompact exams;
 
     @Column(name = "lunes")
     private String lunes;

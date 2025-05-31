@@ -1,6 +1,7 @@
 package com.elias_gill.poliplanner.controller;
 
 import com.elias_gill.poliplanner.models.User;
+import com.elias_gill.poliplanner.services.ScheduleService;
 import com.elias_gill.poliplanner.services.UserService;
 
 import org.springframework.stereotype.Controller;
@@ -11,12 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class UserController {
+public class ScheduleController {
 
     private final UserService userService;
+    private final ScheduleService scheduleService;
 
-    public UserController(UserService userService) {
+    public ScheduleController(UserService userService, ScheduleService scheduleService) {
         this.userService = userService;
+        this.scheduleService = scheduleService;
     }
 
     // Muestra el formulario de registro

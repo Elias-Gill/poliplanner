@@ -27,8 +27,7 @@ public class Career {
     private SheetVersion version;
 
     // --- Constructores ---
-    public Career() {
-    }
+    public Career() {}
 
     public Career(String name) {
         this.name = name;
