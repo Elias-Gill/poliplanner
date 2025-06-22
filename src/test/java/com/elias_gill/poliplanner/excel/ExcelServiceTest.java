@@ -33,9 +33,20 @@ class ExcelServiceIntegrationTest {
 
     @Test
     @Tag("integration")
+    /**
+     * Test de integración que verifica el proceso completo de parseo de un archivo Excel y la
+     * persistencia de sus datos en la base de datos.
+     *
+     * <p>Flujo verificado: 1. Lectura y parseo del archivo Excel. 2. Persistencia de la versión del
+     * archivo (SheetVersion) con la URL asociada. 3. Creacion y persistencia de entidades Career y
+     * Subject a partir del contenido del Excel.
+     *
+     * <p>Este test asume que el archivo testeado contiene datos validos y estructurados
+     * correctamente.
+     */
     void testExcelParsingPersistency() throws Exception {
         Path testExcel = Paths.get("src/test/resources/testExcel.xlsx");
-        String dummyUrl = "https://example.com/test_excel";
+        String dummyUrl = "URL";
 
         excelService.persistSubjectsFromExcel(testExcel, dummyUrl);
 

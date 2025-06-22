@@ -215,6 +215,4 @@ public class ExcelHelperTest {
                 "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx",
                 latestUrl);
     }
-
-    // TODO: test de que se carguen a la base de datos correctamente
 }

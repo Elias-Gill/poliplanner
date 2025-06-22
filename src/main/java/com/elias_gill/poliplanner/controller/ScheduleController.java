@@ -22,34 +22,4 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-    // Muestra el formulario de registro
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
-        return "pages/signup";
-    }
-
-    // Procesa el formulario de registro
-    @PostMapping("/register")
-    public String registerUser(
-            @RequestParam String username,
-            @RequestParam String password,
-            RedirectAttributes redirectAttributes) {
-
-        try {
-            // 1. Registrar el nuevo usuario
-            userService.registerUser(username, password);
-
-            // 2. Redirigir con mensaje de éxito
-            redirectAttributes.addFlashAttribute(
-                    "successMessage", "Registro exitoso! Por favor inicia sesión.");
-            return "redirect:/login";
-
-        } catch (Exception e) {
-            // 3. Manejar errores (usuario ya existe, etc.)
-            redirectAttributes.addFlashAttribute(
-                    "errorMessage", "Error en el registro: " + e.getMessage());
-            return "redirect:/register";
-        }
-    }
 }

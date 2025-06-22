@@ -1,11 +1,5 @@
 package com.elias_gill.poliplanner.models;
 
-import java.util.List;
-
-// WTF, JDTLS no que si se utiliza el import en el codigo.
-// NOTE: no correr la code action "organize imports".
-import com.elias_gill.poliplanner.models.Subject;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +10,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "schedules")
@@ -30,17 +26,19 @@ public class Schedule {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "schedule_id")
+    @Column(name = "schedule_name")
     private String name;
 
     @ManyToMany
-    @JoinTable(name = "schedule_subjects", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
+    @JoinTable(
+            name = "schedule_subjects",
+            joinColumns = @JoinColumn(name = "schedule_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<Subject> materias;
 
     // Getters y setters
 
-    public Schedule() {
-    }
+    public Schedule() {}
 
     public Long getId() {
         return id;

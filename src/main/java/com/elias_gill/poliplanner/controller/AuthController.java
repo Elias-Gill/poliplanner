@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AuthController {
     @GetMapping("/login")
     public String showLoginForm() {
-        return "pages/login"; // Solo muestra la plantilla, sin lógica de redirección
+        return "pages/login"; // Solo muestra la plantilla, sin logica de redirección
     }
 }

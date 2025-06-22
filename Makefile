@@ -13,3 +13,6 @@ run:
 # Carga los datos semilla iniciales para el ambiente de desarrollo
 seed:
 	mvn spring-boot:run -Dspring-boot.run.arguments=--seed
+
+format: 
+	google-java-format --aosp -r ./**/*.java
