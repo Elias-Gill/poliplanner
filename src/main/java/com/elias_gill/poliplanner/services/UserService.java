@@ -1,5 +1,7 @@
 package com.elias_gill.poliplanner.services;
 
+import com.elias_gill.poliplanner.exception.BadArgumentsException;
+import com.elias_gill.poliplanner.exception.InternalServerErrorException;
 import com.elias_gill.poliplanner.exception.UserNameAlreadyExistsException;
 import com.elias_gill.poliplanner.models.User;
 import com.elias_gill.poliplanner.repositories.UserRepository;
@@ -19,25 +21,31 @@ public class UserService {
     }
 
     public User registerUser(String username, String rawPassword)
-            throws UserNameAlreadyExistsException {
+            throws UserNameAlreadyExistsException, BadArgumentsException, InternalServerErrorException {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new UserNameAlreadyExistsException(
                     "Username '" + username + "' is already taken.");
         }
+
         if (username == null || username.trim().isEmpty()) {
-            throw new IllegalArgumentException("Username must not be empty.");
+            throw new BadArgumentsException("Username must not be empty.");
         }
         if (rawPassword == null || rawPassword.length() < 6) {
-            throw new IllegalArgumentException("Password must be at least 6 characters long.");
+            throw new BadArgumentsException("Password must be at least 6 characters long.");
         }
 
         User newUser = new User();
         newUser.setUsername(username);
         newUser.setPassword(passwordEncoder.encode(rawPassword));
-        return userRepository.save(newUser);
+
+        try {
+            return userRepository.save(newUser);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Error while registering a new user: ", e);
+        }
     }
 
     public void updateUserProfile(Long userId, String newEmail) {
-        // Lógica de actualización
+        // TODO: logica de actualización
     }
 }

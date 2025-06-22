@@ -1,18 +1,22 @@
 package com.elias_gill.poliplanner.controller;
 
-import com.elias_gill.poliplanner.models.User;
-import com.elias_gill.poliplanner.services.UserService;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.elias_gill.poliplanner.exception.InternalServerErrorException;
+import com.elias_gill.poliplanner.models.User;
+import com.elias_gill.poliplanner.services.UserService;
 
 @Controller
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
 
@@ -24,7 +28,7 @@ public class UserController {
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
-        return "pages/signup";
+        return "pages/register";
     }
 
     // Procesa el formulario de registro
@@ -34,19 +38,20 @@ public class UserController {
             RedirectAttributes redirectAttributes) {
 
         try {
-            // 1. Registrar el nuevo usuario
             userService.registerUser(user.getUsername(), user.getPassword());
-
-            // 2. Redirigir con mensaje de éxito
+        } catch (InternalServerErrorException e) {
+            logger.error(e.getMessage());
             redirectAttributes.addFlashAttribute(
-                    "successMessage", "Registro exitoso! Por favor inicia sesión.");
-            return "redirect:/login";
-
+                    "errorMessage", "Internal server error. Please try again latter");
+            return "redirect:/register";
         } catch (Exception e) {
-            // 3. Manejar errores (usuario ya existe, etc.)
             redirectAttributes.addFlashAttribute(
-                    "errorMessage", "Error en el registro: " + e.getMessage());
+                    "errorMessage", e.getMessage());
             return "redirect:/register";
         }
+
+        redirectAttributes.addFlashAttribute(
+                "successMessage", "Registro exitoso! Por favor inicia sesión.");
+        return "redirect:/login";
     }
 }
