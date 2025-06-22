@@ -21,7 +21,9 @@ public class UserService {
     }
 
     public User registerUser(String username, String rawPassword)
-            throws UserNameAlreadyExistsException, BadArgumentsException, InternalServerErrorException {
+            throws UserNameAlreadyExistsException,
+                    BadArgumentsException,
+                    InternalServerErrorException {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new UserNameAlreadyExistsException(
                     "Username '" + username + "' is already taken.");

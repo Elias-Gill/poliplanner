@@ -15,4 +15,4 @@ seed:
 	mvn spring-boot:run -Dspring-boot.run.arguments=--seed
 
 format: 
-	google-java-format --aosp -r ./**/*.java
+	find . -name "*.java" -print0 | xargs -0 google-java-format --aosp -i
