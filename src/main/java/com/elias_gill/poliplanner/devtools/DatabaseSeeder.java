@@ -1,40 +1,41 @@
 package com.elias_gill.poliplanner.devtools;
 
-import com.elias_gill.poliplanner.excel.ExcelService;
-import com.elias_gill.poliplanner.models.SheetVersion;
-import com.elias_gill.poliplanner.services.SheetVersionService;
+import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Path;
-import java.util.Arrays;
-
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
+    @Autowired
+    private DatabaseSeederService seederService;
 
-    @Autowired ExcelService excelService;
-
-    @Autowired SheetVersionService versionService;
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseSeeder.class);
 
     @Override
     public void run(String... args) {
-        if (Arrays.asList(args).contains("--seed")) {
-            Path excelFile = Path.of("src/test/resources/output.csv");
-            System.out.println("Cargando los datos semilla desde: " + excelFile.toString() + "\n");
-
-            try {
-                SheetVersion version =
-                        versionService.create(excelFile.toString(), excelFile.toString());
-                excelService.parseAndPersistCsv(excelFile, version);
-            } catch (Exception e) {
-                System.out.println("No se pudo cargar los datos semilla: \n" + e);
-                System.exit(1);
+        try {
+            // NOTE: if not exit 0, the server would still run after the seeding/cleaning
+            // process
+            if (Arrays.asList(args).contains("--clean") && Arrays.asList(args).contains("--seed")) {
+                logger.info("Performing database clean and seed...");
+                this.seederService.cleanAndSeed();
+                System.exit(0);
+            } else if (Arrays.asList(args).contains("--seed")) {
+                logger.info("Seeding database...");
+                this.seederService.seedDatabase();
+                System.exit(0);
+            } else if (Arrays.asList(args).contains("--clean")) {
+                logger.info("Cleaning database...");
+                this.seederService.cleanDatabase();
+                System.exit(0);
             }
-
-            System.out.println("Datos semilla cargados satisfactoriamente");
-            System.exit(0);
+        } catch (Exception e) {
+            logger.error("Cannot complete operation: " + e.getMessage());
+            System.exit(1);
         }
     }
 }

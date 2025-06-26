@@ -37,15 +37,17 @@ public class ScheduleService {
 
     public Schedule updateName(Long id, String newName) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow();
-        schedule.setName(newName);
+        schedule.setDescription(newName);
 
         return scheduleRepository.save(schedule);
     }
 
-    public Schedule create(User user, String name, List<Long> subjectIds) {
+    public Schedule create(User user, String description, List<Long> subjectIds) {
         Schedule aux = new Schedule();
         List<Subject> materias = subjectRepository.findAllById(subjectIds);
         aux.setMaterias(materias);
+        aux.setDescription(description);
+        aux.setUser(user);
 
         return scheduleRepository.save(aux);
     }

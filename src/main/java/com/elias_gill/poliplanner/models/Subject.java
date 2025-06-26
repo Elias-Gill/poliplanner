@@ -21,7 +21,7 @@ public class Subject {
 
     @ManyToOne
     @JoinColumn(name = "subject_career")
-    private Career carrera;
+    private Career career;
 
     @Column(name = "subject_department")
     private String departamento;
@@ -93,12 +93,12 @@ public class Subject {
         this.id = id;
     }
 
-    public Career getCarrera() {
-        return carrera;
+    public Career getCareer() {
+        return career;
     }
 
-    public void setCarrera(Career carrera) {
-        this.carrera = carrera;
+    public void setCareer(Career carrera) {
+        this.career = carrera;
     }
 
     public String getDepartamento() {

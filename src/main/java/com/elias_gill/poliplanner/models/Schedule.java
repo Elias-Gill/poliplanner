@@ -26,19 +26,17 @@ public class Schedule {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "schedule_name")
-    private String name;
+    @Column(name = "schedule_description")
+    private String description;
 
     @ManyToMany
-    @JoinTable(
-            name = "schedule_subjects",
-            joinColumns = @JoinColumn(name = "schedule_id"),
-            inverseJoinColumns = @JoinColumn(name = "subject_id"))
+    @JoinTable(name = "schedule_subjects", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<Subject> materias;
 
     // Getters y setters
 
-    public Schedule() {}
+    public Schedule() {
+    }
 
     public Long getId() {
         return id;
@@ -48,16 +46,20 @@ public class Schedule {
         this.id = id;
     }
 
-    public String getName() {
-        return this.name;
+    public String getDescription() {
+        return this.description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String name) {
+        this.description = name;
     }
 
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public List<Subject> getMaterias() {

@@ -102,7 +102,7 @@ public class ExcelService {
 
         for (SubjectCsv subjectcsv : subjectscsv) {
             Subject subject = SubjectMapper.mapToSubject(subjectcsv);
-            subject.setCarrera(carrera);
+            subject.setCareer(carrera);
             subjectService.create(subject);
         }
     }
