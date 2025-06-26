@@ -6,6 +6,8 @@ import com.elias_gill.poliplanner.exception.UserNameAlreadyExistsException;
 import com.elias_gill.poliplanner.models.User;
 import com.elias_gill.poliplanner.repositories.UserRepository;
 
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,14 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public Optional<User> findByUsername(String name) {
+        return userRepository.findByUsername(name);
+    }
+
     public User registerUser(String username, String rawPassword)
             throws UserNameAlreadyExistsException,
-                    BadArgumentsException,
-                    InternalServerErrorException {
+            BadArgumentsException,
+            InternalServerErrorException {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new UserNameAlreadyExistsException(
                     "Username '" + username + "' is already taken.");

@@ -17,12 +17,14 @@ import java.util.List;
 @Transactional
 public class ScheduleService {
 
-    @Autowired private ScheduleRepository scheduleRepository;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
-    @Autowired private SubjectRepository subjectRepository;
+    @Autowired
+    private SubjectRepository subjectRepository;
 
-    public Schedule findByUser(User user) {
-        return scheduleRepository.findByUser(user);
+    public List<Schedule> findByUserName(String user) {
+        return scheduleRepository.findByUserUsername(user);
     }
 
     public Schedule updateList(Long id, List<Long> subjectIds) {

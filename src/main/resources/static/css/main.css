@@ -4,6 +4,10 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .section {
@@ -27,7 +31,8 @@ body {
     color: white;
 }
 
-.custom-table th, .custom-table td {
+.custom-table th,
+.custom-table td {
     padding: 18px;
     text-align: center;
     vertical-align: middle;
@@ -54,13 +59,13 @@ body {
     border: 1px solid #d0e3f1;
     border-radius: 10px;
     padding: 20px 24px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .list-group.elegant-list .list-group-item:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     background: linear-gradient(to right, #e3f2fd, #f8fbff);
 }
 
@@ -71,5 +76,5 @@ body {
     color: white;
     font-weight: 700;
     font-size: 0.9rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }

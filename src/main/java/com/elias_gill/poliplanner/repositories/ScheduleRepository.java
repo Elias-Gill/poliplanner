@@ -1,10 +1,11 @@
 package com.elias_gill.poliplanner.repositories;
 
 import com.elias_gill.poliplanner.models.Schedule;
-import com.elias_gill.poliplanner.models.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    Schedule findByUser(User user);
+    List<Schedule> findByUserUsername(String username);
 }
