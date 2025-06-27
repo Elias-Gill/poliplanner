@@ -14,5 +14,8 @@ run:
 seed:
 	mvn spring-boot:run -Dspring-boot.run.arguments=--seed
 
+clean-seed:
+	mvn spring-boot:run -Dspring-boot.run.arguments="--clean --seed"
+
 format: 
 	find . -name "*.java" -print0 | xargs -0 google-java-format --aosp -i
