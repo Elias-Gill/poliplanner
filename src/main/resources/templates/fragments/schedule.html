@@ -1,0 +1,181 @@
+<div th:fragment="schedule(schedule)">
+  <!-- Mensaje de error si el schedule no existe -->
+  <div th:if="${error}" class="alert alert-danger text-center" th:text="${error}"></div>
+  <!-- Mostrar contenido solo si el schedule existe -->
+  <div th:if="${schedule}">
+    <!-- Tabla de horarios -->
+    <div class="table-responsive mb-5" th:if="${not schedule.materias?.empty}">
+      <table class="table table-bordered text-center align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Materia</th>
+            <th>Lunes</th>
+            <th>Martes</th>
+            <th>Miércoles</th>
+            <th>Jueves</th>
+            <th>Viernes</th>
+            <th>Sábado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Iterar por cada materia -->
+          <tr th:each="materia : ${schedule.materias}">
+            <td class="fw-bold" th:text="${materia.nombreAsignatura}"></td>
+            <!-- Lunes -->
+            <td th:if="${materia.lunes != null and materia.lunes != ''}">
+              <div th:text="${materia.lunes}"></div>
+              <div class="small text-muted" th:if="${materia.aulaLunes != null}" 
+               th:text="'Aula: ' + ${materia.aulaLunes}"></div>
+            </td>
+            <td th:if="${materia.lunes == null or materia.lunes == ''}"></td>
+            <!-- Martes -->
+            <td th:if="${materia.martes != null and materia.martes != ''}">
+              <div th:text="${materia.martes}"></div>
+              <div class="small text-muted" th:if="${materia.aulaMartes != null}" 
+               th:text="'Aula: ' + ${materia.aulaMartes}"></div>
+            </td>
+            <td th:if="${materia.martes == null or materia.martes == ''}"></td>
+            <!-- Miércoles -->
+            <td th:if="${materia.miercoles != null and materia.miercoles != ''}">
+              <div th:text="${materia.miercoles}"></div>
+              <div class="small text-muted" th:if="${materia.aulaMiercoles != null}" 
+               th:text="'Aula: ' + ${materia.aulaMiercoles}"></div>
+            </td>
+            <td th:if="${materia.miercoles == null or materia.miercoles == ''}"></td>
+            <!-- Jueves -->
+            <td th:if="${materia.jueves != null and materia.jueves != ''}">
+              <div th:text="${materia.jueves}"></div>
+              <div class="small text-muted" th:if="${materia.aulaJueves != null}" 
+               th:text="'Aula: ' + ${materia.aulaJueves}"></div>
+            </td>
+            <td th:if="${materia.jueves == null or materia.jueves == ''}"></td>
+            <!-- Viernes -->
+            <td th:if="${materia.viernes != null and materia.viernes != ''}">
+              <div th:text="${materia.viernes}"></div>
+              <div class="small text-muted" th:if="${materia.aulaViernes != null}" 
+               th:text="'Aula: ' + ${materia.aulaViernes}"></div>
+            </td>
+            <td th:if="${materia.viernes == null or materia.viernes == ''}"></td>
+            <!-- Sábado -->
+            <td th:if="${materia.sabado != null and materia.sabado != ''}">
+              <div th:text="${materia.sabado}"></div>
+              <div class="small text-muted" th:if="${materia.fechasSabadoNoche != null}" 
+               th:text="'Fechas: ' + ${materia.fechasSabadoNoche}"></div>
+            </td>
+            <td th:if="${materia.sabado == null or materia.sabado == ''}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Mensaje si no hay materias -->
+    <div th:if="${schedule.materias?.empty}" class="text-muted text-center mb-4">
+      No hay materias en este horario
+    </div>
+    <!-- Lista de exámenes -->
+    <h2 class="section">Próximos exámenes</h2>
+    <div class="list-group elegant-list">
+      <!-- Primer Parcial -->
+      <div th:if="${not schedule.materias.?[exams.parcial1Fecha != null].empty}">
+        <div class="list-group-header bg-light p-2 border-bottom">
+          <h5 class="mb-0">Primer Parcial</h5>
+        </div>
+        <div th:each="materia : ${schedule.materias.?[exams.parcial1Fecha != null]}">
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span th:text="${materia.nombreAsignatura}"></span>
+              <span class="date-badge" 
+                th:text="${#temporals.format(materia.exams.parcial1Fecha, 'dd/MM/yyyy')} + ' ' + ${materia.exams.parcial1Hora}">
+              </span>
+            </div>
+            <div th:if="${materia.exams.parcial1Aula != null}" class="text-muted small">
+              Aula: <span th:text="${materia.exams.parcial1Aula}"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Segundo Parcial -->
+      <div th:if="${not schedule.materias.?[exams.parcial2Fecha != null].empty}">
+        <div class="list-group-header bg-light p-2 border-bottom">
+          <h5 class="mb-0">Segundo Parcial</h5>
+        </div>
+        <div th:each="materia : ${schedule.materias.?[exams.parcial2Fecha != null]}">
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span th:text="${materia.nombreAsignatura}"></span>
+              <span class="date-badge" 
+                th:text="${#temporals.format(materia.exams.parcial2Fecha, 'dd/MM/yyyy')} + ' ' + ${materia.exams.parcial2Hora}">
+              </span>
+            </div>
+            <div th:if="${materia.exams.parcial2Aula != null}" class="text-muted small">
+              Aula: <span th:text="${materia.exams.parcial2Aula}"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Primer Final -->
+      <div th:if="${not schedule.materias.?[exams.final1Fecha != null].empty}">
+        <div class="list-group-header bg-light p-2 border-bottom">
+          <h5 class="mb-0">Primer Final</h5>
+        </div>
+        <div th:each="materia : ${schedule.materias.?[exams.final1Fecha != null]}">
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span th:text="${materia.nombreAsignatura}"></span>
+              <span class="date-badge" 
+                th:text="${#temporals.format(materia.exams.final1Fecha, 'dd/MM/yyyy')} + ' ' + ${materia.exams.final1Hora}">
+              </span>
+            </div>
+            <div th:if="${materia.exams.final1Aula != null}" class="text-muted small">
+              Aula: <span th:text="${materia.exams.final1Aula}"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Segundo Final -->
+      <div th:if="${not schedule.materias.?[exams.final2Fecha != null].empty}">
+        <div class="list-group-header bg-light p-2 border-bottom">
+          <h5 class="mb-0">Segundo Final</h5>
+        </div>
+        <div th:each="materia : ${schedule.materias.?[exams.final2Fecha != null]}">
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span th:text="${materia.nombreAsignatura}"></span>
+              <span class="date-badge" 
+                th:text="${#temporals.format(materia.exams.final2Fecha, 'dd/MM/yyyy')} + ' ' + ${materia.exams.final2Hora}">
+              </span>
+            </div>
+            <div th:if="${materia.exams.final2Aula != null}" class="text-muted small">
+              Aula: <span th:text="${materia.exams.final2Aula}"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Mensaje cuando no hay exámenes -->
+      <div th:if="${schedule.materias.?[exams.parcial1Fecha != null or exams.parcial2Fecha != null or exams.final1Fecha != null or exams.final2Fecha != null].empty}">
+        <div class="list-group-item text-muted">No hay exámenes próximos</div>
+      </div>
+    </div>
+    <!-- Información adicional de las materias -->
+    <div th:if="${not schedule.materias?.empty}" class="mt-4">
+      <h3 class="section">Detalles de las materias</h3>
+      <div class="row">
+        <div th:each="materia : ${schedule.materias}" class="col-md-6 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 th:text="${materia.nombreAsignatura}" class="card-title"></h5>
+              <p class="card-text">
+                <span th:if="${materia.nombreProfesor}" 
+                      th:text="'Profesor: ' + ${materia.tituloProfesor} + ' ' + ${materia.apellidoProfesor} + ', ' + ${materia.nombreProfesor}">
+                </span>
+                <br>
+                <span th:if="${materia.emailProfesor}" 
+                      th:text="'Email: ' + ${materia.emailProfesor}">
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

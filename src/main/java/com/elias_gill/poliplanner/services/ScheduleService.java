@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,6 +26,10 @@ public class ScheduleService {
 
     public List<Schedule> findByUserName(String user) {
         return scheduleRepository.findByUserUsername(user);
+    }
+
+    public Optional<Schedule> findById(Long id) {
+        return scheduleRepository.findById(id);
     }
 
     public Schedule updateList(Long id, List<Long> subjectIds) {

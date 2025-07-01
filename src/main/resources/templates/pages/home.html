@@ -3,120 +3,34 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}">
   <main layout:fragment="content" class="container py-5">
-    <!-- Selector de horarios -->
+    <!-- Schedule Selector -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2 class="section">Mis horarios</h2>
       <div th:if="${not schedules?.empty}">
-        <select class="form-select" id="scheduleSelector" style="width: 250px;" onchange="loadSchedule(this.value)">
-          <option value="" selected disabled th:unless="${schedules?.empty}">Selecciona un horario</option>
-          <option th:each="schedule : ${schedules}" 
-                  th:value="${schedule.id}"
-                  th:text="${schedule.nombre} + (${schedule.semestre} ? ' - ' + ${schedule.semestre} : '')">
-          </option>
-        </select>
+        <form id="scheduleForm" th:action="@{/}" method="get">
+          <select class="form-select" id="scheduleSelector" style="width: 250px;"
+                  name="id" onchange="this.form.submit()">
+            <option value="" selected disabled>Selecciona un horario</option>
+            <option th:each="schedule : ${schedules}" 
+                    th:value="${schedule.id}"
+                    th:text="${schedule.description}"
+                    th:selected="${selectedSchedule != null and selectedSchedule.id == schedule.id}">
+            </option>
+          </select>
+        </form>
       </div>
     </div>
-
-    <!-- Tabla de horarios -->
-    <div class="table-responsive mb-5" th:if="${not schedules?.empty}">
-      <table class="table table-bordered text-center align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>Hora</th>
-            <th>Lunes</th>
-            <th>Martes</th>
-            <th>Miércoles</th>
-            <th>Jueves</th>
-            <th>Viernes</th>
-          </tr>
-        </thead>
-        <tbody th:if="${not schedules[0]?.subjects?.empty}">
-          <!-- Agrupar subjects por horario -->
-          <tr th:each="timeSlot : ${#sets.newHashSet(T(java.util.Arrays).asList('08:00 - 10:00', '10:00 - 12:00', '12:00 - 14:00', '14:00 - 16:00', '16:00 - 18:00')}">
-            <td class="fw-bold" th:text="${timeSlot}"></td>
-            <!-- Lunes -->
-            <td>
-              <span th:each="subject : ${schedules[0].subjects}" 
-                    th:if="${subject.lunes != null and subject.lunes != '' and subject.horario == timeSlot}"
-                    th:text="${subject.nombreAsignatura} + (${subject.aulaLunes} ? ' (' + ${subject.aulaLunes} + ')' : '')">
-              </span>
-            </td>
-            <!-- Martes -->
-            <td>
-              <span th:each="subject : ${schedules[0].subjects}" 
-                    th:if="${subject.martes != null and subject.martes != '' and subject.horario == timeSlot}"
-                    th:text="${subject.nombreAsignatura} + (${subject.aulaMartes} ? ' (' + ${subject.aulaMartes} + ')' : '')">
-              </span>
-            </td>
-            <!-- Miércoles -->
-            <td>
-              <span th:each="subject : ${schedules[0].subjects}" 
-                    th:if="${subject.miercoles != null and subject.miercoles != '' and subject.horario == timeSlot}"
-                    th:text="${subject.nombreAsignatura} + (${subject.aulaMiercoles} ? ' (' + ${subject.aulaMiercoles} + ')' : '')">
-              </span>
-            </td>
-            <!-- Jueves -->
-            <td>
-              <span th:each="subject : ${schedules[0].subjects}" 
-                    th:if="${subject.jueves != null and subject.jueves != '' and subject.horario == timeSlot}"
-                    th:text="${subject.nombreAsignatura} + (${subject.aulaJueves} ? ' (' + ${subject.aulaJueves} + ')' : '')">
-              </span>
-            </td>
-            <!-- Viernes -->
-            <td>
-              <span th:each="subject : ${schedules[0].subjects}" 
-                    th:if="${subject.viernes != null and subject.viernes != '' and subject.horario == timeSlot}"
-                    th:text="${subject.nombreAsignatura} + (${subject.aulaViernes} ? ' (' + ${subject.aulaViernes} + ')' : '')">
-              </span>
-            </td>
-          </tr>
-        </tbody>
-        <tbody th:if="${schedules[0]?.subjects?.empty}">
-          <tr>
-            <td colspan="6" class="text-muted">No hay asignaturas en este horario</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Mensaje cuando no hay horarios -->
+    <!-- Empty Schedules Message -->
     <div th:if="${schedules?.empty}" class="alert alert-info">
       No tienes horarios registrados.
     </div>
-
-    <!-- Próximos exámenes -->
-    <h2 class="section" th:if="${not schedules?.empty}">Próximos exámenes</h2>
-    <div class="list-group elegant-list" th:if="${not schedules?.empty}">
-      <div th:each="subject : ${schedules[0].subjects}" 
-           th:if="${subject.exams?.proximoExamen != null}">
-        <div class="list-group-item d-flex justify-content-between align-items-center">
-          <span th:text="${subject.nombreAsignatura}"></span>
-          <span class="date-badge" 
-                th:text="${#temporals.format(subject.exams.proximoExamen, 'dd/MM/yyyy')}">
-          </span>
-        </div>
-      </div>
-      <div th:if="${schedules[0].subjects.?[exams.proximoExamen != null].empty}">
-        <div class="list-group-item text-muted">No hay exámenes próximos</div>
-      </div>
+    <!-- Selected Schedule Content -->
+    <div th:replace="~{fragments/schedule :: schedule(${selectedSchedule})}" 
+         th:if="${selectedSchedule != null}">
     </div>
-
-    <!-- Script para cambiar horarios -->
-    <script th:inline="javascript">
-      function loadSchedule(scheduleId) {
-        // Implementación con HTMX o fetch para cargar el horario seleccionado
-        htmx.ajax('GET', '/api/schedules/' + scheduleId, {
-          swap: 'innerHTML',
-          target: '#scheduleTable'
-        });
-      }
-      
-      // Inicializar mostrando el primer horario si existe
-      document.addEventListener('DOMContentLoaded', function() {
-        if (document.getElementById('scheduleSelector') && document.getElementById('scheduleSelector').options.length > 1) {
-          document.getElementById('scheduleSelector').selectedIndex = 1;
-        }
-      });
-    </script>
+    <!-- Error Message (if not shown in fragment) -->
+    <div th:if="${error != null and !#strings.isEmpty(error)}" class="alert alert-danger mt-3">
+      <span th:text="${error}"></span>
+    </div>
   </main>
 </html>
