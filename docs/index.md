@@ -1,12 +1,18 @@
 # Indice de documentacion
 
-- `[Arquitectura general](arquitectura.md)`:
-  la forma en la que esta estructurado el proyecto
-- `[Sincronizacion de archivos excel (web-scrapper)](sincronizacion-excel.md)`:
-  scraping y descarga.
-- `[Parser excel](parser-excel.md)`:
-  cómo se transforma un Excel en estructuras persistentes.
-- `horarios.md`:
-  lógica de armado de horarios y estructura de datos.
-- `usuarios.md`:
-  modelo de usuario, autenticación y sesiones.
+- `[Guía de desarrollo](workflow.md)`:
+  pasos recomendados para iniciar, correr y modificar el proyecto.
+- `[Arquitectura del sistema](arquitectura.md)`:
+  estructura general del proyecto y sus módulos.
+- `[Extracción de datos desde Excel (scraper)](sincronizacion-excel.md)`:
+  scraping y descarga de archivos desde la web.
+- `[Procesamiento de archivos Excel](parser-excel.md)`:
+  transformación de Excel a estructuras de datos persistentes.
+- `[Lógica de horarios](horarios.md)`:
+  armado de horarios y modelo de datos asociado.
+- `[Gestión de usuarios](usuarios.md)`:
+  autenticación, sesiones y modelo de usuario.
+
+## Otros archivos
+
+- [Eschema de base de datos](media/db_scheme.png)
