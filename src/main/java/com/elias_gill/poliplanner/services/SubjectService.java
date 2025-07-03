@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class SubjectService {
 
-    @Autowired private SubjectRepository subjectRepository;
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     public Subject create(Subject subject) {
         return subjectRepository.save(subject);
@@ -23,6 +24,11 @@ public class SubjectService {
 
     public List<Subject> findByCareer(Long careerId) {
         return subjectRepository.findByCareerId(careerId);
+    }
+
+    public List<Subject> findAll() {
+        // FIX: listar solo el horario mas nuevos existente
+        return subjectRepository.findAll();
     }
 
     public Optional<Subject> findById(Long id) {

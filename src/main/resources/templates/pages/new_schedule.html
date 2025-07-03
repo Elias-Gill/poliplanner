@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+  <main layout:fragment="content" class="container py-5">
+    <h2 class="section">Crear nuevo horario</h2>
+    <form th:action="@{/schedules/new}" method="post">
+      <!-- Nombre del horario -->
+      <div class="mb-4">
+        <label for="description" class="form-label">Nombre del horario</label>
+        <input type="text" class="form-control" id="description" name="description" placeholder="Ej. Segundo Semestre 2025" required>
+      </div>
+      <!-- Filtro por carrera -->
+      <div class="mb-4">
+        <label for="careerFilter" class="form-label">Filtrar por carrera</label>
+        <select class="form-select" id="careerFilter">
+          <option value="all">Todas las carreras</option>
+          <option th:each="career : ${careers}"
+          th:value="${career.id}"
+          th:text="${career.name}">
+          </option>
+        </select>
+      </div>
+      <!-- Materias por semestre -->
+      <div th:each="semester : ${#sets.toSet(subjects.![semestre])}" class="mb-4">
+        <details open>
+          <summary class="mb-2 fw-bold fs-5" th:text="'Semestre ' + ${semester}"></summary>
+          <ul class="list-group elegant-list">
+            <li th:each="subject : ${subjects}"
+                            th:if="${subject.semestre == semester}"
+                            class="list-group-item subject-item"
+                            th:attr="data-career=${subject.career.id}">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox"
+                                th:id="'subject-' + ${subject.id}"
+                                th:name="subjectIds"
+                                th:value="${subject.id}">
+                <label class="form-check-label" th:for="'subject-' + ${subject.id}">
+                  <strong th:text="${subject.nombreAsignatura}"></strong>
+                  <span th:text="' (Sección ' + ${subject.seccion} + ')'"></span> -
+                  <span th:text="${subject.tituloProfesor + ' ' + subject.nombreProfesor + ' ' + subject.apellidoProfesor}"></span>
+                </label>
+              </div>
+            </li>
+          </ul>
+        </details>
+      </div>
+      <!-- Botón de envío -->
+      <div class="mt-5">
+        <button type="submit" class="btn btn-primary px-4">Crear horario</button>
+      </div>
+    </form>
+  </main>
+  <script>
+    // Filtro por carrera
+    document.addEventListener("DOMContentLoaded", function () {
+        const filter = document.getElementById("careerFilter");
+        const items = document.querySelectorAll(".subject-item");
+
+        filter.addEventListener("change", function () {
+            const selected = this.value;
+            items.forEach(item => {
+                if (selected === "all" || item.dataset.career === selected) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        });
+    });
+  </script>
+</html>
