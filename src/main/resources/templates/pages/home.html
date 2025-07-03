@@ -6,8 +6,9 @@
     <!-- Schedule Selector -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2 class="section">Mis horarios</h2>
-      <div th:if="${not schedules?.empty}">
-        <form id="scheduleForm" th:action="@{/}" method="get">
+      <div th:if="${not schedules?.empty}" class="d-flex align-items-center gap-2">
+        <!-- Form para seleccionar horario -->
+        <form id="scheduleForm" th:action="@{/}" method="get" class="m-0">
           <select class="form-select" id="scheduleSelector" style="width: 250px;"
                   name="id" onchange="this.form.submit()">
             <option value="" selected disabled>Selecciona un horario</option>
@@ -18,7 +19,19 @@
             </option>
           </select>
         </form>
+        <!-- Form para eliminar horario seleccionado -->
+        <form id="deleteScheduleForm" th:action="@{/schedules/{id}/delete(id=${selectedSchedule.id})}" method="post" 
+              th:if="${selectedSchedule != null}" onsubmit="return confirm('¿Estás seguro que quieres eliminar este horario?');">
+          <button type="submit" class="btn btn-danger">Eliminar horario</button>
+        </form>
       </div>
+    </div>
+    <!-- Mensajes de éxito y error -->
+    <div th:if="${error != null and !#strings.isEmpty(error)}" class="alert alert-danger mt-3">
+      <span th:text="${error}"></span>
+    </div>
+    <div th:if="${success != null and !#strings.isEmpty(success)}" class="alert alert-success mt-3">
+      <span th:text="${success}"></span>
     </div>
     <!-- Empty Schedules Message -->
     <div th:if="${schedules?.empty}" class="alert alert-info">
@@ -27,10 +40,6 @@
     <!-- Selected Schedule Content -->
     <div th:replace="~{fragments/schedule :: schedule(${selectedSchedule})}" 
          th:if="${selectedSchedule != null}">
-    </div>
-    <!-- Error Message (if not shown in fragment) -->
-    <div th:if="${error != null and !#strings.isEmpty(error)}" class="alert alert-danger mt-3">
-      <span th:text="${error}"></span>
     </div>
   </main>
 </html>

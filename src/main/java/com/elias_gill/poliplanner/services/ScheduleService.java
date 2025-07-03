@@ -1,5 +1,7 @@
 package com.elias_gill.poliplanner.services;
 
+import com.elias_gill.poliplanner.exception.BadArgumentsException;
+import com.elias_gill.poliplanner.exception.InternalServerErrorException;
 import com.elias_gill.poliplanner.models.Schedule;
 import com.elias_gill.poliplanner.models.Subject;
 import com.elias_gill.poliplanner.models.User;
@@ -25,11 +27,25 @@ public class ScheduleService {
     private SubjectRepository subjectRepository;
 
     public List<Schedule> findByUserName(String user) {
-        return scheduleRepository.findByUserUsername(user);
+        return scheduleRepository.findByUserUsernameOrderByCreatedAtDesc(user);
     }
 
     public Optional<Schedule> findById(Long id) {
         return scheduleRepository.findById(id);
+    }
+
+    public void deleteSchedule(Long id) throws InternalServerErrorException, BadArgumentsException {
+        Optional<Schedule> optSchedule = scheduleRepository.findById(id);
+
+        if (optSchedule.isPresent()) {
+            try {
+                scheduleRepository.delete(optSchedule.get());
+            } catch (Exception e) {
+                throw new InternalServerErrorException("Internal error deleting schedule", e);
+            }
+        } else {
+            throw new BadArgumentsException("Schedule with id='" + id + "' does not exist");
+        }
     }
 
     public Schedule updateList(Long id, List<Long> subjectIds) {

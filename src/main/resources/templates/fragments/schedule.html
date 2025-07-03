@@ -20,7 +20,7 @@
         <tbody>
           <!-- Iterar por cada materia -->
           <tr th:each="materia : ${schedule.materias}">
-            <td class="fw-bold" th:text="${materia.nombreAsignatura}"></td>
+            <td class="fw-bold text-left" th:text="${materia.nombreAsignatura}"></td>
             <!-- Lunes -->
             <td th:if="${materia.lunes != null and materia.lunes != ''}">
               <div th:text="${materia.lunes}"></div>

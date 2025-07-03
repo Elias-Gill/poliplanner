@@ -10,9 +10,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.elias_gill.poliplanner.exception.BadArgumentsException;
+import com.elias_gill.poliplanner.exception.InternalServerErrorException;
 import com.elias_gill.poliplanner.models.Career;
 import com.elias_gill.poliplanner.models.Schedule;
 import com.elias_gill.poliplanner.models.Subject;
@@ -49,11 +53,16 @@ public class SchedulesController {
 
         String userName = authentication.getName();
         List<Schedule> schedules = scheduleService.findByUserName(userName);
+
         model.addAttribute("schedules", schedules);
 
-        if (id != null) {
-            logger.warn(id.toString());
+        // Set the latest selected schedule as default
+        // FUTURE: maybe migrate to a cookie
+        if (!schedules.isEmpty()) {
+            model.addAttribute("selectedSchedule", schedules.get(0));
+        }
 
+        if (id != null) {
             scheduleService.findById(id)
                     .ifPresent(s -> {
                         model.addAttribute("selectedSchedule", s);
@@ -88,7 +97,7 @@ public class SchedulesController {
         Optional<User> user = userService.findByUsername(userName);
         if (user.isEmpty()) {
             session.invalidate();
-            model.addAttribute("errorMessage", "Usuario no existe, sesión terminada");
+            model.addAttribute("error", "Usuario no existe, sesión terminada");
             return "redirect:/login";
         }
 
@@ -107,10 +116,27 @@ public class SchedulesController {
             scheduleService.create(user.get(), description, subjectIds);
             model.addAttribute("success", "Horario creado satisfactoriamente");
         } catch (InternalError e) {
-            model.addAttribute("error", "Sorry, and internal server error ocurred. Please try again later");
+            model.addAttribute("error", "Sorry, an internal server error ocurred. Please try again later");
             logger.error("Internal error en creacion de horario: " + e.getMessage());
         }
 
+        return "redirect:/";
+    }
+
+    @PostMapping("/schedules/{id}/delete")
+    public String deleteSchedule(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            scheduleService.deleteSchedule(id);
+        } catch (InternalServerErrorException e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Sorry, an internal server error ocurred. Please try again later");
+            logger.error("Error deleting schedule: " + e.getMessage());
+        } catch (BadArgumentsException e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Arguments invalid. Schedule with id=" + id.toString() + "does not exists");
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Schedule deleted succesfully");
         return "redirect:/";
     }
 }
