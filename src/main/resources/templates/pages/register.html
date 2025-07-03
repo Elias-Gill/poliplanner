@@ -20,7 +20,7 @@
       <div class="d-grid mb-3">
         <button type="submit" class="btn btn-success">Registrarse</button>
       </div>
-      <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+      <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
     </form>
     <p class="text-center mt-3">
       ¿Ya tenés cuenta? <a th:href="@{/login}">Iniciá sesión acá</a>

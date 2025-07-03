@@ -41,10 +41,10 @@ public class UserController {
         } catch (InternalServerErrorException e) {
             logger.error(e.getMessage());
             redirectAttributes.addFlashAttribute(
-                    "errorMessage", "Internal server error. Please try again latter");
+                    "error", "Internal server error. Please try again latter");
             return "redirect:/register";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/register";
         }
 
