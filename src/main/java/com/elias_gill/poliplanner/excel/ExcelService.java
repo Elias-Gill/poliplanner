@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -27,11 +28,14 @@ public class ExcelService {
 
     private static final Logger logger = LoggerFactory.getLogger(ExcelService.class);
 
-    @Autowired private SubjectService subjectService;
+    @Autowired
+    private SubjectService subjectService;
 
-    @Autowired private CareerService careerService;
+    @Autowired
+    private CareerService careerService;
 
-    @Autowired private SheetVersionService versionService;
+    @Autowired
+    private SheetVersionService versionService;
 
     /*
      * Esta función se divide en tres partes para facilitar el testeo de componentes
@@ -75,7 +79,7 @@ public class ExcelService {
         logger.info("Conversion exitosa");
 
         SheetVersion version = versionService.create(excelFile.toString(), url);
-        // Cada "sheet" representa el horario de una carrera diferente
+        // Cada "sheet" representa una carrera diferente
         for (Path sheet : sheets) {
             try {
                 parseAndPersistCsv(sheet, version);
@@ -91,13 +95,13 @@ public class ExcelService {
             throws IOException, InterruptedException, URISyntaxException {
         logger.info("Parseando csv: {}", sheet.toString());
         logger.info("Limpiando");
-        ExcelHelper.cleanCsv(sheet);
+        Path cleanedCsv = ExcelHelper.cleanCsv(sheet);
 
         logger.info("Extrayendo materias");
-        List<SubjectCsv> subjectscsv = ExcelHelper.extractSubjects(sheet);
+        List<SubjectCsv> subjectscsv = ExcelHelper.extractSubjects(cleanedCsv);
 
         logger.info("Enlazando la carrera y persistiendo");
-        String careerName = sheet.getFileName().toString();
+        String careerName = sheet.getFileName().toString().replace(".csv", "");
         Career carrera = careerService.create(careerName, version);
 
         for (SubjectCsv subjectcsv : subjectscsv) {
@@ -105,5 +109,8 @@ public class ExcelService {
             subject.setCareer(carrera);
             subjectService.create(subject);
         }
+
+        // Limpiar archivos temporales
+        Files.delete(cleanedCsv);
     }
 }

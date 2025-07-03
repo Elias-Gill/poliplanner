@@ -25,19 +25,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ExcelHelperTest {
+    private static final String SRC_TEST_RESOURCES_INPUT_CSV = "src/test/resources/input.csv";
+    private static final String SRC_TEST_RESOURCES_OUTPUT_CSV = "src/test/resources/output.csv";
+
     @Test
     @Tag("unit")
     void testCleanCsv() throws Exception {
-        // Preparar archivo temporal copiando el input de prueba
-        Path inputPath = Path.of("src/test/resources/input.csv");
-        Path tempFile = Files.createTempFile("test-clean", ".csv");
-        Files.copy(inputPath, tempFile, StandardCopyOption.REPLACE_EXISTING);
-
-        // Ejecutar el método a testear
-        ExcelHelper.cleanCsv(tempFile);
+        Path tempFile = ExcelHelper.cleanCsv(Path.of(SRC_TEST_RESOURCES_INPUT_CSV));
 
         // Comparar con el output esperado
-        Path expectedPath = Path.of("src/test/resources/output.csv");
+        Path expectedPath = Path.of(SRC_TEST_RESOURCES_OUTPUT_CSV);
         List<String> cleanedLines = Files.readAllLines(tempFile);
         List<String> expectedLines = Files.readAllLines(expectedPath);
 
@@ -56,7 +53,7 @@ public class ExcelHelperTest {
     @Tag("unit")
     void testExtractSubjects() throws Exception {
         // Archivo de prueba ya sanitizado
-        File testFile = new File("src/test/resources/output.csv");
+        File testFile = new File(SRC_TEST_RESOURCES_OUTPUT_CSV);
 
         // Ejecutar el método
         List<SubjectCsv> subjects = ExcelHelper.extractSubjects(testFile.toPath());
@@ -115,9 +112,8 @@ public class ExcelHelperTest {
         // Tratar de descargar un excel cualquiera y ver si es que funciona
         // correctamente
         try {
-            Path file =
-                    ExcelHelper.downloadFile(
-                            "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx");
+            Path file = ExcelHelper.downloadFile(
+                    "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx");
 
             assertNotNull(file);
             assertTrue(Files.exists(file));
@@ -148,26 +144,25 @@ public class ExcelHelperTest {
         List<Path> csvFiles = ExcelHelper.convertExcelToCsv(excelFile);
 
         // Esperados
-        Set<String> nombresEsperados =
-                Set.of(
-                        "IAE.csv",
-                        "ICM.csv",
-                        "IEK.csv",
-                        "IEL.csv",
-                        "IEN.csv",
-                        "IIN.csv",
-                        "IMK.csv",
-                        "ISP.csv",
-                        "LCA.csv",
-                        "LCI.csv",
-                        "LCIk.csv",
-                        "LEL.csv",
-                        "LGH.csv",
-                        "TSE.csv");
+        Set<String> nombresEsperados = Set.of(
+                "IAE.csv",
+                "ICM.csv",
+                "IEK.csv",
+                "IEL.csv",
+                "IEN.csv",
+                "IIN.csv",
+                "IMK.csv",
+                "ISP.csv",
+                "LCA.csv",
+                "LCI.csv",
+                "LCIk.csv",
+                "LEL.csv",
+                "LGH.csv",
+                "TSE.csv");
 
         // Extraer nombres reales
-        Set<String> nombresGenerados =
-                csvFiles.stream().map(p -> p.getFileName().toString()).collect(Collectors.toSet());
+        Set<String> nombresGenerados = csvFiles.stream().map(p -> p.getFileName().toString())
+                .collect(Collectors.toSet());
 
         assertEquals(
                 nombresEsperados,
@@ -176,13 +171,12 @@ public class ExcelHelperTest {
 
         // Cargar el archivo IIN.csv generado y el archivo input.csv de resources para
         // comparar
-        Path iinCsvGenerated =
-                csvFiles.stream()
-                        .filter(p -> p.getFileName().toString().equals("IIN.csv"))
-                        .findFirst()
-                        .orElseThrow(() -> new AssertionError("No se generó el archivo IIN.csv"));
+        Path iinCsvGenerated = csvFiles.stream()
+                .filter(p -> p.getFileName().toString().equals("IIN.csv"))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("No se generó el archivo IIN.csv"));
 
-        Path inputCsvExpected = Path.of("src/test/resources/input.csv");
+        Path inputCsvExpected = Path.of(SRC_TEST_RESOURCES_INPUT_CSV);
 
         // Comparar el contenido de ambos archivos
         List<String> generatedLines = Files.readAllLines(iinCsvGenerated);

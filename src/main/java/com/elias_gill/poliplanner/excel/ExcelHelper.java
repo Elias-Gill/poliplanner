@@ -86,19 +86,20 @@ public class ExcelHelper {
     }
 
     // Limpia los encabezados que no nos sirven (primeras 11 lineas) dentro del csv
-    // generado del horario.
-    static void cleanCsv(Path path) throws IOException {
+    // generado del horario. Retorna el path a un archivo temporal el cual es el CSV
+    // limpio.
+    static Path cleanCsv(Path path) throws IOException {
         // Leer todas las líneas del archivo
         List<String> lines = Files.readAllLines(path);
 
         // Ignorar encabezados
         List<String> cleanedLines = lines.stream().skip(11).collect(Collectors.toList());
 
-        // FIX: feo hack para no sobreescribir el archivo de pruebas
-        if (path.getFileName().equals("output.csv")) {
-            // Sobreescribir el archivo original
-            Files.write(path, cleanedLines);
-        }
+        // Generar un archivo temporal el cual parsear
+        Path tempFile = Files.createTempFile(path.getFileName().toString(), ".xlsx");
+        Files.write(tempFile, cleanedLines);
+
+        return tempFile;
     }
 
     // Convierte cada "hoja" del archivo en archivos csv. Retorna la lista de

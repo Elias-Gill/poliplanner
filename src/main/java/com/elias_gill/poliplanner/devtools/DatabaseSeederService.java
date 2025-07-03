@@ -65,7 +65,7 @@ public class DatabaseSeederService {
 
         // Parse Excel data
         try {
-            SheetVersion version = versionService.create(excelFile.toString(), excelFile.toString());
+            SheetVersion version = versionService.create("VersionPrueba", excelFile.toString());
             excelService.parseAndPersistCsv(excelFile, version);
         } catch (Exception e) {
             System.err.println("No se pudo cargar los datos semilla: \n" + e);
