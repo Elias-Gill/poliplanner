@@ -1,7 +1,16 @@
 package com.elias_gill.poliplanner.services;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.elias_gill.poliplanner.exception.BadArgumentsException;
 import com.elias_gill.poliplanner.exception.InternalServerErrorException;
+import com.elias_gill.poliplanner.exception.InvalidScheduleException;
+import com.elias_gill.poliplanner.exception.SubjectNotFoundException;
+import com.elias_gill.poliplanner.exception.UserNotFoundException;
 import com.elias_gill.poliplanner.models.Schedule;
 import com.elias_gill.poliplanner.models.Subject;
 import com.elias_gill.poliplanner.models.User;
@@ -10,18 +19,14 @@ import com.elias_gill.poliplanner.repositories.SubjectRepository;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-
 @Service
-@Transactional
 public class ScheduleService {
 
     @Autowired
     private ScheduleRepository scheduleRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private SubjectRepository subjectRepository;
@@ -34,20 +39,31 @@ public class ScheduleService {
         return scheduleRepository.findById(id);
     }
 
-    public void deleteSchedule(Long id) throws InternalServerErrorException, BadArgumentsException {
-        Optional<Schedule> optSchedule = scheduleRepository.findById(id);
+    @Transactional
+    public void deleteScheduleForUser(Long scheduleId, String username)
+            throws InternalServerErrorException, BadArgumentsException {
 
-        if (optSchedule.isPresent()) {
-            try {
-                scheduleRepository.delete(optSchedule.get());
-            } catch (Exception e) {
-                throw new InternalServerErrorException("Internal error deleting schedule", e);
-            }
-        } else {
-            throw new BadArgumentsException("Schedule with id='" + id + "' does not exist");
+        Optional<Schedule> optSchedule = scheduleRepository.findById(scheduleId);
+
+        if (optSchedule.isEmpty()) {
+            throw new BadArgumentsException("Schedule with id = '" + scheduleId + "' does not exist");
+        }
+
+        Schedule schedule = optSchedule.get();
+
+        // Make sure the user owns the schedule
+        if (!schedule.getUser().getUsername().equals(username)) {
+            throw new BadArgumentsException("You are not authorized to delete this schedule");
+        }
+
+        try {
+            scheduleRepository.delete(schedule);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Internal error deleting schedule", e);
         }
     }
 
+    @Transactional
     public Schedule updateList(Long id, List<Long> subjectIds) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow();
         List<Subject> subjects = subjectRepository.findAllById(subjectIds);
@@ -56,6 +72,7 @@ public class ScheduleService {
         return scheduleRepository.save(schedule);
     }
 
+    @Transactional
     public Schedule updateName(Long id, String newName) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow();
         schedule.setDescription(newName);
@@ -63,13 +80,36 @@ public class ScheduleService {
         return scheduleRepository.save(schedule);
     }
 
-    public Schedule create(User user, String description, List<Long> subjectIds) {
-        Schedule aux = new Schedule();
-        List<Subject> materias = subjectRepository.findAllById(subjectIds);
-        aux.setMaterias(materias);
-        aux.setDescription(description);
-        aux.setUser(user);
+    @Transactional
+    public void create(String username, String description, List<Long> subjectIds)
+            throws UserNotFoundException, InvalidScheduleException, SubjectNotFoundException, InternalError {
 
-        return scheduleRepository.save(aux);
+        Optional<User> userOpt = userService.findByUsername(username);
+        if (userOpt.isEmpty()) {
+            throw new UserNotFoundException("Usuario no encontrado: " + username);
+        }
+
+        if (description == null || description.trim().isEmpty()) {
+            throw new InvalidScheduleException("Se debe proporcionar un nombre para el horario");
+        }
+
+        if (subjectIds == null || subjectIds.isEmpty()) {
+            throw new InvalidScheduleException("Debe seleccionar al menos una materia");
+        }
+
+        List<Subject> subjects = subjectRepository.findAllById(subjectIds);
+        if (subjects.size() != subjectIds.size()) {
+            throw new SubjectNotFoundException("Una o más materias no existen");
+        }
+
+        try {
+            Schedule schedule = new Schedule();
+            schedule.setUser(userOpt.get());
+            schedule.setDescription(description.trim());
+            schedule.setMaterias(subjects);
+            scheduleRepository.save(schedule);
+        } catch (Exception e) {
+            throw new InternalError("Error interno al guardar el horario", e);
+        }
     }
 }

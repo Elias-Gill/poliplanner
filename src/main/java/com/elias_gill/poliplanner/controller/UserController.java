@@ -1,6 +1,7 @@
 package com.elias_gill.poliplanner.controller;
 
 import com.elias_gill.poliplanner.exception.InternalServerErrorException;
+import com.elias_gill.poliplanner.exception.UserNameAlreadyExistsException;
 import com.elias_gill.poliplanner.models.User;
 import com.elias_gill.poliplanner.services.UserService;
 
@@ -38,18 +39,17 @@ public class UserController {
 
         try {
             userService.registerUser(user.getUsername(), user.getPassword());
-        } catch (InternalServerErrorException e) {
-            logger.error(e.getMessage());
-            redirectAttributes.addFlashAttribute(
-                    "error", "Internal server error. Please try again latter");
+        } catch (UserNameAlreadyExistsException e) {
+            redirectAttributes.addFlashAttribute("error", "El nombre de usuario ya está en uso.");
             return "redirect:/register";
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        } catch (InternalServerErrorException e) {
+            logger.error("Error interno en registro de usuario: " + e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Internal server error. Please try again later");
             return "redirect:/register";
         }
 
         redirectAttributes.addFlashAttribute(
-                "successMessage", "Registro exitoso! Por favor inicia sesión.");
+                "successMessage", "¡Registro exitoso! Por favor, inicia sesión.");
         return "redirect:/login";
     }
 }

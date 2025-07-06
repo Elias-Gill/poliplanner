@@ -1,7 +1,6 @@
 package com.elias_gill.poliplanner.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +16,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.elias_gill.poliplanner.exception.BadArgumentsException;
 import com.elias_gill.poliplanner.exception.InternalServerErrorException;
+import com.elias_gill.poliplanner.exception.InvalidScheduleException;
+import com.elias_gill.poliplanner.exception.SubjectNotFoundException;
+import com.elias_gill.poliplanner.exception.UserNotFoundException;
 import com.elias_gill.poliplanner.models.Career;
 import com.elias_gill.poliplanner.models.Schedule;
 import com.elias_gill.poliplanner.models.Subject;
-import com.elias_gill.poliplanner.models.User;
 import com.elias_gill.poliplanner.services.CareerService;
 import com.elias_gill.poliplanner.services.ScheduleService;
 import com.elias_gill.poliplanner.services.SubjectService;
@@ -56,31 +57,41 @@ public class SchedulesController {
 
         model.addAttribute("schedules", schedules);
 
-        // Set the latest selected schedule as default
-        // FUTURE: maybe migrate to a cookie
-        if (!schedules.isEmpty()) {
-            model.addAttribute("selectedSchedule", schedules.get(0));
+        if (schedules.isEmpty()) {
+            return "pages/home";
         }
 
+        // Set the latest created schedule as default
         if (id != null) {
-            scheduleService.findById(id)
-                    .ifPresent(s -> {
-                        model.addAttribute("selectedSchedule", s);
-                    });
+            // FUTURE: maybe migrate to a cookie
+            for (Schedule s : schedules) {
+                if (s.getId() == id) {
+                    model.addAttribute("selectedSchedule", s);
+                }
+            }
+        } else {
+            model.addAttribute("selectedSchedule", schedules.get(0));
         }
 
         return "pages/home";
     }
 
     @GetMapping("/schedules/new")
-    public String showScheduleForm(Model model) {
-        List<Subject> subjects = subjectService.findAll();
-        List<Career> careers = careerService.findAll();
+    public String showScheduleForm(Model model, RedirectAttributes redirectAttributes) {
+        try {
+            List<Subject> subjects = subjectService.findAll();
+            List<Career> careers = careerService.findAll();
 
-        model.addAttribute("subjects", subjects);
-        model.addAttribute("careers", careers);
+            model.addAttribute("subjects", subjects);
+            model.addAttribute("careers", careers);
 
-        return "pages/new_schedule";
+            return "pages/new_schedule";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "And internal error ocurred. Please try again latter.");
+            logger.error("Error on show schedule form: ", e);
+
+            return "redirect:/";
+        }
     }
 
     @PostMapping("/schedules/new")
@@ -90,53 +101,41 @@ public class SchedulesController {
             HttpSession session,
             Model model) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // Invalidate session if user is not found
-        Optional<User> user = userService.findByUsername(userName);
-        if (user.isEmpty()) {
+        try {
+            scheduleService.create(userName, description, subjectIds);
+            model.addAttribute("success", "Horario creado satisfactoriamente");
+            return "redirect:/";
+        } catch (UserNotFoundException e) {
             session.invalidate();
             model.addAttribute("error", "Usuario no existe, sesión terminada");
             return "redirect:/login";
-        }
-
-        if (description.isEmpty()) {
-            model.addAttribute("error", "Se debe proporcionar un nombre para el horario");
+        } catch (InvalidScheduleException | SubjectNotFoundException e) {
+            model.addAttribute("error", e.getMessage());
             return "redirect:/schedules/new";
-        }
-
-        if (subjectIds.isEmpty()) {
-            model.addAttribute("error", "Se debe proporcionar un nombre para el horario");
-            return "redirect:/schedules/new";
-        }
-
-        // Persist the new schedule
-        try {
-            scheduleService.create(user.get(), description, subjectIds);
-            model.addAttribute("success", "Horario creado satisfactoriamente");
         } catch (InternalError e) {
-            model.addAttribute("error", "Sorry, an internal server error ocurred. Please try again later");
-            logger.error("Internal error en creacion de horario: " + e.getMessage());
+            model.addAttribute("error", "Error interno, intenta más tarde");
+            logger.error("Error interno al crear horario", e);
+            return "redirect:/schedules/new";
         }
-
-        return "redirect:/";
     }
 
     @PostMapping("/schedules/{id}/delete")
     public String deleteSchedule(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
-            scheduleService.deleteSchedule(id);
-        } catch (InternalServerErrorException e) {
-            redirectAttributes.addFlashAttribute("error",
-                    "Sorry, an internal server error ocurred. Please try again later");
-            logger.error("Error deleting schedule: " + e.getMessage());
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            scheduleService.deleteSchedule(id, username);
+            redirectAttributes.addFlashAttribute("success", "Schedule deleted successfully");
         } catch (BadArgumentsException e) {
             redirectAttributes.addFlashAttribute("error",
-                    "Arguments invalid. Schedule with id=" + id.toString() + "does not exists");
+                    "Invalid argument. Schedule with id = " + id + " does not exist.");
+        } catch (InternalServerErrorException e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Sorry, an internal server error occurred. Please try again later.");
+            logger.error("Error deleting schedule: " + e.getMessage(), e);
         }
 
-        redirectAttributes.addFlashAttribute("success", "Schedule deleted succesfully");
         return "redirect:/";
     }
 }
