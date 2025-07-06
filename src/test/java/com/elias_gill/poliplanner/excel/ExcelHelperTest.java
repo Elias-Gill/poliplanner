@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ExcelHelperTest {
+    private static final String EXCEL_DOWNLOAD_URL = "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx";
     private static final String SRC_TEST_RESOURCES_INPUT_CSV = "src/test/resources/input.csv";
     private static final String SRC_TEST_RESOURCES_OUTPUT_CSV = "src/test/resources/output.csv";
 
@@ -112,8 +113,7 @@ public class ExcelHelperTest {
         // Tratar de descargar un excel cualquiera y ver si es que funciona
         // correctamente
         try {
-            Path file = ExcelHelper.downloadFile(
-                    "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx");
+            Path file = ExcelHelper.downloadFile(EXCEL_DOWNLOAD_URL);
 
             assertNotNull(file);
             assertTrue(Files.exists(file));
@@ -205,8 +205,6 @@ public class ExcelHelperTest {
         Document doc = Jsoup.parse(htmlContent);
         String latestUrl = ExcelHelper.extractUrlFromDoc(doc);
 
-        assertEquals(
-                "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx",
-                latestUrl);
+        assertEquals(EXCEL_DOWNLOAD_URL, latestUrl);
     }
 }
