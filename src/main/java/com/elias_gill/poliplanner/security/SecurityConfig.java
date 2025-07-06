@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.configuration;
+package com.elias_gill.poliplanner.security;
 
 import com.elias_gill.poliplanner.services.SecurityUserDetailsService;
 
@@ -26,22 +26,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(
-                        auth ->
-                                auth.requestMatchers(
-                                                "/login",
-                                                "/logout",
-                                                "/register",
-                                                "/css/**",
-                                                "/js/**",
-                                                "/img/**")
-                                        .permitAll()
-                                        .anyRequest()
-                                        .authenticated())
+                auth -> auth.requestMatchers(
+                        "/login",
+                        "/logout",
+                        "/register",
+                        "/css/**",
+                        "/js/**",
+                        "/img/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .formLogin(
-                        form ->
-                                form.loginPage("/login")
-                                        .defaultSuccessUrl("/") // Asegúrate que esta ruta exista
-                                        .permitAll())
+                        form -> form.loginPage("/login")
+                                .defaultSuccessUrl("/") // Asegúrate que esta ruta exista
+                                .permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll());
 
         return http.build();
