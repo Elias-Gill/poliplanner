@@ -27,19 +27,24 @@
       </div>
     </div>
     <!-- Mensajes de éxito y error -->
-    <div th:if="${error != null and !#strings.isEmpty(error)}" class="alert alert-danger mt-3">
+    <div th:if="${error != null and !#strings.isEmpty(error)}" 
+     class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
       <span th:text="${error}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <div th:if="${success != null and !#strings.isEmpty(success)}" class="alert alert-success mt-3">
+    <div th:if="${success != null and !#strings.isEmpty(success)}" 
+     class="alert alert-success alert-dismissible fade show mt-3" role="alert">
       <span th:text="${success}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <!-- Empty Schedules Message -->
-    <div th:if="${schedules?.empty}" class="alert alert-info">
+    <div th:if="${schedules?.empty}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
       No tienes horarios registrados.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <!-- Selected Schedule Content -->
     <div th:replace="~{fragments/schedule :: schedule(${selectedSchedule})}" 
-         th:if="${selectedSchedule != null}">
+     th:if="${selectedSchedule != null}">
     </div>
   </main>
 </html>

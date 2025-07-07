@@ -3,6 +3,13 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layouts/base}">
   <main layout:fragment="content" class="container py-5">
+    <!-- mensaje de error -->
+    <div th:if="${error != null and !#strings.isEmpty(error)}" 
+          class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+      <span th:text="${error}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <!-- formulario -->
     <h2 class="section">Crear nuevo horario</h2>
     <form th:action="@{/schedules/new}" method="post">
       <!-- Nombre del horario -->
@@ -23,7 +30,7 @@
       </div>
       <!-- Materias por semestre -->
       <div th:each="semester : ${#sets.toSet(subjects.![semestre])}" class="mb-4">
-        <details open>
+        <details>
           <summary class="mb-2 fw-bold fs-5" th:text="'Semestre ' + ${semester}"></summary>
           <ul class="list-group elegant-list">
             <li th:each="subject : ${subjects}"
