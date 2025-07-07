@@ -45,7 +45,7 @@ public class DatabaseSeederService {
     static final Path excelFile = Path.of("src/test/resources/output.csv");
 
     @Transactional
-    public void cleanAndSeed() {
+    public void cleanAndSeed() throws Exception {
         this.cleanDatabase();
         this.seedDatabase();
     }
@@ -60,7 +60,7 @@ public class DatabaseSeederService {
     }
 
     @Transactional
-    public void seedDatabase() {
+    public void seedDatabase() throws Exception {
         System.out.println("Cargando los datos semilla desde: " + excelFile.toString() + "\n");
 
         // Parse Excel data
@@ -88,8 +88,8 @@ public class DatabaseSeederService {
             return userRepo.save(newUser);
         });
 
-        // 4. Crear horario con los IDs REALES
-        scheduleService.create(user, "Horario de pruebas", subjectIds);
+        // Crear horario con los IDs REALES
+        scheduleService.create(user.getUsername(), "Horario de pruebas", subjectIds);
 
         System.out.println("Datos semilla cargados satisfactoriamente");
     }
