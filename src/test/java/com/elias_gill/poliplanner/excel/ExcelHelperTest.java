@@ -19,7 +19,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -86,8 +85,7 @@ public class ExcelHelperTest {
         assertEquals("Estela Mary", last.nombreProfesor);
         assertEquals("emramirez@pol.una.py", last.emailProfesor);
 
-        LocalDate fechaEsperada = LocalDate.of(2024, 9, 17);
-        assertEquals(fechaEsperada, last.parcial1Fecha);
+        assertEquals("Mar 17/09/24", last.parcial1Fecha);
 
         assertEquals("Ms. Estela Mary Ramírez Barboza", last.comitePresidente);
         assertEquals("Lic. Zulma Lucía Demattei Ortíz", last.comiteMiembro1);

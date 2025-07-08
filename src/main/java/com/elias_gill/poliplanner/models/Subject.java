@@ -30,7 +30,7 @@ public class Subject {
     private String nombreAsignatura;
 
     @Column(name = "subject_semester")
-    private String semestre;
+    private Integer semestre;
 
     @Column(name = "subject_section")
     private String seccion;
@@ -47,7 +47,8 @@ public class Subject {
     @Column(name = "subject_teacher_mail")
     private String emailProfesor;
 
-    @Embedded private ExamsCompact exams;
+    @Embedded
+    private ExamsCompact exams;
 
     @Column(name = "lunes")
     private String lunes;
@@ -117,11 +118,11 @@ public class Subject {
         this.nombreAsignatura = nombreAsignatura;
     }
 
-    public String getSemestre() {
+    public Integer getSemestre() {
         return semestre;
     }
 
-    public void setSemestre(String semestre) {
+    public void setSemestre(Integer semestre) {
         this.semestre = semestre;
     }
 

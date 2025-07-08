@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -63,7 +62,7 @@ public class ExcelService {
             logger.info("Descarga exitosa. Iniciando parseo y persistencia");
             persistSubjectsFromExcel(excelFile, url);
             logger.info("Actualizacion exitosa");
-        } catch (InterruptedException | IOException | URISyntaxException e) {
+        } catch (InterruptedException | IOException e) {
             String message = "Error sincronizando el archivo Excel. Se inició el rollback";
             logger.error(message, e);
             throw new ExcelSynchronizationException(message, e);
@@ -72,7 +71,7 @@ public class ExcelService {
 
     @Transactional
     public void persistSubjectsFromExcel(Path excelFile, String url)
-            throws IOException, InterruptedException, URISyntaxException {
+            throws IOException, InterruptedException {
 
         logger.info("Iniciando conversion a csv");
         List<Path> sheets = ExcelHelper.convertExcelToCsv(excelFile);
@@ -92,7 +91,7 @@ public class ExcelService {
 
     @Transactional
     public void parseAndPersistCsv(Path sheet, SheetVersion version)
-            throws IOException, InterruptedException, URISyntaxException {
+            throws IOException {
         logger.info("Parseando csv: {}", sheet.toString());
         logger.info("Limpiando");
         Path cleanedCsv = ExcelHelper.cleanCsv(sheet);

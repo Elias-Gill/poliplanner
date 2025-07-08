@@ -11,7 +11,6 @@ import org.jsoup.select.Elements;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,7 +49,7 @@ public class ExcelHelper {
         return extractUrlFromDoc(doc);
     }
 
-    static String extractUrlFromDoc(Document doc) throws IOException {
+    static String extractUrlFromDoc(Document doc) {
         Pattern datePattern = Pattern.compile("(\\d{2})(\\d{2})(\\d{4})\\.xlsx?$", Pattern.CASE_INSENSITIVE);
 
         String latestUrl = "";
@@ -74,7 +73,7 @@ public class ExcelHelper {
         return latestUrl;
     }
 
-    static Path downloadFile(String fileUrl) throws IOException, URISyntaxException {
+    static Path downloadFile(String fileUrl) throws IOException {
         URL url = new URL(fileUrl);
         InputStream in = url.openStream();
 

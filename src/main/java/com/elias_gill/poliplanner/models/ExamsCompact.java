@@ -1,9 +1,9 @@
 package com.elias_gill.poliplanner.models;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-
-import java.time.LocalDate;
 
 @Embeddable
 public class ExamsCompact {
@@ -64,8 +64,6 @@ public class ExamsCompact {
 
     @Column(name = "comite_miembro2")
     private String comiteMiembro2;
-
-    // --- Getters y setters ---
 
     public LocalDate getParcial1Fecha() {
         return parcial1Fecha;
