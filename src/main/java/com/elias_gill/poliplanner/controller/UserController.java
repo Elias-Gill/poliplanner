@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
-        return "pages/register";
+        return "pages/auth/register";
     }
 
     // Procesa el formulario de registro

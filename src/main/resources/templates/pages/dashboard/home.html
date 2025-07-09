@@ -43,7 +43,7 @@
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <!-- Selected Schedule Content -->
-    <div th:replace="~{fragments/schedule :: schedule(${selectedSchedule})}" 
+    <div th:replace="~{pages/dashboard/detail :: schedule(${selectedSchedule})}" 
      th:if="${selectedSchedule != null}">
     </div>
   </main>

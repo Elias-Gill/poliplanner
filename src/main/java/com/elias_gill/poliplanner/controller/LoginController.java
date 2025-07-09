@@ -8,6 +8,6 @@ public class LoginController {
     @GetMapping("/login")
     public String showLoginForm() {
         // NOTE: la logica de redireccion es manejada automaticamente por Spring
-        return "pages/login";
+        return "pages/auth/login";
     }
 }

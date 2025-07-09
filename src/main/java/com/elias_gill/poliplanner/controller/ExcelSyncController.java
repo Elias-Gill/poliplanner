@@ -51,6 +51,6 @@ public class ExcelSyncController {
 
     @GetMapping("/sync")
     public String showSyncForm() {
-        return "pages/sync";
+        return "pages/sync/form";
     }
 }

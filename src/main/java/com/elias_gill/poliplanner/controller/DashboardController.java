@@ -3,6 +3,7 @@ package com.elias_gill.poliplanner.controller;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.elias_gill.poliplanner.models.Schedule;
 import com.elias_gill.poliplanner.services.ScheduleService;
 
+@Controller
 public class DashboardController {
     private final ScheduleService scheduleService;
 
@@ -29,7 +31,7 @@ public class DashboardController {
         model.addAttribute("schedules", schedules);
 
         if (schedules.isEmpty()) {
-            return "pages/home";
+            return "pages/dashboard/home";
         }
 
         // Set the latest created schedule as default
@@ -45,6 +47,6 @@ public class DashboardController {
             model.addAttribute("selectedSchedule", schedules.get(0));
         }
 
-        return "pages/home";
+        return "pages/dashboard/home";
     }
 }

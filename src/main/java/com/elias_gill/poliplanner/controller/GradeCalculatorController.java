@@ -2,11 +2,13 @@ package com.elias_gill.poliplanner.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller("/calculator")
+@Controller
+@RequestMapping("/calculator")
 public class GradeCalculatorController {
     @GetMapping
     public String calculadora() {
-        return "pages/calculadora";
+        return "pages/grades/calculator";
     }
 }

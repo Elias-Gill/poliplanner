@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -26,7 +27,8 @@ import com.elias_gill.poliplanner.services.SubjectService;
 
 import jakarta.servlet.http.HttpSession;
 
-@Controller("/schedule")
+@Controller
+@RequestMapping("/schedule")
 public class SchedulesController {
     private final Logger logger = LoggerFactory.getLogger(SchedulesController.class);
 
@@ -50,7 +52,7 @@ public class SchedulesController {
             model.addAttribute("subjects", subjects);
             model.addAttribute("careers", careers);
 
-            return "pages/new_schedule";
+            return "pages/schedules/creation_form";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "And internal error ocurred. Please try again latter.");
             logger.error("Error on show schedule form: ", e);
@@ -78,7 +80,7 @@ public class SchedulesController {
             return "redirect:/login";
         } catch (InvalidScheduleException | SubjectNotFoundException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/schedules/new";
+            return "redirect:/schedule/new";
         } catch (InternalError e) {
             redirectAttributes.addFlashAttribute("error", "Error interno, intenta más tarde");
             logger.error("Error interno al crear horario", e);
