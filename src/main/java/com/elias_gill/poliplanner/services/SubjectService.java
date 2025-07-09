@@ -23,12 +23,7 @@ public class SubjectService {
     }
 
     public List<Subject> findByCareer(Long careerId) {
-        return subjectRepository.findByCareerId(careerId);
-    }
-
-    public List<Subject> findAll() {
-        // FIX: listar solo el horario mas nuevos existente
-        return subjectRepository.findAllByOrderBySemestreAsc();
+        return subjectRepository.findByCareerIdOrderBySemestreAsc(careerId);
     }
 
     public Optional<Subject> findById(Long id) {

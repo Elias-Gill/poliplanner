@@ -1,79 +1,49 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layouts/base}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
   <main layout:fragment="content" class="container py-5">
-    <!-- mensaje de error -->
+    <!-- Mensaje de error si no hay carreras -->
     <div th:if="${error != null and !#strings.isEmpty(error)}" 
-          class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+       class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
       <span th:text="${error}"></span>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <!-- formulario -->
+    <!-- Formulario de selección de carrera -->
     <h2 class="section">Crear nuevo horario</h2>
     <form th:action="@{/schedule/new}" method="post">
-      <!-- Nombre del horario -->
+      <!-- Descripción del horario -->
       <div class="mb-4">
-        <label for="description" class="form-label">Nombre del horario</label>
-        <input type="text" class="form-control" id="description" name="description" placeholder="Ej. Segundo Semestre 2025" required>
+        <label for="description" class="form-label">Descripción</label>
+        <input type="text" class="form-control" id="description" name="description" 
+             placeholder="Ej: Horario primer semestre 2025" required>
       </div>
-      <!-- Filtro por carrera -->
+      <!-- Selección de carrera -->
       <div class="mb-4">
-        <label for="careerFilter" class="form-label">Filtrar por carrera</label>
-        <select class="form-select" id="careerFilter">
-          <option value="all">Todas las carreras</option>
+        <label for="careerId" class="form-label">Carrera</label>
+        <select class="form-select" id="careerId" name="careerId" required>
+          <option disabled selected value="">Selecciona una carrera</option>
           <option th:each="career : ${careers}"
-          th:value="${career.id}"
-          th:text="${career.name}">
+                th:value="${career.id}"
+                th:text="${career.name}">
           </option>
         </select>
       </div>
-      <!-- Materias por semestre -->
-      <div th:each="semester : ${#sets.toSet(subjects.![semestre])}" class="mb-4">
-        <details>
-          <summary class="mb-2 fw-bold fs-5" th:text="'Semestre ' + ${semester}"></summary>
-          <ul class="list-group elegant-list">
-            <li th:each="subject : ${subjects}"
-                            th:if="${subject.semestre == semester}"
-                            class="list-group-item subject-item"
-                            th:attr="data-career=${subject.career.id}">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox"
-                                th:id="'subject-' + ${subject.id}"
-                                th:name="subjectIds"
-                                th:value="${subject.id}">
-                <label class="form-check-label" th:for="'subject-' + ${subject.id}">
-                  <strong th:text="${subject.nombreAsignatura}"></strong>
-                  <span th:text="' (Sección ' + ${subject.seccion} + ')'"></span> -
-                  <span th:text="${subject.tituloProfesor + ' ' + subject.nombreProfesor + ' ' + subject.apellidoProfesor}"></span>
-                </label>
-              </div>
-            </li>
-          </ul>
-        </details>
+      <!-- Versión de hoja (solo informativo) -->
+      <div class="mb-4">
+        <label class="form-label">Versión de Excel</label>
+        <!-- TODO: se ve re feo -->
+        <div>
+          <span th:text="${sheetVersion.fileName}"></span>
+          <span th:if="${sheetVersion.parsedAt != null}"
+              th:text="${#dates.format(sheetVersion.parsedAt, 'dd/MM/yyyy HH:mm')}"></span>
+          <span th:if="${sheetVersion.parsedAt == null}">Fecha no disponible</span>
+        </div>
       </div>
       <!-- Botón de envío -->
       <div class="mt-5">
-        <button type="submit" class="btn btn-primary px-4">Crear horario</button>
+        <button type="submit" class="btn btn-primary px-4">Continuar</button>
       </div>
     </form>
   </main>
-  <script>
-    // Filtro por carrera
-    document.addEventListener("DOMContentLoaded", function () {
-        const filter = document.getElementById("careerFilter");
-        const items = document.querySelectorAll(".subject-item");
-
-        filter.addEventListener("change", function () {
-            const selected = this.value;
-            items.forEach(item => {
-                if (selected === "all" || item.dataset.career === selected) {
-                    item.style.display = "block";
-                } else {
-                    item.style.display = "none";
-                }
-            });
-        });
-    });
-  </script>
 </html>

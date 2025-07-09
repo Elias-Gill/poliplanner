@@ -1,6 +1,6 @@
 package com.elias_gill.poliplanner.models;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -36,7 +36,7 @@ public class SheetVersion {
 
     @Column(name = "parsed_at", nullable = false)
     @CreationTimestamp
-    private LocalDate parsedAt;
+    private Date parsedAt;
 
     public SheetVersion(String fileName, String url) {
         this.fileName = fileName;

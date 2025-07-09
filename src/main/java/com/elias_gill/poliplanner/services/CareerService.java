@@ -14,16 +14,19 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 public class CareerService {
+    @Autowired
+    private CareerRepository careerRepository;
+    @Autowired
+    private SheetVersionService sheetVersionService;
 
-    @Autowired private CareerRepository careerRepository;
-
-    public Career find(String name) {
+    public Career findByName(String name) {
         return careerRepository.findByNameIgnoreCase(name);
     }
 
-    public List<Career> findAll() {
-        // FIX: ver que no se esten repitiendo y de otros horarios viejos y eso
-        return careerRepository.findAll();
+    public List<Career> findCareers() {
+        // FIX: posibles try catch and errors
+        SheetVersion version = sheetVersionService.findLatest();
+        return careerRepository.findByVersion(version);
     }
 
     public Career create(String name, SheetVersion version) {
