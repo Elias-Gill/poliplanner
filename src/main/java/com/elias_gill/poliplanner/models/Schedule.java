@@ -15,11 +15,16 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "schedules")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Schedule {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_id")
@@ -39,49 +44,4 @@ public class Schedule {
     @ManyToMany
     @JoinTable(name = "schedule_subjects", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<Subject> materias;
-
-    // Getters y setters
-
-    public Schedule() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String name) {
-        this.description = name;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<Subject> getMaterias() {
-        return materias;
-    }
-
-    public void setMaterias(List<Subject> materias) {
-        this.materias = materias;
-    }
 }

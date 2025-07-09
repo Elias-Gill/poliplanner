@@ -1,7 +1,6 @@
 package com.elias_gill.poliplanner.controller;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,25 +78,9 @@ public class SchedulesController {
         try {
             List<Subject> subjects = subjectService.findAll();
             List<Career> careers = careerService.findAll();
-            // Extraer y ordenar los semestres
-            List<Integer> semesters = subjects.stream()
-                    .map(Subject::getSemestre)
-                    .filter(Objects::nonNull)
-                    .map(s -> {
-                        try {
-                            return Integer.parseInt(s.trim());
-                        } catch (NumberFormatException e) {
-                            return null; // o podrías loguearlo
-                        }
-                    })
-                    .filter(Objects::nonNull)
-                    .distinct()
-                    .sorted()
-                    .toList();
 
             model.addAttribute("subjects", subjects);
             model.addAttribute("careers", careers);
-            model.addAttribute("semestres", semesters);
 
             return "pages/new_schedule";
         } catch (Exception e) {
@@ -151,5 +134,10 @@ public class SchedulesController {
         }
 
         return "redirect:/";
+    }
+
+    @GetMapping("/calculadora")
+    public String calculadora() {
+        return "pages/calculadora";
     }
 }

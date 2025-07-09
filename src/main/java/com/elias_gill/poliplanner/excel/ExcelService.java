@@ -1,6 +1,5 @@
 package com.elias_gill.poliplanner.excel;
 
-import com.elias_gill.poliplanner.excel.dto.SubjectCsv;
 import com.elias_gill.poliplanner.exception.CsvParsingException;
 import com.elias_gill.poliplanner.exception.ExcelSynchronizationException;
 import com.elias_gill.poliplanner.models.Career;
@@ -97,13 +96,13 @@ public class ExcelService {
         Path cleanedCsv = ExcelHelper.cleanCsv(sheet);
 
         logger.info("Extrayendo materias");
-        List<SubjectCsv> subjectscsv = ExcelHelper.extractSubjects(cleanedCsv);
+        List<SubjectCsvDTO> subjectscsv = ExcelHelper.extractSubjects(cleanedCsv);
 
         logger.info("Enlazando la carrera y persistiendo");
         String careerName = sheet.getFileName().toString().replace(".csv", "");
         Career carrera = careerService.create(careerName, version);
 
-        for (SubjectCsv subjectcsv : subjectscsv) {
+        for (SubjectCsvDTO subjectcsv : subjectscsv) {
             Subject subject = SubjectMapper.mapToSubject(subjectcsv);
             subject.setCareer(carrera);
             subjectService.create(subject);

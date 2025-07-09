@@ -9,11 +9,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "careers")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Career {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "career_id")
@@ -26,31 +31,7 @@ public class Career {
     @JoinColumn(name = "sheet_version_id")
     private SheetVersion version;
 
-    // --- Constructores ---
-    public Career() {}
-
     public Career(String name) {
         this.name = name;
-    }
-
-    // --- Getters y Setters ---
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public SheetVersion getVersion() {
-        return version;
-    }
-
-    public void setVersion(SheetVersion version) {
-        this.version = version;
     }
 }

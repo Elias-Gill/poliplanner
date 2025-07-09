@@ -40,7 +40,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void deleteScheduleForUser(Long scheduleId, String username)
+    public void deleteSchedule(Long scheduleId, String username)
             throws InternalServerErrorException, BadArgumentsException {
 
         Optional<Schedule> optSchedule = scheduleRepository.findById(scheduleId);

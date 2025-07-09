@@ -52,8 +52,4 @@ public class UserService {
             throw new InternalServerErrorException("Error while registering a new user: ", e);
         }
     }
-
-    public void updateUserProfile(Long userId, String newEmail) {
-        // TODO: logica de actualización
-    }
 }

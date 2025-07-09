@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import com.elias_gill.poliplanner.excel.dto.SubjectCsv;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Tag;
@@ -56,14 +54,14 @@ public class ExcelHelperTest {
         File testFile = new File(SRC_TEST_RESOURCES_OUTPUT_CSV);
 
         // Ejecutar el método
-        List<SubjectCsv> subjects = ExcelHelper.extractSubjects(testFile.toPath());
+        List<SubjectCsvDTO> subjects = ExcelHelper.extractSubjects(testFile.toPath());
 
         // Verificar resultados
         assertNotNull(subjects, "La lista de subjects no debería ser null");
         assertFalse(subjects.isEmpty(), "La lista de subjects no debería estar vacía");
 
         // Verificar primera entrada
-        SubjectCsv first = subjects.get(0);
+        SubjectCsvDTO first = subjects.get(0);
         assertEquals("DCB", first.departamento);
         assertEquals("Algebra Lineal", first.nombreAsignatura);
         assertEquals("2", first.semestre);
@@ -74,7 +72,7 @@ public class ExcelHelperTest {
         assertEquals("", first.emailProfesor);
 
         // Verificar última entrada
-        SubjectCsv last = subjects.get(subjects.size() - 1);
+        SubjectCsvDTO last = subjects.get(subjects.size() - 1);
 
         assertEquals("DG", last.departamento);
         assertEquals("Técnicas de Organización y Métodos", last.nombreAsignatura);

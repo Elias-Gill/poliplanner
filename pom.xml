@@ -15,6 +15,12 @@
     <java.version>17</java.version>
   </properties>
   <dependencies>
+    <!-- lombok to make code cleaner -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <!-- Spring Boot starters -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -113,8 +119,19 @@
           <target>${java.version}</target>
           <compilerArgs>
             <arg>-Xlint:all</arg>
+            <!-- Desactiva warnings de procesamiento -->
+            <arg>-Xlint:-processing</arg>
+            <!-- Uncomment bellow to have a more pedantic compiler -->
             <!-- <arg>-Werror</arg> -->
           </compilerArgs>
+          <!-- lombok -->
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <!-- eclipse code formatter -->

@@ -1,8 +1,8 @@
-package com.elias_gill.poliplanner.excel.dto;
+package com.elias_gill.poliplanner.excel;
 
 import com.opencsv.bean.CsvBindByPosition;
 
-public class SubjectCsv {
+public class SubjectCsvDTO {
     @CsvBindByPosition(position = 1)
     public String departamento;
 

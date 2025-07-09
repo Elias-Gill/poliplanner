@@ -28,7 +28,7 @@ public class SubjectService {
 
     public List<Subject> findAll() {
         // FIX: listar solo el horario mas nuevos existente
-        return subjectRepository.findAll();
+        return subjectRepository.findAllByOrderBySemestreAsc();
     }
 
     public Optional<Subject> findById(Long id) {

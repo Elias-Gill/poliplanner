@@ -1,6 +1,5 @@
 package com.elias_gill.poliplanner.excel;
 
-import com.elias_gill.poliplanner.excel.dto.SubjectCsv;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import org.jsoup.Jsoup;
@@ -25,10 +24,10 @@ public class ExcelHelper {
 
     private static final String targetUrl = "https://www.pol.una.py/academico/horarios-de-clases-y-examenes/";
 
-    static List<SubjectCsv> extractSubjects(Path csvFile) throws RuntimeException {
+    static List<SubjectCsvDTO> extractSubjects(Path csvFile) throws RuntimeException {
         try {
-            List<SubjectCsv> beans = new CsvToBeanBuilder<SubjectCsv>(new FileReader(csvFile.toString()))
-                    .withType(SubjectCsv.class)
+            List<SubjectCsvDTO> beans = new CsvToBeanBuilder<SubjectCsvDTO>(new FileReader(csvFile.toString()))
+                    .withType(SubjectCsvDTO.class)
                     .withSeparator(',')
                     .withIgnoreLeadingWhiteSpace(true)
                     .build()

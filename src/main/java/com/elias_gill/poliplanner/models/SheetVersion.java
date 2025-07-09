@@ -1,5 +1,9 @@
 package com.elias_gill.poliplanner.models;
 
+import java.time.LocalDate;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,12 +11,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "sheet_version")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SheetVersion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,30 +42,4 @@ public class SheetVersion {
         this.fileName = fileName;
         this.url = url;
     }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public LocalDate getParsedAt() {
-        return parsedAt;
-    }
-
-    public SheetVersion() {}
 }
