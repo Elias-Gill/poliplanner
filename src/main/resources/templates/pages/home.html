@@ -20,7 +20,7 @@
           </select>
         </form>
         <!-- Form para eliminar horario seleccionado -->
-        <form id="deleteScheduleForm" th:action="@{/schedules/{id}/delete(id=${selectedSchedule.id})}" method="post" 
+        <form id="deleteScheduleForm" th:action="@{/schedule/{id}/delete(id=${selectedSchedule.id})}" method="post" 
               th:if="${selectedSchedule != null}" onsubmit="return confirm('¿Estás seguro que quieres eliminar este horario?');">
           <button type="submit" class="btn btn-danger">Eliminar horario</button>
         </form>

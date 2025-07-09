@@ -28,6 +28,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(
                 auth -> auth.requestMatchers(
                         "/login",
+                        "/calculator",
                         "/logout",
                         "/register",
                         "/css/**",
