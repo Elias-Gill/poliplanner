@@ -1,6 +1,4 @@
 <div th:fragment="schedule(schedule)">
-  <!-- Mensaje de error si el schedule no existe -->
-  <div th:if="${error}" class="alert alert-danger text-center" th:text="${error}"></div>
   <!-- Mostrar contenido solo si el schedule existe -->
   <div th:if="${schedule}">
     <!-- Tabla de horarios -->
@@ -83,8 +81,13 @@
           <div class="list-group-item">
             <div class="d-flex justify-content-between align-items-center">
               <span th:text="${materia.nombreAsignatura}"></span>
-              <span class="date-badge" 
-                th:text="${#temporals.format(materia.exams.parcial1Fecha, 'dd/MM/yyyy')} + ' ' + ${materia.exams.parcial1Hora}">
+              <span>
+                <span class="date-badge" 
+                th:text="${#temporals.format(materia.exams.parcial1Fecha, 'dd/MM/yyyy')}">
+                </span>
+                <span class="date-badge bg-warning"
+                  th:text="${materia.exams.parcial1Hora} + 'hs'">
+                </span>
               </span>
             </div>
             <div th:if="${materia.exams.parcial1Aula != null}" class="text-muted small">
@@ -102,8 +105,13 @@
           <div class="list-group-item">
             <div class="d-flex justify-content-between align-items-center">
               <span th:text="${materia.nombreAsignatura}"></span>
-              <span class="date-badge" 
-                th:text="${#temporals.format(materia.exams.parcial2Fecha, 'dd/MM/yyyy')} + ' ' + ${materia.exams.parcial2Hora}">
+              <span>
+                <span class="date-badge" 
+                th:text="${#temporals.format(materia.exams.parcial2Fecha, 'dd/MM/yyyy')}">
+                </span>
+                <span class="date-badge bg-warning"
+                  th:text="${materia.exams.parcial2Hora} + 'hs'">
+                </span>
               </span>
             </div>
             <div th:if="${materia.exams.parcial2Aula != null}" class="text-muted small">
@@ -121,8 +129,13 @@
           <div class="list-group-item">
             <div class="d-flex justify-content-between align-items-center">
               <span th:text="${materia.nombreAsignatura}"></span>
-              <span class="date-badge" 
-                th:text="${#temporals.format(materia.exams.final1Fecha, 'dd/MM/yyyy')} + ' ' + ${materia.exams.final1Hora}">
+              <span>
+                <span class="date-badge" 
+                th:text="${#temporals.format(materia.exams.final1Fecha, 'dd/MM/yyyy')}">
+                </span>
+                <span class="date-badge bg-warning"
+                  th:text="${materia.exams.final1Hora} + 'hs'">
+                </span>
               </span>
             </div>
             <div th:if="${materia.exams.final1Aula != null}" class="text-muted small">
@@ -140,8 +153,13 @@
           <div class="list-group-item">
             <div class="d-flex justify-content-between align-items-center">
               <span th:text="${materia.nombreAsignatura}"></span>
-              <span class="date-badge" 
-                th:text="${#temporals.format(materia.exams.final2Fecha, 'dd/MM/yyyy')} + ' ' + ${materia.exams.final2Hora}">
+              <span>
+                <span class="date-badge" 
+                th:text="${#temporals.format(materia.exams.final2Fecha, 'dd/MM/yyyy')}">
+                </span>
+                <span class="date-badge bg-warning"
+                  th:text="${materia.exams.final2Hora} + 'hs'">
+                </span>
               </span>
             </div>
             <div th:if="${materia.exams.final2Aula != null}" class="text-muted small">
@@ -157,7 +175,7 @@
     </div>
     <!-- Información adicional de las materias -->
     <div th:if="${not schedule.materias?.empty}" class="mt-4">
-      <h3 class="section">Detalles de las materias</h3>
+      <h3 class="section">Información adicional</h3>
       <div class="row">
         <div th:each="materia : ${schedule.materias}" class="col-md-6 mb-3">
           <div class="card">
@@ -170,6 +188,10 @@
                 <br>
                 <span th:if="${materia.emailProfesor}" 
                       th:text="'Email: ' + ${materia.emailProfesor}">
+                </span>
+                <br>
+                <span th:if="${materia.seccion}" 
+                    th:text="'Seccion: ' + ${materia.seccion}">
                 </span>
               </p>
             </div>

@@ -1,7 +1,7 @@
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
+    font-family: var(--font-main);
+    background-color: var(--color-background);
+    color: var(--color-text);
     margin: 0;
     padding: 0;
 
@@ -14,21 +14,21 @@ body {
     font-size: 2rem;
     margin-bottom: 30px;
     font-weight: 700;
-    color: #2c3e50;
-    border-bottom: 2px solid #3498db;
+    color: var(--color-heading);
+    border-bottom: 2px solid var(--color-primary);
     padding-bottom: 8px;
 }
 
 .custom-table {
-    background: #ffffff;
+    background: var(--color-surface);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px var(--color-shadow);
 }
 
 .custom-table thead {
-    background-color: #3498db;
-    color: white;
+    background-color: var(--color-primary);
+    color: var(--color-surface);
 }
 
 .custom-table th,
@@ -46,6 +46,7 @@ body {
 .custom-table td {
     font-size: 0.95rem;
     border-bottom: 1px solid #e9ecef;
+    /* Puedes crear var(--color-table-border) si deseas */
 }
 
 .list-group.elegant-list {
@@ -55,26 +56,25 @@ body {
 }
 
 .list-group.elegant-list .list-group-item {
-    background: linear-gradient(to right, #ffffff, #f1f9ff);
-    border: 1px solid #d0e3f1;
+    background: linear-gradient(to right, var(--color-surface), var(--color-accent-bg));
+    border: 1px solid var(--color-border);
     border-radius: 10px;
     padding: 20px 24px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 15px var(--color-shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .list-group.elegant-list .list-group-item:hover {
-    /* transform: translateY(-3px); */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    /* background: linear-gradient(to right, #e3f2fd, #f8fbff); */
+    /* Para versión activada: background: linear-gradient(to right, var(--color-primary-light), var(--color-accent-hover)); */
 }
 
 .date-badge {
-    background-color: #3498db;
+    background-color: var(--color-primary);
     padding: 8px 16px;
     border-radius: 50px;
-    color: white;
+    color: var(--color-surface);
     font-weight: 700;
     font-size: 0.9rem;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 6px var(--color-badge-shadow);
 }
