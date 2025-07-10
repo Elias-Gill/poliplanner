@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TokenValidator {
 
-    private final String expectedKey = System.getenv("UPDATEKEY");
+    private final String expectedKey = System.getenv("UPDATE_KEY");
 
     public void validate(String authHeader) {
         if (authHeader == null || !authHeader.trim().equals("Bearer " + expectedKey)) {
