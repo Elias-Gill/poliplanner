@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 public class ExcelService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExcelService.class);
+    private final static Logger logger = LoggerFactory.getLogger(ExcelService.class);
 
     @Autowired
     private SubjectService subjectService;
@@ -50,7 +50,7 @@ public class ExcelService {
 
             if (latestVersion != null) {
                 if (latestVersion.getUrl().equals(url)) {
-                    logger.info("Excel ya se encuentra en su ultima version");
+                    logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.getUrl());
                     return;
                 }
             }

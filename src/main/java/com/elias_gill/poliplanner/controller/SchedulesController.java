@@ -39,19 +39,18 @@ import jakarta.servlet.http.HttpSession;
  *
  * 1. Selección de carrera y descripción del horario:
  * - GET /schedule/new: muestra un formulario con la lista de carreras
- * disponibles.
+ * disponibles, muestra la informacion de la ultima plantilla excel parseada y
+ * pide el ingreso de un nuevo nombre para el horario.
  * - POST /schedule/new: recibe la carrera seleccionada y la descripción,
- * luego redirige al siguiente paso pasando los datos como parámetros o
- * atributos flash.
+ * luego redirige al siguiente paso pasando los datos como parámetros.
  * <p>
  *
  * 2. Selección de materias:
- * - GET /schedule/new/details: carga las materias correspondientes a la carrera
- * elegida
- * y permite al usuario armar su horario seleccionando asignaturas.
+ * - GET /schedule/new/details: muestra las materias correspondientes a la
+ * carrera elegida y permite al usuario armar su horario seleccionando
+ * asignaturas.
  * - POST /schedule/new/details: recibe la lista de materias seleccionadas y
- * crea el horario
- * persistiendo la información en la base de datos.
+ * crea el horario en la base de datos.
  * <p>
  *
  * Notas:
@@ -62,14 +61,13 @@ import jakarta.servlet.http.HttpSession;
  * adecuados.
  * <p>
  *
- * Este enfoque permite una experiencia de usuario sencilla y estructurada, y
- * facilita la
- * validación progresiva de los datos ingresados.
+ * Esto permite una experiencia de usuario sencilla y facilita la
+ * validacion progresiva de los datos ingresados.
  */
 @Controller
 @RequestMapping("/schedule")
 public class SchedulesController {
-    private final Logger logger = LoggerFactory.getLogger(SchedulesController.class);
+    private final static Logger logger = LoggerFactory.getLogger(SchedulesController.class);
 
     private final ScheduleService scheduleService;
     private final SubjectService subjectService;

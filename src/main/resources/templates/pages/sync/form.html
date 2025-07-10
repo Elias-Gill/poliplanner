@@ -6,9 +6,14 @@
   </head>
   <body>
     <h1>Actualizar Excel</h1>
-    <form id="syncForm">
+    <form id="syncForm" enctype="multipart/form-data">
       <label for="token">Token de autenticación:</label>
       <input type="password" id="token" name="token" required>
+      <br>
+      <label for="archivo">Archivo Excel:</label>
+      <input type="file" id="archivo" name="file" accept=".xls,.xlsx" required>
+      <br>
+      <br>
       <button type="submit" id="submitBtn">Actualizar</button>
     </form>
     <div id="respuesta"></div>
@@ -18,32 +23,35 @@
       const respuestaDiv = document.getElementById("respuesta");
 
       form.addEventListener("submit", async function(e) {
-          e.preventDefault();
+        e.preventDefault();
 
-          button.disabled = true;
-          respuestaDiv.textContent = "Actualizando...";
+        button.disabled = true;
+        respuestaDiv.textContent = "Subiendo y actualizando...";
 
-          const token = document.getElementById("token").value;
+        const token = document.getElementById("token").value;
+        const fileInput = document.getElementById("archivo");
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
 
-          // settear el token bearer
-          try {
-              const response = await fetch("/sync", {
-                  method: "POST",
-                  headers: {
-                      "Authorization": "Bearer " + token
-                  }
-              });
+        try {
+          const response = await fetch("/sync", {
+            method: "POST",
+            headers: {
+              "Authorization": "Bearer " + token
+            },
+            body: formData
+          });
 
-              message = response.ok ? "Actualización completada." :
-                  `Error ${response.status}: ${response.body}`;
+          const message = response.ok
+            ? "Actualización completada."
+            : `Error ${response.status}: ${await response.text()}`;
+          respuestaDiv.textContent = message;
 
-              respuestaDiv.textContent = message;
-
-          } catch (error) {
-              respuestaDiv.textContent = `Error de red o del servidor: ${error.message}`;
-          } finally {
-              button.disabled = false;
-          }
+        } catch (error) {
+          respuestaDiv.textContent = `Error de red o del servidor: ${error.message}`;
+        } finally {
+          button.disabled = false;
+        }
       });
     </script>
   </body>

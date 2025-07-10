@@ -12,12 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@Transactional
 public class SubjectService {
 
     @Autowired
     private SubjectRepository subjectRepository;
 
+    @Transactional
     public Subject create(Subject subject) {
         return subjectRepository.save(subject);
     }
