@@ -41,6 +41,7 @@ public class ExcelSyncController {
      * lo parsea, y actualiza la base de datos con la nueva información.
      *
      * @param authHeader Header HTTP de autorización con el token Bearer.
+     * @param file       El nuevo archivo subido de manera manual.
      * @return {@code 200 OK} si la sincronización fue exitosa,
      *         {@code 403 Forbidden} si el token es incorrecto o no está presente,
      *         {@code 500 Internal Server Error} si ocurre un error durante la
@@ -51,7 +52,7 @@ public class ExcelSyncController {
             @RequestHeader("Authorization") String authHeader,
             @RequestParam("file") MultipartFile file) {
 
-        logger.warn(">>> POST /sync alcanzado");
+        logger.warn(">>> POST '/sync' alcanzado");
 
         try {
             tokenValidator.validate(authHeader);
@@ -72,6 +73,27 @@ public class ExcelSyncController {
             logger.warn("Excel correctamente parseado y actualizado");
 
             return ResponseEntity.ok("Archivo sincronizado correctamente.");
+        } catch (Exception e) {
+            logger.error("Error al sincronizar Excel", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("No se pudo sincronizar: " + e.getMessage());
+        }
+    }
+
+    /*
+     * Funciona exactamente igual que el endpoint "/sync", per esta pensado para
+     * automatizacion con web scrapping.
+     *
+     * Este endpoint al recibir una request, tratara de scrapear la web de la
+     * universidad en busca de nuevos horarios.
+     */
+    @PostMapping("/sync/ci")
+    public ResponseEntity<?> syncExcel(@RequestHeader("Authorization") String authHeader) {
+        logger.warn(">>> POST '/sync/ci' alcanzado desde CI/CD");
+        try {
+            tokenValidator.validate(authHeader);
+            service.SyncronizeExcel();
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             logger.error("Error al sincronizar Excel", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
