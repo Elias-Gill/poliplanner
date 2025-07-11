@@ -1,42 +1,121 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/base}">
-<main layout:fragment="content">
-    <div class="login-page">
-        <div class="login-container">
-            <img th:src="@{/img/logo.webp}" alt="Logo Facultad Politécnica UNA" class="login-logo">
-            <h2 class="login-title">
-                <!-- <span class="login-title-main">Facultad Politécnica UNA</span><br> -->
-                <span class="login-title-sub">Iniciar Sesión</span>
-            </h2>
-            <form th:action="@{/login}" method="post" class="mx-auto" style="max-width: 400px;">
-                <div class="mb-3">
-                    <label for="username" class="form-label">Usuario:</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        <input type="text" id="username" name="username" class="form-control" required />
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña:</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="password" id="password" name="password" class="form-control" required />
-                    </div>
-                </div>
-                <div class="d-grid mb-3">
-                    <button type="submit" class="btn btn-primary">Entrar</button>
-                </div>
-
-                <div th:if="${param.error}" class="alert alert-danger">Usuario o contraseña inválidos</div>
-                <div th:if="${param.logout}" class="alert alert-success">Sesión cerrada exitosamente</div>
-            </form>
-
-            <p class="text-center mt-3">
-                ¿No tenés cuenta? <a th:href="@{/register}">Registrate acá</a>
-            </p>
+      layout:decorate="~{layouts/flat_base}">
+  <head>
+    <title>Iniciar Sesión</title>
+  </head>
+  <main layout:fragment="content">
+    <div class="login-container">
+      <img th:src="@{/img/logo.webp}" alt="Logo Facultad Politécnica UNA" class="login-logo">
+      <h2 class="login-title">
+        <span class="login-title-sub">Iniciar Sesión</span>
+      </h2>
+      <form th:action="@{/login}" method="post">
+        <div class="form-group">
+          <label for="username">Usuario:</label>
+          <div class="input-with-icon">
+            <i class="bi bi-person"></i>
+            <input type="text" id="username" name="username" required>
+          </div>
         </div>
+        <div class="form-group">
+          <label for="password">Contraseña:</label>
+          <div class="input-with-icon">
+            <i class="bi bi-lock"></i>
+            <input type="password" id="password" name="password" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Entrar</button>
+        <div th:if="${param.error}" class="alert error">
+          Usuario o contraseña inválidos
+        </div>
+        <div th:if="${param.logout}" class="alert success">
+          Sesión cerrada exitosamente
+        </div>
+      </form>
+      <p class="login-footer">
+        ¿No tenés cuenta? <a th:href="@{/register}">Registrate acá</a>
+      </p>
     </div>
-</main>
+  </main>
+  <style layout:fragment="custom_style">
+    /* Estilos para página de login */
+    .login-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: var(--space-xl);
+        text-align: center;
+    }
+
+    .login-logo {
+        max-width: 150px;
+        margin-bottom: var(--space-lg);
+    }
+
+    .login-title {
+        margin-bottom: var(--space-xl);
+    }
+
+    .login-title-sub {
+        font-size: 1.5rem;
+        font-weight: 500;
+    }
+
+    .form-group {
+        margin-bottom: var(--space-md);
+        text-align: left;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: var(--space-xs);
+        font-weight: 500;
+    }
+
+    .input-with-icon {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-with-icon i {
+        position: absolute;
+        left: var(--space-sm);
+        color: var(--color-secondary);
+    }
+
+    .input-with-icon input {
+        width: 100%;
+        padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--space-xl);
+        border: 1px solid var(--color-border);
+        border-radius: 0.25rem;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: var(--space-sm);
+        margin: var(--space-md) 0;
+    }
+
+    .alert {
+        padding: var(--space-sm);
+        border-radius: 0.25rem;
+        margin: var(--space-md) 0;
+    }
+
+    .alert.error {
+        background-color: color-mix(in srgb, var(--color-error), transparent 90%);
+        border-left: 4px solid var(--color-error);
+    }
+
+    .alert.success {
+        background-color: color-mix(in srgb, var(--color-success), transparent 90%);
+        border-left: 4px solid var(--color-success);
+    }
+
+    .login-footer {
+        margin-top: var(--space-lg);
+    }
+  </style>
 </html>

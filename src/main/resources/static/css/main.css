@@ -1,80 +1,344 @@
-body {
-    font-family: var(--font-main);
-    background-color: var(--color-background);
-    color: var(--color-text);
+/* === Variables CSS y paleta de colores === */
+:root {
+    /* Modo Claro (default) */
+    --color-bg: #f8f8f8; /* Fondo gris claro */
+    --color-text: #333333; /* Texto oscuro */
+    --color-border: #e0e0e0; /* Borde gris claro */
+    --color-primary: #2563eb; /* Azul brillante */
+    --color-secondary: #6b7280; /* Gris neutral */
+    --color-success: #10b981; /* Verde */
+    --color-error: #ef4444; /* Rojo */
+    --color-warning: #f59e0b; /* Ámbar */
+    --color-info: #3b82f6; /* Azul info */
+
+    /* Espaciado (basado en rem) */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    /* Tipografía */
+    --font-base: 'Inter', system-ui, sans-serif;
+    --font-size-base: 1rem;
+    --line-height: 1.5;
+}
+
+/* Modo Oscuro */
+.dark-mode {
+    --color-bg: #232323; /* Fondo gris oscuro */
+    --color-text: #f0f0f0; /* Texto claro */
+    --color-border: #444444; /* Borde gris oscuro */
+    --color-primary: #3b82f6; /* Azul más claro para modo oscuro */
+    --color-secondary: #9ca3af; /* Gris claro */
+}
+
+/* === Reset básico === */
+* {
     margin: 0;
     padding: 0;
-
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    box-sizing: border-box;
 }
 
-.section {
-    font-size: 2rem;
-    margin-bottom: 30px;
-    font-weight: 700;
-    color: var(--color-heading);
-    border-bottom: 2px solid var(--color-primary);
-    padding-bottom: 8px;
+body {
+    font-family: var(--font-base);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    padding: var(--space-md);
 }
 
-.custom-table {
-    background: var(--color-surface);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 20px var(--color-shadow);
+/* === Contenedor principal (limita ancho en desktop) === */
+body>header,
+body>nav,
+body>main,
+body>footer {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-md);
 }
 
-.custom-table thead {
+/* === Tipografía === */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-bottom: var(--space-sm);
+    line-height: 1.2;
+}
+
+p {
+    margin-bottom: var(--space-md);
+}
+
+/* === Enlaces === */
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* === Botones (estilo por defecto y atributo "type") === */
+button,
+[role="button"] {
+    display: inline-block;
+    padding: var(--space-sm) var(--space-md);
     background-color: var(--color-primary);
-    color: var(--color-surface);
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.custom-table th,
-.custom-table td {
-    padding: 18px;
-    text-align: center;
-    vertical-align: middle;
+button:hover,
+[role="button"]:hover {
+    background-color: color-mix(in srgb, var(--color-primary), black 10%);
 }
 
-.custom-table th {
-    font-size: 1rem;
-    letter-spacing: 0.5px;
+button[type="secondary"] {
+    background-color: transparent;
+    border: 1px solid var(--color-secondary);
+    color: var(--color-secondary);
 }
 
-.custom-table td {
-    font-size: 0.95rem;
-    border-bottom: 1px solid #e9ecef;
-    /* Puedes crear var(--color-table-border) si deseas */
+button[type="success"] {
+    background-color: var(--color-success);
 }
 
-.list-group.elegant-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+button[type="error"] {
+    background-color: var(--color-error);
 }
 
-.list-group.elegant-list .list-group-item {
-    background: linear-gradient(to right, var(--color-surface), var(--color-accent-bg));
+/* === Formularios (inputs, selects, etc.) === */
+input,
+select,
+textarea {
+    width: 100%;
+    padding: var(--space-sm);
     border: 1px solid var(--color-border);
-    border-radius: 10px;
-    padding: 20px 24px;
-    box-shadow: 0 4px 15px var(--color-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 0.25rem;
+    margin-bottom: var(--space-md);
 }
 
-.list-group.elegant-list .list-group-item:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    /* Para versión activada: background: linear-gradient(to right, var(--color-primary-light), var(--color-accent-hover)); */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
 }
 
-.date-badge {
-    background-color: var(--color-primary);
-    padding: 8px 16px;
-    border-radius: 50px;
-    color: var(--color-surface);
-    font-weight: 700;
-    font-size: 0.9rem;
-    box-shadow: 0 2px 6px var(--color-badge-shadow);
+/* === Tarjetas (<article>, <section>) === */
+article,
+section {
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+/* === Tablas === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--space-md);
+    min-width: 600px;
+    white-space: nowrap;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    /* Permite scroll horizontal */
+    margin-bottom: var(--space-sm);
+    -webkit-overflow-scrolling: touch;
+    /* Mejor scroll en iOS */
+    border-radius: 0.25rem;
+    border: 1px solid var(--color-border);
+}
+
+/* Estilo para el scrollbar */
+.table-container::-webkit-scrollbar {
+    height: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--color-secondary);
+    border-radius: 4px;
+}
+
+th,
+td {
+    padding: var(--space-sm);
+    border: 1px solid var(--color-border);
+    text-align: left;
+}
+
+th {
+    background-color: color-mix(in srgb, var(--color-bg), black 5%);
+}
+
+/* === Navbar Rediseñado === */
+nav {
+    background-color: var(--color-bg);
+    /* Mismo color de fondo que el body */
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-sm) 0;
+    /* Espaciado más ajustado */
+    margin-bottom: var(--space-lg);
+    /* Separación del contenido */
+}
+
+nav ul {
+    display: flex;
+    gap: var(--space-md);
+    list-style: none;
+    align-items: center;
+    padding: 0 var(--space-md);
+}
+
+nav a {
+    color: var(--color-text);
+    padding: var(--space-xs) 0;
+    position: relative;
+    transition: color 0.2s;
+}
+
+nav a:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* Subrayado sutil al activar */
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transition: width 0.3s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* Versión móvil (hamburger menu) */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        gap: var(--space-sm);
+        padding: var(--space-md);
+        display: none;
+        /* Se activará con JavaScript */
+    }
+
+    /* Botón hamburguesa (necesario) */
+    .burguer {
+        display: block;
+        padding: var(--space-md);
+        cursor: pointer;
+    }
+}
+
+/* === Footer específico === */
+footer {
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-xl);
+    text-align: center;
+}
+
+/* === Alertas/Burbujas (<aside> o role="alert") === */
+aside,
+[role="alert"] {
+    padding: var(--space-md);
+    border-radius: 0.5rem;
+    margin-bottom: var(--space-md);
+}
+
+[role="alert"] {
+    background-color: color-mix(in srgb, var(--color-primary), transparent 90%);
+    border-left: 4px solid var(--color-primary);
+}
+
+/* === Utilidades (opcionales) === */
+[hidden] {
+    display: none !important;
+}
+
+/* === Imágenes responsivas y centradas === */
+img {
+    display: block;
+    /* Elimina espacio fantasma debajo */
+    max-width: 100%;
+    /* Límite del contenedor padre */
+    height: auto;
+    /* Mantiene proporción */
+    margin: 0 auto;
+    /* Centrado horizontal */
+    border-radius: 0.25rem;
+    /* Opcional: bordes ligeramente redondeados */
+}
+
+/* Contenedor opcional para imágenes grandes (si necesitas un límite fijo) */
+.image-container {
+    max-width: 800px;
+    /* Ajusta este valor según necesites */
+    margin: var(--space-md) auto;
+}
+
+/* === Dropdown Menus === */
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-bottom: var(--space-md);
+}
+
+.dropdown-toggle {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 160px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.25rem;
+    list-style: none;
+    padding: var(--space-sm) 0;
+    z-index: 10;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: var(--space-xs) var(--space-md);
+    color: var(--color-text);
+}
+
+.dropdown-menu a:hover {
+    background: color-mix(in srgb, var(--color-primary), transparent 90%);
+}
+
+/* === Checkboxes === */
+input[type="checkbox"] {
+    margin-right: var(--space-xs);
+    width: 1em;
+    height: 1em;
+    cursor: pointer;
 }
