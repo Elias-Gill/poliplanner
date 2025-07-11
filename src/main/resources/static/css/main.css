@@ -174,7 +174,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: var(--space-md);
-    min-width: 600px;
+    /* min-width: 600px; */
     white-space: nowrap;
 }
 
