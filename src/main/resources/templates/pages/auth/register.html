@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/base}">
+      layout:decorate="~{layouts/flat_base}">
+  <head>
+    <title>Registro de Usuario</title>
+  </head>
   <main layout:fragment="content">
-    <h2 class="mb-4">Registro de Usuario</h2>
-    <form th:action="@{/register}" th:object="${user}" method="post" class="mx-auto" style="max-width: 400px;">
-      <div class="mb-3">
-        <label for="username" class="form-label">Nombre de usuario:</label>
-        <input type="text" id="username" th:field="*{username}" class="form-control" required />
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Contraseña:</label>
-        <input type="password" id="password" th:field="*{password}" class="form-control" required />
-      </div>
-      <div class="mb-3">
-        <label for="confirmPassword" class="form-label">Confirmar contraseña:</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required />
-      </div>
-      <div class="d-grid mb-3">
-        <button type="submit" class="btn btn-success">Registrarse</button>
-      </div>
-      <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-    </form>
-    <p class="text-center mt-3">
-      ¿Ya tenés cuenta? <a th:href="@{/login}">Iniciá sesión acá</a>
-    </p>
+    <article>
+      <h2>Registro de Usuario</h2>
+      <form th:action="@{/register}" th:object="${user}" method="post">
+        <label>
+          Nombre de usuario:
+          <input type="text" th:field="*{username}" required>
+        </label>
+        <label>
+          Contraseña:
+          <input type="password" th:field="*{password}" required>
+        </label>
+        <label>
+          Confirmar contraseña:
+          <input type="password" name="confirmPassword" required>
+        </label>
+        <button type="submit">Registrarse</button>
+        <div th:if="${error}" role="alert" th:text="${error}"></div>
+      </form>
+      <p>
+        ¿Ya tenés cuenta? <a th:href="@{/login}">Iniciá sesión acá</a>
+      </p>
+    </article>
   </main>
 </html>

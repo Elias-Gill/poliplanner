@@ -1,15 +1,24 @@
 /* === Variables CSS y paleta de colores === */
 :root {
     /* Modo Claro (default) */
-    --color-bg: #f8f8f8; /* Fondo gris claro */
-    --color-text: #333333; /* Texto oscuro */
-    --color-border: #e0e0e0; /* Borde gris claro */
-    --color-primary: #2563eb; /* Azul brillante */
-    --color-secondary: #6b7280; /* Gris neutral */
-    --color-success: #10b981; /* Verde */
-    --color-error: #ef4444; /* Rojo */
-    --color-warning: #f59e0b; /* Ámbar */
-    --color-info: #3b82f6; /* Azul info */
+    --color-bg: #f8f8f8;
+    /* Fondo gris claro */
+    --color-text: #333333;
+    /* Texto oscuro */
+    --color-border: #e0e0e0;
+    /* Borde gris claro */
+    --color-primary: #2563eb;
+    /* Azul brillante */
+    --color-secondary: #6b7280;
+    /* Gris neutral */
+    --color-success: #10b981;
+    /* Verde */
+    --color-error: #ef4444;
+    /* Rojo */
+    --color-warning: #f59e0b;
+    /* Ámbar */
+    --color-info: #3b82f6;
+    /* Azul info */
 
     /* Espaciado (basado en rem) */
     --space-xs: 0.25rem;
@@ -26,11 +35,16 @@
 
 /* Modo Oscuro */
 .dark-mode {
-    --color-bg: #232323; /* Fondo gris oscuro */
-    --color-text: #f0f0f0; /* Texto claro */
-    --color-border: #444444; /* Borde gris oscuro */
-    --color-primary: #3b82f6; /* Azul más claro para modo oscuro */
-    --color-secondary: #9ca3af; /* Gris claro */
+    --color-bg: #232323;
+    /* Fondo gris oscuro */
+    --color-text: #f0f0f0;
+    /* Texto claro */
+    --color-border: #444444;
+    /* Borde gris oscuro */
+    --color-primary: #3b82f6;
+    /* Azul más claro para modo oscuro */
+    --color-secondary: #9ca3af;
+    /* Gris claro */
 }
 
 /* === Reset básico === */
@@ -71,6 +85,11 @@ h6 {
     line-height: 1.2;
 }
 
+h1 {
+    border-bottom: 1px solid var(--color-primary);
+    margin-top: var(--space-xl);
+}
+
 p {
     margin-bottom: var(--space-md);
 }
@@ -103,17 +122,17 @@ button:hover,
     background-color: color-mix(in srgb, var(--color-primary), black 10%);
 }
 
-button[type="secondary"] {
+button .secondary {
     background-color: transparent;
     border: 1px solid var(--color-secondary);
     color: var(--color-secondary);
 }
 
-button[type="success"] {
+button .success {
     background-color: var(--color-success);
 }
 
-button[type="error"] {
+button .error {
     background-color: var(--color-error);
 }
 
@@ -136,13 +155,18 @@ textarea:focus {
 }
 
 /* === Tarjetas (<article>, <section>) === */
-article,
-section {
+article {
     background-color: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     padding: var(--space-md);
     margin-bottom: var(--space-md);
+}
+
+section {
+    background-color: var(--color-bg);
+    margin-bottom: var(--space-xl);
+    margin-top: var(--space-xl);
 }
 
 /* === Tablas === */
