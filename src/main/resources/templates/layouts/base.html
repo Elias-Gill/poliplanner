@@ -39,6 +39,10 @@
     </header>
     <!-- Contenido principal -->
     <main layout:fragment="content"></main>
+    <!-- Botón flotante para cambiar modo claro/oscuro -->
+    <button id="theme-toggle" aria-label="Cambiar modo" title="Cambiar modo">
+      <i class="bi bi-moon"></i>
+    </button>
     <!-- Footer -->
     <footer>
       <div class="container">
@@ -50,38 +54,51 @@
     </footer>
     <!-- Scripts -->
     <script th:inline="javascript">
-      // --- BURGUER MENU ---
-      const toggle = document.querySelector('.burguer');
-      const menu = document.querySelector('nav ul');
+      document.addEventListener('DOMContentLoaded', () => {
+          // --- BURGUER MENU ---
+          const toggle = document.querySelector('.burguer');
+          const menu = document.querySelector('nav ul');
 
-      toggle.addEventListener('click', () => {
-          menu.classList.toggle('open');
-          toggle.classList.toggle('open'); // Para animar el botón
-      });
+          toggle.addEventListener('click', () => {
+              menu.classList.toggle('open');
+              toggle.classList.toggle('open'); // Para animar el botón
+          });
 
-      // Ocultar/mostrar botón en responsive
-      window.addEventListener('resize', () => {
-          toggle.hidden = window.innerWidth > 768;
+          // Ocultar/mostrar botón en responsive
+          window.addEventListener('resize', () => {
+              toggle.hidden = window.innerWidth > 768;
 
-          if (window.innerWidth > 768) {
-              menu.classList.remove('open');  // Cierra menú si agrandás pantalla
-              toggle.classList.remove('open');
+              if (window.innerWidth > 768) {
+                  menu.classList.remove('open');  // Cierra menú si agrandás pantalla
+                  toggle.classList.remove('open');
+              }
+          });
+
+          // Ajustar al cargar la página
+          window.dispatchEvent(new Event('resize'));
+
+          // ---- DARK MODE TOGGLE ----
+          const themeToggle = document.getElementById('theme-toggle');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+          if (!themeToggle) return; // Si no existe, no seguimos
+
+          // Cargar preferencia
+          if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && prefersDark)) {
+              document.body.classList.add('dark-mode');
+              themeToggle.innerHTML = '<i class="bi bi-sun"></i>';
+          } else {
+              themeToggle.innerHTML = '<i class="bi bi-moon"></i>';
           }
-      });
 
-      // Ajustar al cargar la página
-      window.dispatchEvent(new Event('resize'));
-
-      // ---- DROPDOWN MENU ------
-      document.querySelector('.dropdown-toggle').addEventListener('click', (e) => {
-          e.stopPropagation();
-          const menu = e.target.nextElementSibling;
-          menu.hidden = !menu.hidden;
-      });
-
-      // Cerrar al hacer clic fuera
-      window.addEventListener('click', () => {
-          document.querySelector('.dropdown-menu').hidden = true;
+          // Alternar modo
+          themeToggle.addEventListener('click', () => {
+              const isDark = document.body.classList.toggle('dark-mode');
+              localStorage.setItem('theme', isDark ? 'dark' : 'light');
+              themeToggle.innerHTML = isDark
+                  ? '<i class="bi bi-sun"></i>'
+                  : '<i class="bi bi-moon"></i>';
+          });
       });
     </script>
     <!-- // custom scripts // -->

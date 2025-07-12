@@ -26,11 +26,13 @@
 
 /* Modo Oscuro */
 .dark-mode {
-    --color-bg: #232323;
+    --color-bg: #1e1e1e;
     --color-text: #f0f0f0;
-    --color-border: #444444;
+    --color-border: #444;
     --color-primary: #3b82f6;
     --color-secondary: #9ca3af;
+    --color-success: #10b981;
+    --color-error: #ef4444;
 }
 
 /* === Reset básico === */
@@ -38,6 +40,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 body {
@@ -391,37 +394,6 @@ img {
     margin-bottom: var(--space-md);
 }
 
-.dropdown-toggle {
-    padding: var(--space-sm) var(--space-md);
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 0.25rem;
-    cursor: pointer;
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: 160px;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 0.25rem;
-    list-style: none;
-    padding: var(--space-sm) 0;
-    z-index: 10;
-}
-
-.dropdown-menu a {
-    display: block;
-    padding: var(--space-xs) var(--space-md);
-    color: var(--color-text);
-}
-
-.dropdown-menu a:hover {
-    background: color-mix(in srgb, var(--color-primary), transparent 90%);
-}
-
 /* === Checkboxes === */
 input[type="checkbox"] {
     margin-right: var(--space-xs);
@@ -492,4 +464,29 @@ article ol ul {
     padding-left: 1.25rem;
     font-size: 0.95em;
     opacity: 0.9;
+}
+
+/* ==== DARK MODE SELECTOR ==== */
+#theme-toggle {
+    position: fixed;
+    bottom: var(--space-md);
+    right: var(--space-md);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#theme-toggle:hover {
+    background-color: var(--color-primary);
+    color: white;
 }
