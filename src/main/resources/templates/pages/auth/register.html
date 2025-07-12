@@ -22,7 +22,7 @@
           <input type="password" name="confirmPassword" required>
         </label>
         <button type="submit">Registrarse</button>
-        <div th:if="${error}" role="alert" th:text="${error}"></div>
+        <div th:if="${error}" role="alert" th:text="${error}" class="error"></div>
       </form>
       <p>
         ¿Ya tenés cuenta? <a th:href="@{/login}">Iniciá sesión acá</a>

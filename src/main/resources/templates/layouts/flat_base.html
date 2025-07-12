@@ -9,14 +9,10 @@
     <link th:href="@{/css/main.css}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
-    <!-- CSS personalizado de cada pagina -->
-    <style layout:fragment="custom_style"></style>
   </head>
   <body>
     <!-- Contenido principal -->
     <main layout:fragment="content"></main>
-
     <!-- Scripts -->
     <script th:inline="javascript">
       // -- Dropdown menu --
@@ -31,7 +27,6 @@
           document.querySelector('.dropdown-menu').hidden = true;
       });
     </script>
-
     <!-- // custom scripts // -->
     <th:block layout:fragment="scripts"></th:block>
   </body>

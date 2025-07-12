@@ -38,78 +38,78 @@
         ¿No tenés cuenta? <a th:href="@{/register}">Registrate acá</a>
       </p>
     </div>
+    <style>
+      /* Estilos para página de login */
+      .login-container {
+          max-width: 400px;
+          margin: 0 auto;
+          padding: var(--space-xl);
+          text-align: center;
+      }
+
+      .login-logo {
+          max-width: 150px;
+          margin-bottom: var(--space-lg);
+      }
+
+      .login-title {
+          margin-bottom: var(--space-xl);
+      }
+
+      .login-title-sub {
+          font-size: 1.5rem;
+          font-weight: 500;
+      }
+
+      .form-group {
+          margin-bottom: var(--space-md);
+          text-align: left;
+      }
+
+      .form-group label {
+          display: block;
+          margin-bottom: var(--space-xs);
+          font-weight: 500;
+      }
+
+      .input-with-icon {
+          position: relative;
+          display: flex;
+          align-items: center;
+      }
+
+      .input-with-icon i {
+          position: absolute;
+          left: var(--space-sm);
+          color: var(--color-secondary);
+      }
+
+      .input-with-icon input {
+          width: 100%;
+          padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--space-xl);
+          border: 1px solid var(--color-border);
+          border-radius: 0.25rem;
+      }
+
+      .alert {
+          padding: var(--space-sm);
+          border-radius: 0.25rem;
+          margin: var(--space-md) 0;
+      }
+
+      .alert.error {
+          background-color: color-mix(in srgb, var(--color-error), transparent 90%);
+          border-left: 4px solid var(--color-error);
+      }
+
+      .alert.success {
+          background-color: color-mix(in srgb, var(--color-success), transparent 90%);
+          border-left: 4px solid var(--color-success);
+      }
+
+      .login-footer {
+          margin-top: var(--space-lg);
+      }
+    </style>
   </main>
-  <style layout:fragment="custom_style">
-    /* Estilos para página de login */
-    .login-container {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: var(--space-xl);
-        text-align: center;
-    }
-
-    .login-logo {
-        max-width: 150px;
-        margin-bottom: var(--space-lg);
-    }
-
-    .login-title {
-        margin-bottom: var(--space-xl);
-    }
-
-    .login-title-sub {
-        font-size: 1.5rem;
-        font-weight: 500;
-    }
-
-    .form-group {
-        margin-bottom: var(--space-md);
-        text-align: left;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: var(--space-xs);
-        font-weight: 500;
-    }
-
-    .input-with-icon {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .input-with-icon i {
-        position: absolute;
-        left: var(--space-sm);
-        color: var(--color-secondary);
-    }
-
-    .input-with-icon input {
-        width: 100%;
-        padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--space-xl);
-        border: 1px solid var(--color-border);
-        border-radius: 0.25rem;
-    }
-
-    .alert {
-        padding: var(--space-sm);
-        border-radius: 0.25rem;
-        margin: var(--space-md) 0;
-    }
-
-    .alert.error {
-        background-color: color-mix(in srgb, var(--color-error), transparent 90%);
-        border-left: 4px solid var(--color-error);
-    }
-
-    .alert.success {
-        background-color: color-mix(in srgb, var(--color-success), transparent 90%);
-        border-left: 4px solid var(--color-success);
-    }
-
-    .login-footer {
-        margin-top: var(--space-lg);
-    }
-  </style>
 </html>

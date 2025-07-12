@@ -68,7 +68,7 @@
     </div>
     <!-- Lista de exámenes -->
     <h1>Próximos exámenes</h1>
-    <section class="exam-list">
+    <article class="exam-list">
       <!-- Primer Parcial -->
       <div th:if="${not schedule.materias.?[exams.parcial1Fecha != null].empty}">
         <h2>Primer Parcial</h5>
@@ -111,7 +111,7 @@ th:text="${materia.exams.parcial1Hora} + 'hs'">
       </div>
       <!-- Primer final -->
       <div th:if="${not schedule.materias.?[exams.final1Fecha != null].empty}">
-        <h2>Segundo Parcial</h5>
+        <h2>Primer Final</h5>
         <div th:each="materia : ${schedule.materias.?[exams.final1Fecha != null]}">
           <article>
             <span th:text="${materia.nombreAsignatura}"></span>
@@ -149,7 +149,7 @@ th:text="${materia.exams.parcial1Hora} + 'hs'">
           </article>
         </div>
       </div>
-    </section>
+    </article>
     <!-- Información adicional de las materias -->
     <section th:if="${not schedule.materias?.empty}">
       <h1 class="section">Información adicional</h1>
@@ -170,72 +170,35 @@ th:text="${materia.exams.parcial1Hora} + 'hs'">
         </div>
       </div>
     </section>
-    <style layout:fragment="custom_style">
-      .table-container {
-          overflow-x: auto;
-          margin-bottom: 2rem;
-      }
+  </div>
+  <style>
+    .exam-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
 
-        th, td {
-            border: 1px solid var(--border-color, #ddd);
-            padding: 0.5rem;
-            vertical-align: middle;
-        }
+    .info-card {
+      border: 1px solid var(--border-color, #ccc);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      background: var(--card-bg, #fff);
+    }
 
-        thead {
-            background-color: var(--table-head-bg, #f5f5f5);
-        }
+    .card-title {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
 
-        .strong {
-            font-weight: bold;
-        }
-
-        .subtext {
-            font-size: 0.875em;
-            color: var(--text-muted, #666);
-        }
-
-        .center {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .exam-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .margin-top-lg {
-            margin-top: 2rem;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .info-card {
-            border: 1px solid var(--border-color, #ccc);
-            border-radius: 0.5rem;
-            padding: 1rem;
-            background: var(--card-bg, #fff);
-        }
-
-        .card-title {
-            margin-top: 0;
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-        }
-
-        .card-text {
-            font-size: 0.95rem;
-        }
-    </style>
+    .card-text {
+      font-size: 0.95rem;
+    }
+  </style>
+</div>

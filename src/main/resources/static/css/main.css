@@ -1,24 +1,14 @@
 /* === Variables CSS y paleta de colores === */
 :root {
-    /* Modo Claro (default) */
     --color-bg: #f8f8f8;
-    /* Fondo gris claro */
     --color-text: #333333;
-    /* Texto oscuro */
     --color-border: #e0e0e0;
-    /* Borde gris claro */
     --color-primary: #2563eb;
-    /* Azul brillante */
     --color-secondary: #6b7280;
-    /* Gris neutral */
     --color-success: #10b981;
-    /* Verde */
     --color-error: #ef4444;
-    /* Rojo */
     --color-warning: #f59e0b;
-    /* Ámbar */
     --color-info: #3b82f6;
-    /* Azul info */
 
     /* Espaciado (basado en rem) */
     --space-xs: 0.25rem;
@@ -28,7 +18,8 @@
     --space-xl: 2rem;
 
     /* Tipografía */
-    --font-base: 'Inter', system-ui, sans-serif;
+    /* --font-base: 'Inter', system-ui, sans-serif; */
+    --font-base: 'Urbanist', sans-serif;
     --font-size-base: 1rem;
     --line-height: 1.5;
 }
@@ -36,15 +27,10 @@
 /* Modo Oscuro */
 .dark-mode {
     --color-bg: #232323;
-    /* Fondo gris oscuro */
     --color-text: #f0f0f0;
-    /* Texto claro */
     --color-border: #444444;
-    /* Borde gris oscuro */
     --color-primary: #3b82f6;
-    /* Azul más claro para modo oscuro */
     --color-secondary: #9ca3af;
-    /* Gris claro */
 }
 
 /* === Reset básico === */
@@ -74,20 +60,68 @@ body>footer {
     padding: var(--space-md);
 }
 
-/* === Tipografía === */
+/* === Tipografía General === */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-    margin-bottom: var(--space-sm);
+    font-family: var(--font-base);
+    font-weight: 700;
     line-height: 1.2;
+    margin-bottom: var(--space-sm);
+    scroll-margin-top: 4rem;
+    /* útil si se usan anclas */
+    color: var(--color-text);
 }
 
+/* === H1: Separador de grandes secciones === */
 h1 {
-    border-bottom: 1px solid var(--color-primary);
+    font-size: 2rem;
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 0.25rem;
     margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* === H2: Títulos principales de secciones === */
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
+}
+
+/* === H3: Subtítulos bien diferenciados de H2 === */
+h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-top: var(--space-md);
+}
+
+/* === H4-H6: para subtítulos más discretos === */
+h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: var(--space-md);
+}
+
+h5 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: var(--space-md);
+}
+
+h6 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-top: var(--space-sm);
 }
 
 p {
@@ -122,17 +156,17 @@ button:hover,
     background-color: color-mix(in srgb, var(--color-primary), black 10%);
 }
 
-button .secondary {
+button.secondary {
     background-color: transparent;
     border: 1px solid var(--color-secondary);
     color: var(--color-secondary);
 }
 
-button .success {
+button.success {
     background-color: var(--color-success);
 }
 
-button .error {
+button.error {
     background-color: var(--color-error);
 }
 
@@ -173,7 +207,7 @@ section {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: var(--space-md);
+    /* margin-bottom: var(--space-md); */
     /* min-width: 600px; */
     white-space: nowrap;
 }
@@ -182,7 +216,7 @@ table {
     width: 100%;
     overflow-x: auto;
     /* Permite scroll horizontal */
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
     -webkit-overflow-scrolling: touch;
     /* Mejor scroll en iOS */
     border-radius: 0.25rem;
@@ -257,14 +291,28 @@ nav a:hover::after {
     width: 100%;
 }
 
+nav .logo {
+    margin-right: auto;
+}
+
 /* Versión móvil (hamburger menu) */
 @media (max-width: 768px) {
     nav ul {
         flex-direction: column;
         gap: var(--space-sm);
-        padding: var(--space-md);
-        display: none;
-        /* Se activará con JavaScript */
+        padding: 0 var(--space-md);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    nav .logo {
+        margin-right: 0;
+    }
+
+    nav ul.open {
+        /* abrir el menu */
+        max-height: 500px;
     }
 
     /* Botón hamburguesa (necesario) */
@@ -272,6 +320,15 @@ nav a:hover::after {
         display: block;
         padding: var(--space-md);
         cursor: pointer;
+        margin-left: auto;
+    }
+
+    .burguer i {
+        transition: transform 0.3s ease;
+    }
+
+    .burguer.open i {
+        transform: rotate(90deg);
     }
 }
 
@@ -288,11 +345,17 @@ aside,
     padding: var(--space-md);
     border-radius: 0.5rem;
     margin-bottom: var(--space-md);
+    margin-top: var(--space-md);
 }
 
 [role="alert"] {
     background-color: color-mix(in srgb, var(--color-primary), transparent 90%);
     border-left: 4px solid var(--color-primary);
+}
+
+[role="alert"].error {
+    background-color: color-mix(in srgb, var(--color-error), transparent 90%);
+    border-left: 4px solid var(--color-error);
 }
 
 /* === Utilidades (opcionales) === */
@@ -365,4 +428,68 @@ input[type="checkbox"] {
     width: 1em;
     height: 1em;
     cursor: pointer;
+}
+
+/* === Lista <li> y <ul> === */
+/* Listas para contenido de lectura (ej. blog, artículos) */
+section ul,
+section ol,
+article ul,
+article ol {
+    padding-left: 1.5rem;
+    margin: var(--space-md) 0;
+    line-height: 1.6;
+}
+
+section li,
+article li {
+    margin-bottom: var(--space-sm);
+    padding-left: 0.25rem;
+}
+
+/* Listas no ordenadas: marcador elegante */
+section ul li::marker,
+article ul li::marker {
+    content: '– ';
+    /* guion largo o puedes usar '•' o '▸' */
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+/* Listas ordenadas: numeración clara */
+section ol,
+article ol {
+    counter-reset: list-counter;
+}
+
+section ol li,
+article ol li {
+    counter-increment: list-counter;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+section ol li::before,
+article ol li::before {
+    content: counter(list-counter) '.';
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+/* Anidación */
+section ul ul,
+section ol ol,
+section ul ol,
+section ol ul,
+article ul ul,
+article ol ol,
+article ul ol,
+article ol ul {
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-xs);
+    padding-left: 1.25rem;
+    font-size: 0.95em;
+    opacity: 0.9;
 }

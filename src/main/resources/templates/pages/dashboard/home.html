@@ -7,23 +7,23 @@
   </head>
   <main layout:fragment="content">
     <!-- Encabezado y selector -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
+    <div class="header-selector">
       <h1>Mis horarios</h1>
-      <div th:if="${not schedules?.empty}" style="display: flex; align-items: center; gap: var(--space-md);">
+      <div th:if="${not schedules?.empty}" class="form-container">
         <!-- Form para seleccionar horario -->
         <form id="scheduleForm" th:action="@{/}" method="get" style="margin: 0;">
           <select id="scheduleSelector" name="id" onchange="this.form.submit()" style="width: 250px;">
             <option value="" selected disabled>Selecciona un horario</option>
             <option th:each="schedule : ${schedules}" 
-                                th:value="${schedule.id}"
-                                th:text="${schedule.description}"
-                                th:selected="${selectedSchedule != null and selectedSchedule.id == schedule.id}">
+                        th:value="${schedule.id}"
+                        th:text="${schedule.description}"
+                        th:selected="${selectedSchedule != null and selectedSchedule.id == schedule.id}">
             </option>
           </select>
         </form>
         <!-- Form para eliminar horario -->
         <form id="deleteScheduleForm" th:action="@{/schedule/{id}/delete(id=${selectedSchedule.id})}" method="post" 
-                      th:if="${selectedSchedule != null}" onsubmit="return confirm('¿Estás seguro que quieres eliminar este horario?');">
+          th:if="${selectedSchedule != null}" onsubmit="return confirm('¿Estás seguro que quieres eliminar este horario?');">
           <button type="submit" class="error">Eliminar horario</button>
         </form>
       </div>
@@ -38,12 +38,45 @@
     <div th:if="${schedules?.empty}" role="alert">
       No tienes horarios registrados.
     </div>
-
     <section>
-        <!-- Contenido del horario seleccionado -->
-        <div th:replace="~{pages/dashboard/detail :: schedule(${selectedSchedule})}" 
+      <!-- Contenido del horario seleccionado -->
+      <div th:replace="~{pages/dashboard/detail :: schedule(${selectedSchedule})}" 
             th:if="${selectedSchedule != null}">
-        </div>
+      </div>
     </section>
+    <style>
+      .header-selector {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: var(--space-lg);
+          flex-wrap: wrap;
+      }
+
+      .form-container {
+          display: flex;
+          align-items: center;
+          gap: var(--space-md);
+      }
+
+      /* Para que el form ocupe ancho completo en mobile y quede debajo */
+      @media (max-width: 768px) {
+          .header-selector {
+              flex-direction: column;
+              align-items: flex-start; /* para que título quede alineado a la izquierda */
+              gap: var(--space-md);
+          }
+          .form-container {
+              width: 100%;
+              flex-wrap: wrap;
+          }
+          #scheduleForm {
+              width: 100%;
+          }
+          #scheduleSelector {
+              width: 100%;
+          }
+      }
+    </style>
   </main>
 </html>
