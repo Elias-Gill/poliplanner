@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/flat_base}">
   <head>
-    <meta charset="UTF-8">
-    <title>Actualizar Excel</title>
+    <title>Iniciar Sesión</title>
   </head>
-  <body>
+  <main layout:fragment="content">
     <h1>Actualizar Excel</h1>
     <form id="syncForm" enctype="multipart/form-data">
       <label for="token">Token de autenticación:</label>
@@ -12,6 +13,9 @@
       <br>
       <label for="archivo">Archivo Excel:</label>
       <input type="file" id="archivo" name="file" accept=".xls,.xlsx" required>
+      <br>
+      <label for="token">Link de descarga:</label>
+      <input type="text" id="link" name="link" required>
       <br>
       <br>
       <button type="submit" id="submitBtn">Actualizar</button>
@@ -28,10 +32,17 @@
         button.disabled = true;
         respuestaDiv.textContent = "Subiendo y actualizando...";
 
+        // extraer token
         const token = document.getElementById("token").value;
+
+        // subir archivo
         const fileInput = document.getElementById("archivo");
         const formData = new FormData();
         formData.append("file", fileInput.files[0]);
+
+        // extraer link de descarga
+        const link = document.getElementById("link").value;
+        formData.append("link", link);
 
         try {
           const response = await fetch("/sync", {
@@ -54,5 +65,5 @@
         }
       });
     </script>
-  </body>
+  </main>
 </html>

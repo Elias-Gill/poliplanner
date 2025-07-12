@@ -40,7 +40,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    transition: background-color 0.4s ease, color 0.4s ease;
+    transition: background-color 0.20s ease, color 0.20s ease;
 }
 
 body {
@@ -50,6 +50,14 @@ body {
     color: var(--color-text);
     background-color: var(--color-bg);
     padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
 }
 
 /* === Contenedor principal (limita ancho en desktop) === */
@@ -61,6 +69,10 @@ body>footer {
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--space-md);
+}
+
+main {
+    flex: 1;
 }
 
 /* === Tipografía General === */
@@ -181,7 +193,6 @@ textarea {
     padding: var(--space-sm);
     border: 1px solid var(--color-border);
     border-radius: 0.25rem;
-    margin-bottom: var(--space-md);
 }
 
 input:focus,
@@ -340,6 +351,7 @@ footer {
     border-top: 1px solid var(--color-border);
     margin-top: var(--space-xl);
     text-align: center;
+    padding: var(--space-md);
 }
 
 /* === Alertas/Burbujas (<aside> o role="alert") === */

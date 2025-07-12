@@ -2,48 +2,59 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}">
-  <main layout:fragment="content" class="container py-5">
+  <main layout:fragment="content">
     <!-- Mensaje de error si no hay carreras -->
-    <div th:if="${error != null and !#strings.isEmpty(error)}" 
-       class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-      <span th:text="${error}"></span>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <!-- Formulario de selección de carrera -->
-    <h2 class="section">Crear nuevo horario</h2>
-    <form th:action="@{/schedule/new}" method="post">
-      <!-- Descripción del horario -->
-      <div class="mb-4">
-        <label for="description" class="form-label">Descripción</label>
-        <input type="text" class="form-control" id="description" name="description" 
-             placeholder="Ej: Horario primer semestre 2025" required>
+    <section th:if="${error != null and !#strings.isEmpty(error)}" role="alert" style="--color: var(--color-danger); margin-top: var(--space-md)">
+      <div class="alert">
+        <span th:text="${error}"></span>
+        <button type="button" onclick="this.parentElement.remove()" aria-label="Cerrar alerta">×</button>
       </div>
-      <!-- Selección de carrera -->
-      <div class="mb-4">
-        <label for="careerId" class="form-label">Carrera</label>
-        <select class="form-select" id="careerId" name="careerId" required>
-          <option disabled selected value="">Selecciona una carrera</option>
-          <option th:each="career : ${careers}"
-                th:value="${career.id}"
-                th:text="${career.name}">
-          </option>
-        </select>
-      </div>
-      <!-- Versión de hoja (solo informativo) -->
-      <div class="mb-4">
-        <label class="form-label">Versión de Excel</label>
-        <!-- TODO: se ve re feo -->
-        <div>
-          <span th:text="${sheetVersion.fileName}"></span>
-          <span th:if="${sheetVersion.parsedAt != null}"
-              th:text="${#dates.format(sheetVersion.parsedAt, 'dd/MM/yyyy HH:mm')}"></span>
-          <span th:if="${sheetVersion.parsedAt == null}">Fecha no disponible</span>
-        </div>
-      </div>
-      <!-- Botón de envío -->
-      <div class="mt-5">
-        <button type="submit" class="btn btn-primary px-4">Continuar</button>
-      </div>
-    </form>
+    </section>
+    <!-- Formulario -->
+    <section>
+      <article>
+        <h2>Crear nuevo horario</h2>
+        <form th:action="@{/schedule/new}" method="post">
+          <!-- Descripción -->
+          <article>
+            <label for="description">Descripción</label>
+            <input type="text" id="description" name="description" placeholder="Ej: Horario primer semestre 2025" required>
+          </article>
+          <!-- Selección de carrera -->
+          <article>
+            <label for="careerId">Carrera</label>
+            <select id="careerId" name="careerId" required>
+              <option disabled selected value="">Selecciona una carrera</option>
+              <option th:each="career : ${careers}"
+                    th:value="${career.id}"
+                    th:text="${career.name}">
+              </option>
+            </select>
+          </article>
+          <!-- Versión de hoja -->
+          <article>
+            <label>Versión de Excel</label>
+            <div>
+              <span>
+                <strong>Archivo:</strong>
+                <span th:text="${sheetVersion.fileName}"></span>
+              </span>
+              <br>
+              <strong>Procesado el:</strong>
+              <span th:if="${sheetVersion.parsedAt != null}"
+            th:text="${#dates.format(sheetVersion.parsedAt, 'dd/MM/yyyy HH:mm')}"></span>
+              <span th:if="${sheetVersion.parsedAt == null}">Fecha no disponible</span>
+              <br>
+              <strong>Descarga:</strong>
+              <a th:href="@{${sheetVersion.url}}" th:text="${sheetVersion.url}" target="_blank" rel="noopener"></a>
+            </div>
+          </article>
+          <!-- Botón de envío -->
+          <footer style="margin-top: var(--space-xl)">
+            <button type="submit">Continuar</button>
+          </footer>
+        </form>
+      </article>
+    </section>
   </main>
 </html>
