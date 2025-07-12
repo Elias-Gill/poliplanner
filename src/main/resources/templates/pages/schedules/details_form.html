@@ -2,45 +2,90 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}">
-  <main layout:fragment="content" class="container py-5">
-    <!-- mensaje de error -->
+  <main layout:fragment="content" class="container">
+    <!-- Mensaje de error -->
     <div th:if="${error != null and !#strings.isEmpty(error)}" 
-       class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+       role="alert" class="error dismissible">
       <span th:text="${error}"></span>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <button type="button" aria-label="Cerrar" onclick="this.parentElement.remove()">✕</button>
     </div>
-    <!-- formulario -->
-    <h2 class="section">Selecciona las materias</h2>
+    <!-- Formulario -->
+    <h2>Selecciona las materias</h2>
     <form th:action="@{/schedule/new/details}" method="post">
-      <!-- campo oculto para descripción -->
-      <input type="hidden" name="description" th:value="${description}"/>
-      <!-- materias agrupadas por semestre -->
-      <div th:each="semester : ${#sets.toSet(subjects.![semestre])}" class="mb-4">
+      <!-- Campo oculto para descripción -->
+      <input type="hidden" name="description" th:value="${description}" />
+      <!-- Materias agrupadas por semestre -->
+      <div th:each="semester : ${#sets.toSet(subjects.![semestre])}" style="margin-bottom: var(--space-lg);">
         <details>
-          <summary class="mb-2 fw-bold fs-5" th:text="'Semestre ' + ${semester}"></summary>
-          <ul class="list-group elegant-list">
+          <summary style="margin-bottom: var(--space-sm); font-weight: bold; font-size: 1.2rem;" 
+                 th:text="'Semestre ' + ${semester}"></summary>
+          <ul>
             <li th:each="subject : ${subjects}"
-              th:if="${subject.semestre == semester}"
-              class="list-group-item subject-item">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox"
+              th:if="${subject.semestre == semester}">
+              <label>
+                <input type="checkbox"
                      th:id="'subject-' + ${subject.id}"
                      th:name="subjectIds"
-                     th:value="${subject.id}">
-                <label class="form-check-label" th:for="'subject-' + ${subject.id}">
-                  <strong th:text="${subject.nombreAsignatura}"></strong>
-                  <span th:text="' (Sección ' + ${subject.seccion} + ')'"></span> -
-                  <small class="text-muted" th:text="${subject.tituloProfesor + ' ' + subject.nombreProfesor + ' ' + subject.apellidoProfesor}"></small>
-                </label>
-              </div>
+                     th:value="${subject.id}" />
+                <strong th:text="${subject.nombreAsignatura}"></strong>
+                <span th:text="' (Sección ' + ${subject.seccion} + ')'"></span> –
+                <small th:text="${subject.tituloProfesor + ' ' + subject.nombreProfesor + ' ' + subject.apellidoProfesor}"></small>
+              </label>
             </li>
           </ul>
         </details>
       </div>
-      <!-- botón de envío -->
-      <div class="mt-5">
-        <button type="submit" class="btn btn-primary px-4">Crear horario</button>
+      <!-- Botón de envío -->
+      <div style="margin-top: var(--space-xl);">
+        <button type="submit">Crear horario</button>
       </div>
     </form>
+    <style>
+      details {
+          margin-top: var(--space-xl);
+      }
+
+      details ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      details ul li {
+        border: 1px solid var(--color-border);
+        border-radius: 0.25rem;
+        padding: var(--space-sm) var(--space-md);
+        margin-bottom: var(--space-sm);
+        background-color: var(--color-bg);
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: flex-start;
+      }
+
+      details ul li:hover {
+        background-color: color-mix(in srgb, var(--color-primary), transparent 95%);
+      }
+
+      details ul li label {
+        display: flex;
+        gap: var(--space-sm);
+        cursor: pointer;
+        width: 100%;
+        flex-wrap: wrap;
+      }
+
+      details ul li input[type="checkbox"] {
+        margin-top: 0.2rem;
+      }
+
+      details ul li strong {
+        font-weight: 600;
+      }
+
+      details ul li small {
+        color: var(--color-muted, #666);
+        font-size: 0.85rem;
+      }
+    </style>
   </main>
 </html>

@@ -50,16 +50,24 @@ public class ExcelSyncController {
     @PostMapping("/sync")
     public ResponseEntity<?> syncExcel(
             @RequestHeader("Authorization") String authHeader,
+            @RequestParam("link") String link,
             @RequestParam("file") MultipartFile file) {
 
         logger.warn(">>> POST '/sync' alcanzado");
 
-        try {
-            tokenValidator.validate(authHeader);
+        if (!tokenValidator.isValid(authHeader)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token invalido");
+        }
 
+        try {
             if (file.isEmpty()) {
                 logger.warn("Archivo no recibido");
                 return ResponseEntity.badRequest().body("No se recibió un archivo válido.");
+            }
+
+            if (link.isEmpty()) {
+                logger.warn("Link de descarga no proporcionado");
+                return ResponseEntity.badRequest().body("Link de descarga no proporcionado");
             }
 
             // Guardar archivo temporal
@@ -69,7 +77,7 @@ public class ExcelSyncController {
             logger.info("Archivo subido y guardado en {}", tempFile);
 
             // Procesar archivo como nuevo Excel
-            service.persistSubjectsFromExcel(tempFile, tempFile.getFileName().toString());
+            service.persistSubjectsFromExcel(tempFile, link);
             logger.warn("Excel correctamente parseado y actualizado");
 
             return ResponseEntity.ok("Archivo sincronizado correctamente.");
@@ -91,7 +99,7 @@ public class ExcelSyncController {
     public ResponseEntity<?> syncExcel(@RequestHeader("Authorization") String authHeader) {
         logger.warn(">>> POST '/sync/ci' alcanzado desde CI/CD");
         try {
-            tokenValidator.validate(authHeader);
+            tokenValidator.isValid(authHeader);
             service.SyncronizeExcel();
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {

@@ -2,162 +2,189 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}">
-  <main layout:fragment="content" class="container py-5">
-    <!-- Título general -->
-    <h2 class="mb-5 text-primary" style="font-family: var(--font-main);">Calculadora de Notas</h2>
-    <div class="row gy-5">
-      <!-- Sección A: Cálculo con promedio ponderado conocido -->
-      <section class="col-12 col-lg-6">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h4 class="card-title text-primary" style="font-family: var(--font-main);">A) Ya tengo mi promedio ponderado</h4>
-            <p class="text-secondary">Ingresa tu promedio ponderado (0–100) y obtén los puntajes mínimos en el examen final para cada nota 2–5.</p>
-            <form id="formPonderado" class="row g-3" onsubmit="return false;">
-              <div class="col-12">
-                <label for="inputPonderado" class="form-label">Promedio ponderado (0–100)</label>
-                <input type="number" id="inputPonderado" class="form-control" min="0" max="100" step="1">
-              </div>
-              <div class="col-12 text-end">
-                <button id="btnPonderado" class="btn btn-primary">Calcular A</button>
-              </div>
-            </form>
-          </div>
-        </div>
+  <main layout:fragment="content">
+    <h2 class="titulo">Calculadora de Notas</h2>
+    <div class="contenedor-principal">
+      <!-- Sección A -->
+      <section class="bloque">
+        <article>
+          <h4 class="seccion-titulo">A) Ya tengo mi promedio ponderado</h4>
+          <p class="descripcion">Ingresa tu promedio ponderado (0–100) y obtén los puntajes mínimos en el examen final para cada nota 2–5.</p>
+          <form id="formPonderado" onsubmit="return false;">
+            <label for="inputPonderado">Promedio ponderado (0–100)</label>
+            <input type="number" id="inputPonderado" min="0" max="100" step="1">
+            <div class="alinear-derecha">
+              <button id="btnPonderado" type="button">Calcular A</button>
+            </div>
+          </form>
+        </article>
       </section>
-      <!-- Sección B: Calcular promedio y luego examen -->
-      <section class="col-12 col-lg-6">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h4 class="card-title text-primary" style="font-family: var(--font-main);">B) Calcular promedio ponderado y examen</h4>
-            <p class="text-secondary">Introduce tus promedios y pesos (que sumen 100) para calcular tu promedio ponderado y luego los puntajes del examen.</p>
-            <form id="formComponentes" class="row g-3" onsubmit="return false;">
-              <div class="col-6">
-                <label for="pesoParciales" class="form-label">Peso Parciales (%)</label>
-                <input type="number" id="pesoParciales" class="form-control" min="0" max="100">
-              </div>
-              <div class="col-6">
-                <label for="promParciales" class="form-label">Promedio Parciales (0–100)</label>
-                <input type="number" id="promParciales" class="form-control" min="0" max="100">
-              </div>
-              <div class="col-6">
-                <label for="pesoTareas" class="form-label">Peso Tareas (%)</label>
-                <input type="number" id="pesoTareas" class="form-control" min="0" max="100">
-              </div>
-              <div class="col-6">
-                <label for="promTareas" class="form-label">Promedio Tareas (0–100)</label>
-                <input type="number" id="promTareas" class="form-control" min="0" max="100">
-              </div>
-              <div class="col-6">
-                <label for="pesoLab" class="form-label">Peso Laboratorios (%)</label>
-                <input type="number" id="pesoLab" class="form-control" min="0" max="100">
-              </div>
-              <div class="col-6">
-                <label for="promLab" class="form-label">Promedio Lab. (0–100)</label>
-                <input type="number" id="promLab" class="form-control" min="0" max="100">
-              </div>
-              <div class="col-12 text-end">
-                <button id="btnComponentes" class="btn btn-primary">Calcular B</button>
-              </div>
-            </form>
-          </div>
-        </div>
+      <!-- Sección B -->
+      <section class="bloque">
+        <article>
+          <h4 class="seccion-titulo">B) Calcular promedio ponderado y examen</h4>
+          <p class="descripcion">Introduce tus promedios y pesos (que sumen 100) para calcular tu promedio ponderado y luego los puntajes del examen.</p>
+          <form id="formComponentes" onsubmit="return false;" class="form-grid">
+            <div>
+              <label for="pesoParciales">Peso Parciales (%)</label>
+              <input type="number" id="pesoParciales" min="0" max="100" value="0">
+            </div>
+            <div>
+              <label for="promParciales">Promedio Parciales (0–100)</label>
+              <input type="number" id="promParciales" min="0" max="100" value="0">
+            </div>
+            <div>
+              <label for="pesoTareas">Peso Tareas (%)</label>
+              <input type="number" id="pesoTareas" min="0" max="100" value="0">
+            </div>
+            <div>
+              <label for="promTareas">Promedio Tareas (0–100)</label>
+              <input type="number" id="promTareas" min="0" max="100" value="0">
+            </div>
+            <div>
+              <label for="pesoLab">Peso Laboratorios (%)</label>
+              <input type="number" id="pesoLab" min="0" max="100" value="0">
+            </div>
+            <div>
+              <label for="promLab">Promedio Lab. (0–100)</label>
+              <input type="number" id="promLab" min="0" max="100" value="0">
+            </div>
+            <div class="alinear-derecha" style="grid-column: 1 / -1;">
+              <button id="btnComponentes" type="button">Calcular B</button>
+            </div>
+          </form>
+        </article>
       </section>
     </div>
-    <!-- Resultados (común a ambas secciones) -->
-    <section class="mt-5">
-      <h4 class="mb-3" style="font-family: var(--font-main); color: var(--color-heading);">
-        Puntajes mínimos en el examen final para obtener cada nota (2–5)
-      </h4>
-      <div class="table-responsive">
-        <table class="table table-bordered text-center" style="background-color: var(--color-surface);">
-          <thead class="table-primary" style="color: white;">
+    <!-- Resultados -->
+    <section id="resultados">
+      <h4 class="seccion-titulo">Puntajes mínimos en el examen final para obtener cada nota (2–5)</h4>
+      <div class="table-container">
+        <table>
+          <thead>
             <tr>
               <th>Nota final</th>
               <th>Examen mínimo (0–100)</th>
             </tr>
           </thead>
-          <tbody id="resultadoTabla">
-            <!-- Se rellenará por JavaScript -->
-          </tbody>
+          <tbody id="resultadoTabla"></tbody>
         </table>
       </div>
     </section>
   </main>
-  <script layout:fragment="scripts">
-    const MIN_EXAM = 50; // Examen mínimo exigido (50 puntos para aprobar)
-
-    // Umbrales para convertir puntaje final (0-100) a nota (1-5)
-    const UMBRALES_NOTAS = [
-        { min: 91, nota: 5 },
-        { min: 81, nota: 4 },
-        { min: 71, nota: 3 },
-        { min: 61, nota: 2 },
-        { min: 0,  nota: 1 }
-    ];
-
-    // Calcula la nota final (1-5) basada en el ponderado y examen
-    function calcularNotaFinal(ponderado, examen) {
-        const puntajeFinal = 0.4 * ponderado + 0.6 * examen;
-        for (const umbral of UMBRALES_NOTAS) {
-            if (puntajeFinal >= umbral.min) {
-                return umbral.nota;
-            }
-        }
-        return 1; // Por defecto (no debería ocurrir)
+  <style>
+    .titulo {
+      font-family: var(--font-base);
+      color: var(--color-primary);
+      margin-bottom: var(--space-xl);
     }
 
-    // Calcula la nota mínima necesaria en el examen para alcanzar una nota deseada
+    .contenedor-principal {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xl);
+    }
+
+    .bloque {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+
+    @media (min-width: 992px) {
+      .bloque {
+        flex: 1 1 48%;
+      }
+    }
+
+    .seccion-titulo {
+      font-family: var(--font-base);
+      color: var(--color-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .descripcion {
+      color: var(--color-secondary);
+      margin-bottom: var(--space-md);
+    }
+
+    .alinear-derecha {
+      text-align: right;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+  </style>
+  <script layout:fragment="scripts">
+    const MIN_EXAM = 50;
+    const UMBRALES_NOTAS = [
+      { min: 91, nota: 5 },
+      { min: 81, nota: 4 },
+      { min: 71, nota: 3 },
+      { min: 61, nota: 2 },
+      { min: 0,  nota: 1 }
+    ];
+
+    function calcularNotaFinal(ponderado, examen) {
+      const puntajeFinal = 0.4 * ponderado + 0.6 * examen;
+      for (const umbral of UMBRALES_NOTAS) {
+        if (puntajeFinal >= umbral.min) return umbral.nota;
+      }
+      return 1;
+    }
+
     function calcularExamenNecesario(ponderado, notaDeseada) {
-        const umbral = UMBRALES_NOTAS.find(u => u.nota === notaDeseada);
-        if (!umbral) return NaN; // Nota inválida
+      const umbral = UMBRALES_NOTAS.find(u => u.nota === notaDeseada);
+      if (!umbral) return NaN;
 
-        let examenNecesario = (umbral.min - 0.4 * ponderado) / 0.6;
-        examenNecesario = Math.max(examenNecesario, MIN_EXAM);
-        examenNecesario = Math.floor(examenNecesario);
-
-        // Si no es alcanzable, devuelve '-'
-        return examenNecesario > 100 ? '-' : examenNecesario;
+      let examenNecesario = (umbral.min - 0.4 * ponderado) / 0.6;
+      examenNecesario = Math.max(examenNecesario, MIN_EXAM);
+      examenNecesario = Math.floor(examenNecesario);
+      return examenNecesario > 100 ? '-' : examenNecesario;
     }
 
     function calcularTabla(ponderado) {
-        const tbody = document.getElementById('resultadoTabla');
-        tbody.innerHTML = '';
-        for (let nota = 5; nota >= 2; nota--) { // Mostrar invertido (mejor legibilidad)
-            const req = calcularExamenNecesario(ponderado, nota);
-            tbody.insertAdjacentHTML('beforeend', `
-                <tr>
-                    <td>${nota}</td>
-                    <td>${req}</td>
-                </tr>
-            `);
-        }
+      const tbody = document.getElementById('resultadoTabla');
+      tbody.innerHTML = '';
+      for (let nota = 5; nota >= 2; nota--) {
+    const req = calcularExamenNecesario(ponderado, nota);
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>${nota}</td>
+        <td>${req}</td>
+      </tr>
+    `);
+      }
+      document.getElementById('resultados').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Sección A: Calcular con ponderado directo
     document.getElementById('btnPonderado').addEventListener('click', () => {
-        const v = parseInt(document.getElementById('inputPonderado').value);
-        if (isNaN(v) || v < 0 || v > 100) {
-            return alert('Ingresa un promedio ponderado válido (0–100)');
-        }
-        calcularTabla(v);
+      const v = parseInt(document.getElementById('inputPonderado').value);
+      if (isNaN(v) || v < 0 || v > 100) {
+        return alert('Ingresa un promedio ponderado válido (0–100)');
+      }
+      calcularTabla(v);
     });
 
-    // Sección B: Calcular con componentes (parciales, tareas, etc.)
     document.getElementById('btnComponentes').addEventListener('click', () => {
-        const p1 = parseInt(document.getElementById('pesoParciales').value) || 0;
-        const p2 = parseInt(document.getElementById('pesoTareas').value)   || 0;
-        const p3 = parseInt(document.getElementById('pesoLab').value)    || 0;
-        if (p1 + p2 + p3 !== 100) {
-            return alert('La suma de los pesos debe ser 100');
-        }
-        const m1 = parseInt(document.getElementById('promParciales').value);
-        const m2 = parseInt(document.getElementById('promTareas').value);
-        const m3 = parseInt(document.getElementById('promLab').value);
-        if ([m1, m2, m3].some(x => isNaN(x) || x < 0 || x > 100)) {
-            return alert('Promedios deben ser números entre 0 y 100');
-        }
-        const ponderado = (m1 * p1 + m2 * p2 + m3 * p3) / 100;
-        calcularTabla(ponderado);
+      const p1 = parseInt(document.getElementById('pesoParciales').value) || 0;
+      const p2 = parseInt(document.getElementById('pesoTareas').value) || 0;
+      const p3 = parseInt(document.getElementById('pesoLab').value) || 0;
+      if (p1 + p2 + p3 !== 100) {
+        return alert('La suma de los pesos debe ser 100');
+      }
+
+      const m1 = parseInt(document.getElementById('promParciales').value);
+      const m2 = parseInt(document.getElementById('promTareas').value);
+      const m3 = parseInt(document.getElementById('promLab').value);
+      if ([m1, m2, m3].some(x => isNaN(x) || x < 0 || x > 100)) {
+        return alert('Promedios deben ser números entre 0 y 100');
+      }
+
+      const ponderado = (m1 * p1 + m2 * p2 + m3 * p3) / 100;
+      calcularTabla(ponderado);
     });
   </script>
 </html>

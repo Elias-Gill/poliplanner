@@ -1,10 +1,5 @@
 package com.elias_gill.poliplanner.controller;
 
-import com.elias_gill.poliplanner.exception.InternalServerErrorException;
-import com.elias_gill.poliplanner.exception.UserNameAlreadyExistsException;
-import com.elias_gill.poliplanner.models.User;
-import com.elias_gill.poliplanner.services.UserService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -13,6 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.elias_gill.poliplanner.exception.BadArgumentsException;
+import com.elias_gill.poliplanner.exception.InternalServerErrorException;
+import com.elias_gill.poliplanner.exception.UserNameAlreadyExistsException;
+import com.elias_gill.poliplanner.models.User;
+import com.elias_gill.poliplanner.services.UserService;
 
 @Controller
 public class UserController {
@@ -35,17 +36,22 @@ public class UserController {
     // Procesa el formulario de registro
     @PostMapping("/register")
     public String registerUser(
-            @ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+            @ModelAttribute("user") User user,
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
         try {
             userService.registerUser(user.getUsername(), user.getPassword());
+        } catch (BadArgumentsException e) {
+            model.addAttribute("error", e.getMessage());
+            return "pages/auth/register";
         } catch (UserNameAlreadyExistsException e) {
-            redirectAttributes.addFlashAttribute("error", "El nombre de usuario ya está en uso.");
-            return "redirect:/register";
+            model.addAttribute("error", "El nombre de usuario ya está en uso.");
+            return "pages/auth/register";
         } catch (InternalServerErrorException e) {
             logger.error("Error interno en registro de usuario: " + e.getMessage(), e);
             redirectAttributes.addFlashAttribute("error", "Internal server error. Please try again later");
-            return "redirect:/register";
+            return "redirect:/login";
         }
 
         redirectAttributes.addFlashAttribute(
