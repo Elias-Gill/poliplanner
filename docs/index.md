@@ -16,3 +16,4 @@
 ## Otros archivos
 
 - [Eschema de base de datos](media/db_scheme.png)
+- [Calculo de notas](media/calculo_de_notas.jpeg), [escala](media/escala_politecnica.pdf)
