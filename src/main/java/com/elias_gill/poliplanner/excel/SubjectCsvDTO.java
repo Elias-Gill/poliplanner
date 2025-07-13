@@ -9,6 +9,12 @@ public class SubjectCsvDTO {
     @CsvBindByPosition(position = 2)
     public String nombreAsignatura;
 
+    // NOTE: algunas materias tienen semestre y nivel, otras solo semestre, y otras
+    // solo nivel la verdad es que no tengo ni idea de que significa esa
+    // nomenclatura para los de la facultad.
+    @CsvBindByPosition(position = 2)
+    public String nivel;
+
     @CsvBindByPosition(position = 4)
     public String semestre;
 

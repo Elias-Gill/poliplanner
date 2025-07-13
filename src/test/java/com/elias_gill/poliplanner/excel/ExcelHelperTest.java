@@ -141,6 +141,8 @@ public class ExcelHelperTest {
 
         // Esperados
         Set<String> nombresEsperados = Set.of(
+                "Cnel. Oviedo.csv", // NOTE: en algunas versiones del horario es super inconsistente
+                "Villarrica.csv", // tambien es inconsistente
                 "IAE.csv",
                 "ICM.csv",
                 "IEK.csv",

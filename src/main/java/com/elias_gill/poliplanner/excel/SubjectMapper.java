@@ -6,6 +6,8 @@ import java.time.format.DateTimeParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.elias_gill.poliplanner.models.ExamsCompact;
@@ -13,6 +15,8 @@ import com.elias_gill.poliplanner.models.Subject;
 
 @Component
 public class SubjectMapper {
+    private final static Logger logger = LoggerFactory.getLogger(SubjectMapper.class);
+
     public static Subject mapToSubject(SubjectCsvDTO subjectCsv) {
         if (subjectCsv == null) {
             return null;
@@ -22,7 +26,18 @@ public class SubjectMapper {
         // informacion general de la materia
         subject.setDepartamento(subjectCsv.departamento);
         subject.setNombreAsignatura(subjectCsv.nombreAsignatura);
-        subject.setSemestre(convertStringToNumber(subjectCsv.semestre));
+
+        // NOTE: en algunas materias y algunas carreras, no se tiene la informacion del
+        // semestre, sino que solo del "nivel". No se que significa esa nomenclatura en
+        // los horarios de la facultad, pero si es que no se provee semestre, entonces
+        // se usa el nivel como valor por defecto. Si ninguno de los dos es posible
+        // parsear, entonces directamente se pone como "0".
+        Integer semestre = convertStringToNumber(subjectCsv.semestre);
+        if (semestre != 0) {
+            subject.setSemestre(semestre);
+        } else {
+            subject.setSemestre(convertStringToNumber(subjectCsv.nivel));
+        }
 
         // informacion del profesor
         subject.setSeccion(subjectCsv.seccion);
@@ -82,12 +97,15 @@ public class SubjectMapper {
     }
 
     private static Integer convertStringToNumber(String str) {
-        str = str.trim();
-        if (str == null || str.isBlank() || str.isEmpty()) {
+        if (str == null) {
             return 0;
         }
 
         String cleanedStr = str.replaceAll("[^0-9]", "");
+        if (str.isBlank() || str.isEmpty()) {
+            return 0;
+        }
+
         try {
             return Integer.parseInt(cleanedStr);
         } catch (Exception e) {

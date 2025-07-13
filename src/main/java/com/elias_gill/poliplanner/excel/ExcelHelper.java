@@ -135,11 +135,12 @@ public class ExcelHelper {
                             && !path.toString().contains("ódigos")
                             && !path.toString().contains("Asignaturas")
                             && !path.toString().contains("Homologadas")
-                            && !path.toString().contains("oviedo")
-                            && !path.toString().contains("Oviedo")
-                            && !path.toString().contains("Villarrica")
-                            && !path.toString().contains("villarrica")
                             && !path.toString().contains("Homólogas")
+                            // INFO: los semestres anteriores, eran super inconsistente
+                            // && !path.toString().contains("oviedo")
+                            // && !path.toString().contains("Oviedo")
+                            // && !path.toString().contains("Villarrica")
+                            // && !path.toString().contains("villarrica")
                             && !path.toString().equalsIgnoreCase("códigos"))
                     .sorted()
                     .collect(Collectors.toList());
