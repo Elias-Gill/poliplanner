@@ -24,7 +24,7 @@
           </label>
         </section>
         <button type="submit">Registrarse</button>
-        <div th:if="${error}" role="alert" th:text="${error}" class="error"></div>
+        <div th:replace="~{fragments/error :: alert(${error})}"></div>
       </form>
       <p>
         ¿Ya tenés cuenta? <a th:href="@{/login}">Iniciá sesión acá</a>

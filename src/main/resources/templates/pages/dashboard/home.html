@@ -29,12 +29,8 @@
       </div>
     </div>
     <!-- Mensajes -->
-    <div th:if="${error != null and !#strings.isEmpty(error)}" role="alert" class="error">
-      <span th:text="${error}"></span>
-    </div>
-    <div th:if="${success != null and !#strings.isEmpty(success)}" role="alert" class="success">
-      <span th:text="${success}"></span>
-    </div>
+    <div th:replace="~{fragments/error :: alert(${error})}"></div>
+    <div th:replace="~{fragments/success :: alert(${success})}"></div>
     <div th:if="${schedules?.empty}" role="alert">
       No tienes horarios registrados.
     </div>

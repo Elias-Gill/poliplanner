@@ -4,11 +4,7 @@
       layout:decorate="~{layouts/base}">
   <main layout:fragment="content" class="container">
     <!-- Mensaje de error -->
-    <div th:if="${error != null and !#strings.isEmpty(error)}" 
-       role="alert" class="error dismissible">
-      <span th:text="${error}"></span>
-      <button type="button" aria-label="Cerrar" onclick="this.parentElement.remove()">✕</button>
-    </div>
+    <div th:replace="~{fragments/error :: alert(${error})}"></div>
     <!-- Formulario -->
     <h2>Selecciona las materias</h2>
     <form th:action="@{/schedule/new/details}" method="post">

@@ -27,11 +27,11 @@
           </div>
         </div>
         <button type="submit">Entrar</button>
-        <div th:if="${param.error}" class="alert error">
-          Usuario o contraseña inválidos
+        <div th:if="${param.error}">
+          <div th:replace="~{fragments/error :: alert('Usuario o contraseña inválidos')}"></div>
         </div>
-        <div th:if="${param.logout}" class="alert success">
-          Sesión cerrada exitosamente
+        <div th:if="${param.logout}">
+          <div th:replace="~{fragments/success :: alert('Sesión cerrada exitosamente')}"></div>
         </div>
       </form>
       <p class="login-footer">
@@ -89,22 +89,6 @@
           padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--space-xl);
           border: 1px solid var(--color-border);
           border-radius: 0.25rem;
-      }
-
-      .alert {
-          padding: var(--space-sm);
-          border-radius: 0.25rem;
-          margin: var(--space-md) 0;
-      }
-
-      .alert.error {
-          background-color: color-mix(in srgb, var(--color-error), transparent 90%);
-          border-left: 4px solid var(--color-error);
-      }
-
-      .alert.success {
-          background-color: color-mix(in srgb, var(--color-success), transparent 90%);
-          border-left: 4px solid var(--color-success);
       }
 
       .login-footer {

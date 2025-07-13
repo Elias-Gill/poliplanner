@@ -4,12 +4,7 @@
       layout:decorate="~{layouts/base}">
   <main layout:fragment="content">
     <!-- Mensaje de error si no hay carreras -->
-    <section th:if="${error != null and !#strings.isEmpty(error)}" role="alert" style="--color: var(--color-danger); margin-top: var(--space-md)">
-      <div class="alert">
-        <span th:text="${error}"></span>
-        <button type="button" onclick="this.parentElement.remove()" aria-label="Cerrar alerta">×</button>
-      </div>
-    </section>
+    <div th:replace="~{fragments/error :: alert(${error})}"></div>
     <!-- Formulario -->
     <section>
       <article>

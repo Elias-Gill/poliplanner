@@ -372,6 +372,11 @@ aside,
     border-left: 4px solid var(--color-error);
 }
 
+[role="alert"].success {
+    background-color: color-mix(in srgb, var(--color-success), transparent 90%);
+    border-left: 4px solid var(--color-success);
+}
+
 /* === Utilidades (opcionales) === */
 [hidden] {
     display: none !important;
