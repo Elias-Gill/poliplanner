@@ -114,7 +114,6 @@ h2 {
 h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--color-primary);
     margin-top: var(--space-md);
 }
 
@@ -255,7 +254,7 @@ td {
 }
 
 th {
-    background-color: color-mix(in srgb, var(--color-bg), black 5%);
+    background-color: color-mix(in srgb, var(--color-bg), var(--color-secondary) 5%);
 }
 
 /* === Navbar Rediseñado === */

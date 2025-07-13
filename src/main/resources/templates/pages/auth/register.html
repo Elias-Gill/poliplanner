@@ -7,20 +7,22 @@
   </head>
   <main layout:fragment="content">
     <article>
-      <h2>Registro de Usuario</h2>
-      <form th:action="@{/register}" th:object="${user}" method="post">
-        <label>
-          Nombre de usuario:
-          <input type="text" th:field="*{username}" required>
-        </label>
-        <label>
-          Contraseña:
-          <input type="password" th:field="*{password}" required>
-        </label>
-        <label>
-          Confirmar contraseña:
-          <input type="password" name="confirmPassword" required>
-        </label>
+      <section>
+        <h2>Registro de Usuario</h2>
+        <form th:action="@{/register}" th:object="${user}" method="post">
+          <label>
+            Nombre de usuario:
+            <input type="text" th:field="*{username}" required>
+          </label>
+          <label>
+            Contraseña:
+            <input type="password" th:field="*{password}" required>
+          </label>
+          <label>
+            Confirmar contraseña:
+            <input type="password" name="confirmPassword" required>
+          </label>
+        </section>
         <button type="submit">Registrarse</button>
         <div th:if="${error}" role="alert" th:text="${error}" class="error"></div>
       </form>

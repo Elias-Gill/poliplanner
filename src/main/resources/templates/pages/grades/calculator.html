@@ -11,11 +11,11 @@
           <h4 class="seccion-titulo">A) Ya tengo mi promedio ponderado</h4>
           <p class="descripcion">Ingresa tu promedio ponderado (0–100) y obtén los puntajes mínimos en el examen final para cada nota 2–5.</p>
           <form id="formPonderado" onsubmit="return false;">
-            <label for="inputPonderado">Promedio ponderado (0–100)</label>
-            <input type="number" id="inputPonderado" min="0" max="100" step="1">
-            <div class="alinear-derecha">
-              <button id="btnPonderado" type="button">Calcular A</button>
-            </div>
+            <section>
+              <label for="inputPonderado">Promedio ponderado (0–100)</label>
+              <input type="number" id="inputPonderado" min="0" max="100" step="1">
+            </section>
+            <button id="btnPonderado" type="button">Calcular A</button>
           </form>
         </article>
       </section>
@@ -25,33 +25,33 @@
           <h4 class="seccion-titulo">B) Calcular promedio ponderado y examen</h4>
           <p class="descripcion">Introduce tus promedios y pesos (que sumen 100) para calcular tu promedio ponderado y luego los puntajes del examen.</p>
           <form id="formComponentes" onsubmit="return false;" class="form-grid">
-            <div>
-              <label for="pesoParciales">Peso Parciales (%)</label>
-              <input type="number" id="pesoParciales" min="0" max="100" value="0">
-            </div>
-            <div>
-              <label for="promParciales">Promedio Parciales (0–100)</label>
-              <input type="number" id="promParciales" min="0" max="100" value="0">
-            </div>
-            <div>
-              <label for="pesoTareas">Peso Tareas (%)</label>
-              <input type="number" id="pesoTareas" min="0" max="100" value="0">
-            </div>
-            <div>
-              <label for="promTareas">Promedio Tareas (0–100)</label>
-              <input type="number" id="promTareas" min="0" max="100" value="0">
-            </div>
-            <div>
-              <label for="pesoLab">Peso Laboratorios (%)</label>
-              <input type="number" id="pesoLab" min="0" max="100" value="0">
-            </div>
-            <div>
-              <label for="promLab">Promedio Lab. (0–100)</label>
-              <input type="number" id="promLab" min="0" max="100" value="0">
-            </div>
-            <div class="alinear-derecha" style="grid-column: 1 / -1;">
-              <button id="btnComponentes" type="button">Calcular B</button>
-            </div>
+            <section>
+              <div>
+                <label for="pesoParciales">Peso Parciales (%)</label>
+                <input type="number" id="pesoParciales" min="0" max="100" value="0">
+              </div>
+              <div>
+                <label for="promParciales">Promedio Parciales (0–100)</label>
+                <input type="number" id="promParciales" min="0" max="100" value="0">
+              </div>
+              <div>
+                <label for="pesoTareas">Peso Tareas (%)</label>
+                <input type="number" id="pesoTareas" min="0" max="100" value="0">
+              </div>
+              <div>
+                <label for="promTareas">Promedio Tareas (0–100)</label>
+                <input type="number" id="promTareas" min="0" max="100" value="0">
+              </div>
+              <div>
+                <label for="pesoLab">Peso Laboratorios (%)</label>
+                <input type="number" id="pesoLab" min="0" max="100" value="0">
+              </div>
+              <div>
+                <label for="promLab">Promedio Lab. (0–100)</label>
+                <input type="number" id="promLab" min="0" max="100" value="0">
+              </div>
+            </section>
+            <button id="btnComponentes" type="button">Calcular B</button>
           </form>
         </article>
       </section>
@@ -105,10 +105,6 @@
     .descripcion {
       color: var(--color-secondary);
       margin-bottom: var(--space-md);
-    }
-
-    .alinear-derecha {
-      text-align: right;
     }
 
     .form-grid {
