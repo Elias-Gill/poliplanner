@@ -142,10 +142,16 @@ p {
     margin-bottom: var(--space-md);
 }
 
+span {
+    overflow-wrap: break-word;
+}
+
 /* === Enlaces === */
 a {
     color: var(--color-primary);
     text-decoration: none;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 a:hover {

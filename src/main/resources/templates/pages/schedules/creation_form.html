@@ -35,13 +35,17 @@
                 <span th:text="${sheetVersion.fileName}"></span>
               </span>
               <br>
-              <strong>Procesado el:</strong>
-              <span th:if="${sheetVersion.parsedAt != null}"
-            th:text="${#dates.format(sheetVersion.parsedAt, 'dd/MM/yyyy HH:mm')}"></span>
-              <span th:if="${sheetVersion.parsedAt == null}">Fecha no disponible</span>
+              <span>
+                <strong>Procesado el:</strong>
+                <span th:if="${sheetVersion.parsedAt != null}"
+                      th:text="${#dates.format(sheetVersion.parsedAt, 'dd/MM/yyyy HH:mm')}"></span>
+                <span th:if="${sheetVersion.parsedAt == null}">Fecha no disponible</span>
+              </span>
               <br>
-              <strong>Descarga:</strong>
-              <a th:href="@{${sheetVersion.url}}" th:text="${sheetVersion.url}" target="_blank" rel="noopener"></a>
+              <span>
+                <strong>Descarga:</strong>
+                <a th:href="@{${sheetVersion.url}}" th:text="${sheetVersion.url}" target="_blank" rel="noopener"></a>
+              </span>
             </div>
           </article>
           <!-- Botón de envío -->
