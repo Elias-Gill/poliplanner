@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+  <head>
+    <title>Cálculo de Notas</title>
+  </head>
+  <main layout:fragment="content">
+    <h1>Cálculo de Notas</h1>
+    <p>En esta guía te explicamos cómo se calcula tu nota final según el reglamento académico.</p>
+    <section>
+      <h2>¿Cómo se calcula la Puntuación Final?</h2>
+      <p>La Puntuación Final (PF) se calcula usando el 60% del Examen Final (EF) y el 40% del Promedio Ponderado (PP) de tus parciales:</p>
+      <p><strong>PF = 0,6 × EF + 0,4 × PP</strong></p>
+      <h3>¿Qué significa cada componente?</h3>
+      <ul>
+        <li><strong>EF:</strong> Puntuación obtenida en el Examen Final. Debe ser al menos 50% para poder aprobar.</li>
+        <li><strong>PP:</strong> Promedio ponderado de exámenes parciales, trabajos prácticos y
+          clases taller. El cálculo depende de cada materia y profesor.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Escala de Calificaciones</h2>
+      <p>Una vez calculada la <strong>PF</strong>, se convierte a nota y calificación usando la siguiente escala:</p>
+      <div class="table-container">
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Situación Académica</th>
+              <th>Puntuación PF</th>
+              <th>Nota</th>
+              <th>Calificación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Reprobado</td>
+              <td>0 – 59%</td>
+              <td>1 (Uno)</td>
+              <td>Insuficiente</td>
+            </tr>
+            <tr>
+              <td>Aprobado</td>
+              <td>60 – 70%</td>
+              <td>2 (Dos)</td>
+              <td>Regular</td>
+            </tr>
+            <tr>
+              <td>Aprobado</td>
+              <td>71 – 80%</td>
+              <td>3 (Tres)</td>
+              <td>Bueno</td>
+            </tr>
+            <tr>
+              <td>Aprobado</td>
+              <td>81 – 90%</td>
+              <td>4 (Cuatro)</td>
+              <td>Distinguido</td>
+            </tr>
+            <tr>
+              <td>Aprobado</td>
+              <td>91 – 100%</td>
+              <td>5 (Cinco)</td>
+              <td>Sobresaliente</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section>
+      <h3>Consideraciones</h3>
+      <ul>
+        <li>En el Examen Final debes hacer como mínimo 50% para que puedas aprobar la materia, sin importar tu promedio previo.</li>
+        <li>Si la puntuación final (PF) no es un número entero, se redondeará para arriba a partir de 0,5.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Cálculo de Promedio Ponderado</h2>
+      <p>El promedio ponderado se calcula considerando que no todas las actividades tienen la
+        misma importancia. Cada tipo de trabajo (exámenes, tareas, laboratorios, etc.) tiene un
+        peso diferente, definido por cada materia o profesor.
+      </p>
+      <p>
+        Este promedio ponderado se usa para calcular tu <strong>nota final</strong>, pero no
+        hay que confundirlo con el <strong>promedio de parciales</strong>. Este último es el
+        que se tiene en cuenta para otorgarte la <strong>firma</strong> que te habilita a
+        rendir el examen final.
+      </p>
+      <h3>¿Cómo se calcula?</h3>
+      <p>Para calcular el promedio ponderado se multiplica la nota obtenida en cada componente
+        por su peso (en porcentaje), se suman esos resultados y se divide por 100. Por
+        ejemplo:</p>
+      <ul>
+        <li>Trabajos Prácticos: 20%</li>
+        <li>Laboratorios: 30%</li>
+        <li>Promedio de Parciales: 50%</li>
+      </ul>
+      <p>Si tus notas fueron:</p>
+      <ul>
+        <li>Trabajos Prácticos: 80%</li>
+        <li>Laboratorios: 70%</li>
+        <li>Promedio de Parciales: 75%</li>
+      </ul>
+      <p>El cálculo sería:</p>
+      <div class="pre-container">
+        <pre>
+(80 × 20) + (70 × 30) + (75 × 50) = 1600 + 2100 + 3750 = 7450
+7450 ÷ 100 = 74,5%
+        </pre>
+      </div>
+      <p>Por lo tanto, tu Promedio Ponderado sería <strong>74,5%</strong>.</p>
+      <h3>Importante </h3>
+      Cada materia define sus propios pesos, revisá el programa o preguntá a tu profesor.
+    </section>
+    <p><a th:href="@{/guides/index}">Volver a Guías y Ayuda</a></p>
+  </main>
+</html>

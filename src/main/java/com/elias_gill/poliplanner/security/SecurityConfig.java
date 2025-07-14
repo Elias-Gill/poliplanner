@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/sync").permitAll()
                         .requestMatchers(
                                 "/calculator",
+                                "/guides/**",
                                 "/login",
                                 "/logout",
                                 "/register",
