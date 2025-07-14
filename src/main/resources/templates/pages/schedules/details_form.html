@@ -11,24 +11,26 @@
       <!-- Campo oculto para descripción -->
       <input type="hidden" name="description" th:value="${description}" />
       <!-- Materias agrupadas por semestre -->
-      <div th:each="semester : ${#sets.toSet(subjects.![semestre])}" style="margin-bottom: var(--space-lg);">
+      <div th:each="semesterEntry : ${subjects}">
         <details>
-          <summary style="margin-bottom: var(--space-sm); font-weight: bold; font-size: 1.2rem;" 
-                 th:text="'Semestre ' + ${semester}"></summary>
-          <ul>
-            <li th:each="subject : ${subjects}"
-              th:if="${subject.semestre == semester}">
-              <label>
-                <input type="checkbox"
-                     th:id="'subject-' + ${subject.id}"
-                     th:name="subjectIds"
-                     th:value="${subject.id}" />
-                <strong th:text="${subject.nombreAsignatura}"></strong>
-                <span th:text="' (Sección ' + ${subject.seccion} + ')'"></span> –
-                <small th:text="${subject.tituloProfesor + ' ' + subject.nombreProfesor + ' ' + subject.apellidoProfesor}"></small>
-              </label>
-            </li>
-          </ul>
+          <summary th:text="'Semestre ' + ${semesterEntry.key}"></summary>
+          <div th:each="subjectEntry : ${semesterEntry.value}">
+            <section>
+              <h4 th:text="${subjectEntry.key}" style="margin: var(--space-sm) 0;"></h4>
+              <ul>
+                <li th:each="subject : ${subjectEntry.value}">
+                  <label>
+                    <input type="checkbox"
+                               th:id="'subject-' + ${subject.id}"
+                               th:name="subjectIds"
+                               th:value="${subject.id}" />
+                    <span th:text="'Sección ' + ${subject.seccion}"></span> –
+                    <small th:text="${subject.tituloProfesor + ' ' + subject.nombreProfesor + ' ' + subject.apellidoProfesor}"></small>
+                  </label>
+                </li>
+              </ul>
+            </section>
+          </div>
         </details>
       </div>
       <!-- Botón de envío -->

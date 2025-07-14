@@ -2,6 +2,7 @@ package com.elias_gill.poliplanner.controller;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,7 +126,7 @@ public class SchedulesController {
         }
 
         try {
-            List<Subject> subjects = subjectService.findByCareer(careerId);
+            Map<Integer, Map<String, List<Subject>>> subjects = subjectService.findByCareer(careerId);
 
             model.addAttribute("subjects", subjects);
             model.addAttribute("description", description);
