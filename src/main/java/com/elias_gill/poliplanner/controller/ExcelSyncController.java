@@ -48,7 +48,7 @@ public class ExcelSyncController {
      *         sincronización.
      */
     @PostMapping("/sync")
-    public ResponseEntity<?> syncExcel(
+    public ResponseEntity<?> manualExcelSync(
             @RequestHeader("Authorization") String authHeader,
             @RequestParam("link") String link,
             @RequestParam("file") MultipartFile file) {
@@ -96,7 +96,7 @@ public class ExcelSyncController {
      * universidad en busca de nuevos horarios.
      */
     @PostMapping("/sync/ci")
-    public ResponseEntity<?> syncExcel(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<?> automaticExcelSync(@RequestHeader("Authorization") String authHeader) {
         logger.warn(">>> POST '/sync/ci' alcanzado desde CI/CD");
         try {
             tokenValidator.isValid(authHeader);
