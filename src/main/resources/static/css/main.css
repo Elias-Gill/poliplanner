@@ -426,6 +426,7 @@ input[type="checkbox"] {
 
 /* === Lista <li> y <ul> === */
 /* Listas para contenido de lectura (ej. blog, artículos) */
+
 section ul,
 section ol,
 article ul,
@@ -442,12 +443,10 @@ article li {
 }
 
 /* Listas no ordenadas: marcador elegante */
-section ul li::marker,
-article ul li::marker {
-    content: '– ';
-    /* guion largo o puedes usar '•' o '▸' */
-    color: var(--color-primary);
-    font-weight: bold;
+article ul,
+section ul {
+    list-style: square;
+    padding-left: 1.5em;
 }
 
 /* Listas ordenadas: numeración clara */
@@ -511,4 +510,20 @@ article ol ul {
 #theme-toggle:hover {
     background-color: var(--color-primary);
     color: white;
+}
+
+details {
+    margin-left: var(--space-md);
+}
+
+.pre-container {
+    width: 100%;
+    overflow-x: auto;
+    /* Permite scroll horizontal */
+    margin-bottom: var(--space-md);
+    -webkit-overflow-scrolling: touch;
+}
+
+pre {
+    font-size: .75rem;
 }
