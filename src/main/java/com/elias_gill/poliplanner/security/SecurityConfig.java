@@ -39,7 +39,9 @@ public class SecurityConfig {
                                 "/register",
                                 "/css/**",
                                 "/js/**",
-                                "/img/**")
+                                "/img/**",
+                                "/robots.txt",
+                                "/sitemap.xml")
                         .permitAll()
                         .anyRequest().authenticated())
 
