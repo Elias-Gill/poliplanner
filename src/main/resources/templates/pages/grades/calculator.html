@@ -81,82 +81,75 @@
       Si quieres saber cómo se calculan las notas puedes visitar la guía de 
       <a href="/guides/calculo_notas">Cálculo de Notas</a>
     </section>
+    <script>
+      const MIN_EXAM = 50;
+      const UMBRALES_NOTAS = [
+        { min: 91, nota: 5 },
+        { min: 81, nota: 4 },
+        { min: 71, nota: 3 },
+        { min: 60, nota: 2 },
+        { min: 0,  nota: 1 }
+      ];
+
+      function calcularNotaFinal(ponderado, examen) {
+        const puntajeFinal = 0.4 * ponderado + 0.6 * examen;
+        for (const umbral of UMBRALES_NOTAS) {
+          if (puntajeFinal >= umbral.min) return umbral.nota;
+        }
+        return 1;
+      }
+
+      function calcularExamenNecesario(ponderado, notaDeseada) {
+        const umbral = UMBRALES_NOTAS.find(u => u.nota === notaDeseada);
+        if (!umbral) return NaN;
+
+        let examenNecesario = (umbral.min - 0.4 * ponderado) / 0.6;
+        examenNecesario = Math.max(examenNecesario, MIN_EXAM);
+        examenNecesario = Math.floor(examenNecesario);
+        return examenNecesario > 100 ? '-' : examenNecesario;
+      }
+
+      function calcularTabla(ponderado) {
+        const tbody = document.getElementById('resultadoTabla');
+        tbody.innerHTML = '';
+        for (let nota = 5; nota >= 2; nota--) {
+      const req = calcularExamenNecesario(ponderado, nota);
+      tbody.insertAdjacentHTML('beforeend', `
+        <tr>
+          <td>${nota}</td>
+          <td>${req}</td>
+        </tr>
+      `);
+        }
+        document.getElementById('resultados').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      document.getElementById('btnPonderado').addEventListener('click', () => {
+        const v = parseInt(document.getElementById('inputPonderado').value);
+        if (isNaN(v) || v < 0 || v > 100) {
+          return alert('Ingresa un promedio ponderado válido (0–100)');
+        }
+        calcularTabla(v);
+      });
+
+      document.getElementById('btnComponentes').addEventListener('click', () => {
+        const p1 = parseInt(document.getElementById('pesoParciales').value) || 0;
+        const p2 = parseInt(document.getElementById('pesoTareas').value) || 0;
+        const p3 = parseInt(document.getElementById('pesoLab').value) || 0;
+        if (p1 + p2 + p3 !== 100) {
+          return alert('La suma de los pesos debe ser 100');
+        }
+
+        const m1 = parseInt(document.getElementById('promParciales').value);
+        const m2 = parseInt(document.getElementById('promTareas').value);
+        const m3 = parseInt(document.getElementById('promLab').value);
+        if ([m1, m2, m3].some(x => isNaN(x) || x < 0 || x > 100)) {
+          return alert('Promedios deben ser números entre 0 y 100');
+        }
+
+        const ponderado = (m1 * p1 + m2 * p2 + m3 * p3) / 100;
+        calcularTabla(ponderado);
+      });
+    </script>
   </main>
-  <style>
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: var(--space-md);
-    }
-  </style>
-  <script layout:fragment="scripts">
-    const MIN_EXAM = 50;
-    const UMBRALES_NOTAS = [
-      { min: 91, nota: 5 },
-      { min: 81, nota: 4 },
-      { min: 71, nota: 3 },
-      { min: 60, nota: 2 },
-      { min: 0,  nota: 1 }
-    ];
-
-    function calcularNotaFinal(ponderado, examen) {
-      const puntajeFinal = 0.4 * ponderado + 0.6 * examen;
-      for (const umbral of UMBRALES_NOTAS) {
-        if (puntajeFinal >= umbral.min) return umbral.nota;
-      }
-      return 1;
-    }
-
-    function calcularExamenNecesario(ponderado, notaDeseada) {
-      const umbral = UMBRALES_NOTAS.find(u => u.nota === notaDeseada);
-      if (!umbral) return NaN;
-
-      let examenNecesario = (umbral.min - 0.4 * ponderado) / 0.6;
-      examenNecesario = Math.max(examenNecesario, MIN_EXAM);
-      examenNecesario = Math.floor(examenNecesario);
-      return examenNecesario > 100 ? '-' : examenNecesario;
-    }
-
-    function calcularTabla(ponderado) {
-      const tbody = document.getElementById('resultadoTabla');
-      tbody.innerHTML = '';
-      for (let nota = 5; nota >= 2; nota--) {
-    const req = calcularExamenNecesario(ponderado, nota);
-    tbody.insertAdjacentHTML('beforeend', `
-      <tr>
-        <td>${nota}</td>
-        <td>${req}</td>
-      </tr>
-    `);
-      }
-      document.getElementById('resultados').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    document.getElementById('btnPonderado').addEventListener('click', () => {
-      const v = parseInt(document.getElementById('inputPonderado').value);
-      if (isNaN(v) || v < 0 || v > 100) {
-        return alert('Ingresa un promedio ponderado válido (0–100)');
-      }
-      calcularTabla(v);
-    });
-
-    document.getElementById('btnComponentes').addEventListener('click', () => {
-      const p1 = parseInt(document.getElementById('pesoParciales').value) || 0;
-      const p2 = parseInt(document.getElementById('pesoTareas').value) || 0;
-      const p3 = parseInt(document.getElementById('pesoLab').value) || 0;
-      if (p1 + p2 + p3 !== 100) {
-        return alert('La suma de los pesos debe ser 100');
-      }
-
-      const m1 = parseInt(document.getElementById('promParciales').value);
-      const m2 = parseInt(document.getElementById('promTareas').value);
-      const m3 = parseInt(document.getElementById('promLab').value);
-      if ([m1, m2, m3].some(x => isNaN(x) || x < 0 || x > 100)) {
-        return alert('Promedios deben ser números entre 0 y 100');
-      }
-
-      const ponderado = (m1 * p1 + m2 * p2 + m3 * p3) / 100;
-      calcularTabla(ponderado);
-    });
-  </script>
 </html>

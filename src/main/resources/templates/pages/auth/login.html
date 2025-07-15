@@ -28,10 +28,10 @@
         </div>
         <button type="submit">Entrar</button>
         <div th:if="${param.error}">
-          <div th:replace="~{fragments/error :: alert('Usuario o contraseña inválidos')}"></div>
+          <div th:replace="~{fragments/alerts/error :: alert('Usuario o contraseña inválidos')}"></div>
         </div>
         <div th:if="${param.logout}">
-          <div th:replace="~{fragments/success :: alert('Sesión cerrada exitosamente')}"></div>
+          <div th:replace="~{fragments/alerts/success :: alert('Sesión cerrada exitosamente')}"></div>
         </div>
       </form>
       <p class="login-footer">

@@ -4,7 +4,7 @@
       layout:decorate="~{layouts/base}">
   <main layout:fragment="content">
     <!-- Mensaje de error si no hay carreras -->
-    <div th:replace="~{fragments/error :: alert(${error})}"></div>
+    <div th:replace="~{fragments/alerts/error :: alert(${error})}"></div>
     <!-- Formulario -->
     <section>
       <article>

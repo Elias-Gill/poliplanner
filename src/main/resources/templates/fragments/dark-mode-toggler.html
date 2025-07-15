@@ -1,0 +1,30 @@
+<body th:fragment="toggler">
+  <button id="theme-toggle" aria-label="Cambiar modo" title="Cambiar modo">
+    <i class="bi bi-moon"></i>
+  </button>
+  <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        // ---- DARK MODE TOGGLE ----
+        const themeToggle = document.getElementById('theme-toggle');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (!themeToggle) return; // Si no existe, no seguimos
+
+        // Cargar preferencia
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && prefersDark)) {
+            themeToggle.innerHTML = '<i class="bi bi-sun"></i>';
+        } else {
+            themeToggle.innerHTML = '<i class="bi bi-moon"></i>';
+        }
+
+        // Alternar modo
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.innerHTML = isDark
+                ? '<i class="bi bi-sun"></i>'
+                : '<i class="bi bi-moon"></i>';
+        });
+    });
+  </script>
+</body>

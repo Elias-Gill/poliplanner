@@ -4,7 +4,7 @@
       layout:decorate="~{layouts/base}">
   <main layout:fragment="content" class="container">
     <!-- Mensaje de error -->
-    <div th:replace="~{fragments/error :: alert(${error})}"></div>
+    <div th:replace="~{fragments/alerts/error :: alert(${error})}"></div>
     <!-- Formulario -->
     <h2>Selecciona las materias</h2>
     <form th:action="@{/schedule/new/details}" method="post">

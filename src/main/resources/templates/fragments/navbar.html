@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body th:fragment="navbar">
+    <header>
+      <nav>
+        <ul>
+          <li class="logo">
+            <a href="/"><i class="bi bi-calendar3"></i> Armador de Horarios</a>
+          </li>
+          <li><a th:href="@{/schedule/new}">Nuevo horario</a></li>
+          <li><a th:href="@{/calculator}">Calculadora</a></li>
+          <li><a th:href="@{/guides/index}">Ayudas</a></li>
+          <li th:if="${isLoggedIn}">
+            <form th:action="@{/logout}" method="post">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+              <button type="submit">Cerrar sesión</button>
+            </form>
+          </li>
+        </ul>
+        <button class="burguer" aria-label="Menú" hidden>
+          <i class="bi bi-list"></i>
+        </button>
+      </nav>
+    </header>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+          // --- BURGUER MENU ---
+          const toggle = document.querySelector('.burguer');
+          const menu = document.querySelector('nav ul');
+
+          toggle.addEventListener('click', () => {
+              menu.classList.toggle('open');
+              toggle.classList.toggle('open'); // Para animar el botón
+          });
+
+          // Ocultar/mostrar botón en responsive
+          window.addEventListener('resize', () => {
+              toggle.hidden = window.innerWidth > 768;
+
+              if (window.innerWidth > 768) {
+                  menu.classList.remove('open');  // Cierra menú si agrandás pantalla
+                  toggle.classList.remove('open');
+              }
+          });
+
+          // Ajustar al cargar la página
+          window.dispatchEvent(new Event('resize'));
+      });
+    </script>
+  </body>

@@ -29,8 +29,8 @@
       </div>
     </div>
     <!-- Mensajes -->
-    <div th:replace="~{fragments/error :: alert(${error})}"></div>
-    <div th:replace="~{fragments/success :: alert(${success})}"></div>
+    <div th:replace="~{fragments/alerts/error :: alert(${error})}"></div>
+    <div th:replace="~{fragments/alerts/success :: alert(${success})}"></div>
     <div th:if="${schedules?.empty}" role="alert">
       No tienes horarios registrados.
     </div>
