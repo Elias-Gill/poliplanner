@@ -22,15 +22,17 @@
       <scope>provided</scope>
     </dependency>
     <!-- Spring Boot starters -->
+    <!-- security -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
+    <!-- web starter -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
-    <!-- Para soporte de layout dialect -->
+    <!-- Para soporte de layout dialect con thymeleaf -->
     <dependency>
       <groupId>nz.net.ultraq.thymeleaf</groupId>
       <artifactId>thymeleaf-layout-dialect</artifactId>

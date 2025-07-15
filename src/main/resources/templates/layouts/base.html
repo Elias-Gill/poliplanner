@@ -25,7 +25,7 @@
           <li><a th:href="@{/schedule/new}">Nuevo horario</a></li>
           <li><a th:href="@{/calculator}">Calculadora</a></li>
           <li><a th:href="@{/guides/index}">Ayudas</a></li>
-          <li>
+          <li th:if="${isLoggedIn}">
             <form th:action="@{/logout}" method="post">
               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
               <button type="submit">Cerrar sesión</button>

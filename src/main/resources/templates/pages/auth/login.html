@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/flat_base}">
+      layout:decorate="~{layouts/base}">
   <head>
     <title>Iniciar Sesión</title>
   </head>
@@ -36,10 +36,6 @@
       </form>
       <p class="login-footer">
         ¿No tenés cuenta? <a th:href="@{/register}">Registrate acá</a>
-      </p>
-      <p class="login-footer">
-        Accesos directos: 
-        <a th:href="@{/calculator}">Calculadora</a>, <a th:href="@{/guides/index}">Ayuda</a>
       </p>
     </div>
     <style>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/flat_base}">
+      layout:decorate="~{layouts/base}">
   <head>
     <title>Registro de Usuario</title>
   </head>
@@ -30,5 +30,24 @@
         ¿Ya tenés cuenta? <a th:href="@{/login}">Iniciá sesión acá</a>
       </p>
     </article>
+    <section>
+      <h2>Consideraciones</h2>
+      <ul>
+        <li>
+          Los nombres de usuario no distinguen entre mayúsculas y minúsculas (son "case
+          insensitive"). Además, solo se permiten letras, números, guion (-) y guion bajo (_).
+        </li>
+        <li>
+          Las contraseñas deben tener al menos 6 caracteres.
+        </li>
+        <li>
+          Te recomendamos elegir un nombre de usuario fácil de recordar y usar contraseñas
+          seguras y únicas, preferiblemente distintas a las que utilices en otros sitios.
+          Aunque almacenamos las contraseñas de forma encriptada y aplicamos todas las medidas
+          de seguridad necesarias, usar una contraseña exclusiva ayuda a proteger mejor tu
+          cuenta y tu información personal.
+        </li>
+      </ul>
+    </section>
   </main>
 </html>
