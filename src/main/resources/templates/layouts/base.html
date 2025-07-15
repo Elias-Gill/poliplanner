@@ -2,6 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
   <head>
+    <!-- NOTE: dejar script arriba del todo para que no se vea un flash al cargar el documento -->
+    <script>
+      if (localStorage.getItem('theme') === 'dark') {
+          document.documentElement.classList.add('dark-mode');
+      }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Horario</title>
@@ -86,7 +92,6 @@
 
           // Cargar preferencia
           if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && prefersDark)) {
-              document.body.classList.add('dark-mode');
               themeToggle.innerHTML = '<i class="bi bi-sun"></i>';
           } else {
               themeToggle.innerHTML = '<i class="bi bi-moon"></i>';
@@ -94,7 +99,7 @@
 
           // Alternar modo
           themeToggle.addEventListener('click', () => {
-              const isDark = document.body.classList.toggle('dark-mode');
+              const isDark = document.documentElement.classList.toggle('dark-mode');
               localStorage.setItem('theme', isDark ? 'dark' : 'light');
               themeToggle.innerHTML = isDark
                   ? '<i class="bi bi-sun"></i>'

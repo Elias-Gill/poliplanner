@@ -10,22 +10,24 @@
       <section>
         <h2>Registro de Usuario</h2>
         <form th:action="@{/register}" th:object="${user}" method="post">
-          <label>
-            Nombre de usuario:
-            <input type="text" th:field="*{username}" required>
-          </label>
-          <label>
-            Contraseña:
-            <input type="password" th:field="*{password}" required>
-          </label>
-          <label>
-            Confirmar contraseña:
-            <input type="password" name="confirmPassword" required>
-          </label>
-        </section>
-        <button type="submit">Registrarse</button>
-        <div th:replace="~{fragments/error :: alert(${error})}"></div>
-      </form>
+          <section>
+            <label>
+              Nombre de usuario:
+              <input type="text" th:field="*{username}" required>
+            </label>
+            <label>
+              Contraseña:
+              <input type="password" th:field="*{password}" required>
+            </label>
+            <label>
+              Confirmar contraseña:
+              <input type="password" th:field="*{confirmedPassword}" required>
+            </label>
+          </section>
+          <button type="submit">Registrarse</button>
+          <div th:replace="~{fragments/error :: alert(${error})}"></div>
+        </form>
+      </section>
       <p>
         ¿Ya tenés cuenta? <a th:href="@{/login}">Iniciá sesión acá</a>
       </p>
@@ -42,9 +44,9 @@
         </li>
         <li>
           Te recomendamos elegir un nombre de usuario fácil de recordar y usar contraseñas
-          seguras y únicas, preferiblemente distintas a las que utilices en otros sitios.
-          Aunque almacenamos las contraseñas de forma encriptada y aplicamos todas las medidas
-          de seguridad necesarias, usar una contraseña exclusiva ayuda a proteger mejor tu
+          seguras y únicas.
+          Almacenamos las contraseñas de forma encriptada y aplicamos todas las medidas
+          de seguridad necesarias, pero usar una contraseña exclusiva ayuda a proteger mejor tu
           cuenta y tu información personal.
         </li>
       </ul>

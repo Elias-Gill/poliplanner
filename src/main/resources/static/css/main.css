@@ -1,14 +1,15 @@
 /* === Variables CSS y paleta de colores === */
 :root {
     --color-bg: #f8f8f8;
+    --color-secondary-bg: #dddddd;
     --color-text: #333333;
     --color-border: #e0e0e0;
     --color-primary: #2563eb;
     --color-secondary: #6b7280;
+    --color-muted: #666666;
     --color-success: #10b981;
     --color-error: #ef4444;
     --color-warning: #f59e0b;
-    --color-info: #3b82f6;
 
     /* Espaciado (basado en rem) */
     --space-xs: 0.25rem;
@@ -26,8 +27,10 @@
 
 /* Modo Oscuro */
 .dark-mode {
-    --color-bg: #1e1e1e;
+    --color-bg: #232323;
+    --color-secondary-bg: #323232;
     --color-text: #f0f0f0;
+    --color-muted: #9e9e9e;
     --color-border: #444;
     --color-primary: #3b82f6;
     --color-secondary: #9ca3af;
@@ -41,6 +44,16 @@
     padding: 0;
     box-sizing: border-box;
     transition: background-color 0.20s ease, color 0.20s ease;
+}
+
+input:-webkit-autofill {
+    box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-text-fill-color: #000 !important;
+}
+
+input:-moz-autofill {
+    box-shadow: 0 0 0px 1000px white inset !important;
+    -moz-text-fill-color: #000 !important;
 }
 
 body {
@@ -182,13 +195,26 @@ button.secondary {
     color: var(--color-secondary);
 }
 
+button.secondary:hover {
+    background-color: color-mix(in srgb, var(--color-secondary), black 10%);
+}
+
 button.success {
     background-color: var(--color-success);
+}
+
+button.success:hover {
+    background-color: color-mix(in srgb, var(--color-success), black 10%);
 }
 
 button.error {
     background-color: var(--color-error);
 }
+
+button.error:hover {
+    background-color: color-mix(in srgb, var(--color-error), black 10%);
+}
+
 
 /* === Formularios (inputs, selects, etc.) === */
 input,
@@ -198,6 +224,7 @@ textarea {
     padding: var(--space-sm);
     border: 1px solid var(--color-border);
     border-radius: 0.25rem;
+    color: var(--color-text);
 }
 
 input:focus,
@@ -205,6 +232,18 @@ select:focus,
 textarea:focus {
     outline: 2px solid var(--color-primary);
     outline-offset: 1px;
+}
+
+/* delete input number selector */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 /* === Tarjetas (<article>, <section>) === */
@@ -260,7 +299,7 @@ td {
 }
 
 th {
-    background-color: color-mix(in srgb, var(--color-bg), var(--color-secondary) 5%);
+    background-color: color-mix(in srgb, var(--color-secondary-bg), var(--color-bg) 45%);
 }
 
 /* === Navbar Rediseñado === */

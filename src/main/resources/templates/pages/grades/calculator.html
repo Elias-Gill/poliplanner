@@ -3,13 +3,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/base}">
   <main layout:fragment="content">
-    <h2 class="titulo">Calculadora de Notas</h2>
-    <div class="contenedor-principal">
+    <section>
+      <h1 class="titulo">Calculadora de Notas</h2>
       <!-- Sección A -->
-      <section class="bloque">
+      <section>
         <article>
-          <h4 class="seccion-titulo">A) Ya tengo mi promedio ponderado</h4>
-          <p class="descripcion">Ingresa tu promedio ponderado (0–100) y obtén los puntajes mínimos en el examen final para cada nota 2–5.</p>
+          <h3>A) Ya tengo mi promedio ponderado</h3>
+          <p>Ingresa tu promedio ponderado (0–100) y obtén los puntajes mínimos en el examen final para cada nota 2–5.</p>
           <form id="formPonderado" onsubmit="return false;">
             <section>
               <label for="inputPonderado">Promedio ponderado (0–100)</label>
@@ -20,93 +20,69 @@
         </article>
       </section>
       <!-- Sección B -->
-      <section class="bloque">
+      <section>
         <article>
-          <h4 class="seccion-titulo">B) Calcular promedio ponderado y examen</h4>
-          <p class="descripcion">Introduce tus promedios y pesos (que sumen 100) para calcular tu promedio ponderado y luego los puntajes del examen.</p>
+          <h3>B) Calcular promedio ponderado y examen</h3>
+          <p>Introduce tus promedios y pesos (que sumen 100) para calcular tu promedio ponderado y luego los puntajes del examen.</p>
           <form id="formComponentes" onsubmit="return false;" class="form-grid">
             <section>
-              <div>
-                <label for="pesoParciales">Peso Parciales (%)</label>
-                <input type="number" id="pesoParciales" min="0" max="100" value="0">
-              </div>
-              <div>
-                <label for="promParciales">Promedio Parciales (0–100)</label>
-                <input type="number" id="promParciales" min="0" max="100" value="0">
-              </div>
-              <div>
-                <label for="pesoTareas">Peso Tareas (%)</label>
-                <input type="number" id="pesoTareas" min="0" max="100" value="0">
-              </div>
-              <div>
-                <label for="promTareas">Promedio Tareas (0–100)</label>
-                <input type="number" id="promTareas" min="0" max="100" value="0">
-              </div>
-              <div>
-                <label for="pesoLab">Peso Laboratorios (%)</label>
-                <input type="number" id="pesoLab" min="0" max="100" value="0">
-              </div>
-              <div>
-                <label for="promLab">Promedio Lab. (0–100)</label>
-                <input type="number" id="promLab" min="0" max="100" value="0">
-              </div>
+              <section>
+                <div>
+                  <label for="pesoParciales">Peso Parciales (%)</label>
+                  <input type="number" id="pesoParciales" min="0" max="100" value="0">
+                </div>
+                <div>
+                  <label for="promParciales">Promedio Parciales (0–100)</label>
+                  <input type="number" id="promParciales" min="0" max="100" value="0">
+                </div>
+              </section>
+              <section>
+                <div>
+                  <label for="pesoTareas">Peso Tareas (%)</label>
+                  <input type="number" id="pesoTareas" min="0" max="100" value="0">
+                </div>
+                <div>
+                  <label for="promTareas">Promedio Tareas (0–100)</label>
+                  <input type="number" id="promTareas" min="0" max="100" value="0">
+                </div>
+              </section>
+              <section>
+                <div>
+                  <label for="pesoLab">Peso Laboratorios (%)</label>
+                  <input type="number" id="pesoLab" min="0" max="100" value="0">
+                </div>
+                <div>
+                  <label for="promLab">Promedio Lab. (0–100)</label>
+                  <input type="number" id="promLab" min="0" max="100" value="0">
+                </div>
+              </section>
             </section>
             <button id="btnComponentes" type="button">Calcular B</button>
           </form>
         </article>
       </section>
-    </div>
+    </section>
     <!-- Resultados -->
     <section id="resultados">
-      <h4 class="seccion-titulo">Puntajes mínimos en el examen final para obtener cada nota (2–5)</h4>
+      <h3>Puntajes mínimos requeridos</h3>
       <div class="table-container">
         <table>
           <thead>
             <tr>
               <th>Nota final</th>
-              <th>Examen mínimo (0–100)</th>
+              <th>Puntaje requerido</th>
             </tr>
           </thead>
           <tbody id="resultadoTabla"></tbody>
         </table>
       </div>
     </section>
+    <section>
+      Si quieres saber cómo se calculan las notas puedes visitar la guía de 
+      <a href="/guides/calculo_notas">Cálculo de Notas</a>
+    </section>
   </main>
   <style>
-    .titulo {
-      font-family: var(--font-base);
-      color: var(--color-primary);
-      margin-bottom: var(--space-xl);
-    }
-
-    .contenedor-principal {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-xl);
-    }
-
-    .bloque {
-      flex: 1 1 100%;
-      max-width: 100%;
-    }
-
-    @media (min-width: 992px) {
-      .bloque {
-        flex: 1 1 48%;
-      }
-    }
-
-    .seccion-titulo {
-      font-family: var(--font-base);
-      color: var(--color-primary);
-      margin-bottom: var(--space-sm);
-    }
-
-    .descripcion {
-      color: var(--color-secondary);
-      margin-bottom: var(--space-md);
-    }
-
     .form-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
