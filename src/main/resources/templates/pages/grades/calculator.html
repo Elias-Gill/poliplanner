@@ -137,7 +137,7 @@
 
       let examenNecesario = (umbral.min - 0.4 * ponderado) / 0.6;
       examenNecesario = Math.max(examenNecesario, MIN_EXAM);
-      examenNecesario = Math.round(examenNecesario);
+      examenNecesario = Math.floor(examenNecesario);
       return examenNecesario > 100 ? '-' : examenNecesario;
     }
 
