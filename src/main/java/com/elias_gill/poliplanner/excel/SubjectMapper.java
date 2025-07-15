@@ -10,13 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.elias_gill.poliplanner.models.ExamsCompact;
 import com.elias_gill.poliplanner.models.Subject;
 
 @Component
 public class SubjectMapper {
-    private final static Logger logger = LoggerFactory.getLogger(SubjectMapper.class);
-
     public static Subject mapToSubject(SubjectCsvDTO subjectCsv) {
         if (subjectCsv == null) {
             return null;
@@ -63,35 +60,31 @@ public class SubjectMapper {
         subject.setFechasSabadoNoche(subjectCsv.fechasSabadoNoche);
 
         // Mapeo de horarios de examenes
-        ExamsCompact exams = new ExamsCompact();
+        subject.setParcial1Fecha(convertStringToDate(subjectCsv.parcial1Fecha));
+        subject.setParcial1Hora(cleanTime(subjectCsv.parcial1Hora));
+        subject.setParcial1Aula(subjectCsv.parcial1Aula);
 
-        exams.setParcial1Fecha(convertStringToDate(subjectCsv.parcial1Fecha));
-        exams.setParcial1Hora(cleanTime(subjectCsv.parcial1Hora));
-        exams.setParcial1Aula(subjectCsv.parcial1Aula);
+        subject.setParcial2Fecha(convertStringToDate(subjectCsv.parcial2Fecha));
+        subject.setParcial2Hora(cleanTime(subjectCsv.parcial2Hora));
+        subject.setParcial2Aula(subjectCsv.parcial2Aula);
 
-        exams.setParcial2Fecha(convertStringToDate(subjectCsv.parcial2Fecha));
-        exams.setParcial2Hora(cleanTime(subjectCsv.parcial2Hora));
-        exams.setParcial2Aula(subjectCsv.parcial2Aula);
+        subject.setFinal1Fecha(convertStringToDate(subjectCsv.final1Fecha));
+        subject.setFinal1Hora(cleanTime(subjectCsv.final1Hora));
+        subject.setFinal1Aula(subjectCsv.final1Aula);
 
-        exams.setFinal1Fecha(convertStringToDate(subjectCsv.final1Fecha));
-        exams.setFinal1Hora(cleanTime(subjectCsv.final1Hora));
-        exams.setFinal1Aula(subjectCsv.final1Aula);
+        subject.setFinal1RevFecha(convertStringToDate(subjectCsv.final1RevFecha));
+        subject.setFinal1RevHora(cleanTime(subjectCsv.final1RevHora));
 
-        exams.setFinal1RevFecha(convertStringToDate(subjectCsv.final1RevFecha));
-        exams.setFinal1RevHora(cleanTime(subjectCsv.final1RevHora));
+        subject.setFinal2Fecha(convertStringToDate(subjectCsv.final2Fecha));
+        subject.setFinal2Hora(cleanTime(subjectCsv.final2Hora));
+        subject.setFinal2Aula(subjectCsv.final2Aula);
 
-        exams.setFinal2Fecha(convertStringToDate(subjectCsv.final2Fecha));
-        exams.setFinal2Hora(cleanTime(subjectCsv.final2Hora));
-        exams.setFinal2Aula(subjectCsv.final2Aula);
+        subject.setFinal2RevFecha(convertStringToDate(subjectCsv.final2RevFecha));
+        subject.setFinal2RevHora(cleanTime(subjectCsv.final2RevHora));
 
-        exams.setFinal2RevFecha(convertStringToDate(subjectCsv.final2RevFecha));
-        exams.setFinal2RevHora(cleanTime(subjectCsv.final2RevHora));
-
-        exams.setComitePresidente(subjectCsv.comitePresidente);
-        exams.setComiteMiembro1(subjectCsv.comiteMiembro1);
-        exams.setComiteMiembro2(subjectCsv.comiteMiembro2);
-
-        subject.setExams(exams);
+        subject.setComitePresidente(subjectCsv.comitePresidente);
+        subject.setComiteMiembro1(subjectCsv.comiteMiembro1);
+        subject.setComiteMiembro2(subjectCsv.comiteMiembro2);
 
         return subject;
     }

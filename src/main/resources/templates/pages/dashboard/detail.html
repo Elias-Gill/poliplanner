@@ -66,81 +66,81 @@
     <h1>Próximos exámenes</h1>
     <article class="exam-list">
       <!-- Primer Parcial -->
-      <div th:if="${not schedule.materias.?[exams.parcial1Fecha != null].empty}">
+      <div th:if="${not schedule.materias.?[parcial1Fecha != null].empty}">
         <h2>Primer Parcial</h5>
-        <div th:each="materia : ${schedule.materias.?[exams.parcial1Fecha != null]}">
+        <div th:each="materia : ${schedule.materias.?[parcial1Fecha != null]}">
           <article>
             <span th:text="${materia.nombreAsignatura}"></span>
             <span class="badge-container">
               <span class="date-badge" 
-                th:text="${#temporals.format(materia.exams.parcial1Fecha, 'dd/MM/yyyy')}">
+                th:text="${#temporals.format(materia.parcial1Fecha, 'dd/MM/yyyy')}">
               </span>
               <span class="date-badge bg-warning"
-                th:text="${materia.exams.parcial1Hora} + 'hs'">
+                th:text="${materia.parcial1Hora} + 'hs'">
               </span>
             </span>
-            <div th:if="${materia.exams.parcial1Aula != null}">
-              Aula: <span th:text="${materia.exams.parcial1Aula}"></span>
+            <div th:if="${materia.parcial1Aula != null}">
+              Aula: <span th:text="${materia.parcial1Aula}"></span>
             </div>
           </article>
         </div>
       </div>
       <!-- Segundo Parcial -->
-      <div th:if="${not schedule.materias.?[exams.parcial2Fecha != null].empty}">
-        <h2>Segundo Parcial</h5>
-        <div th:each="materia : ${schedule.materias.?[exams.parcial2Fecha != null]}">
+      <div th:if="${not schedule.materias.?[parcial2Fecha != null].empty}">
+        <h2>Segundo Parcial</h2>
+        <div th:each="materia : ${schedule.materias.?[parcial2Fecha != null]}">
           <article>
             <span th:text="${materia.nombreAsignatura}"></span>
             <span class="badge-container">
               <span class="date-badge" 
-                th:text="${#temporals.format(materia.exams.parcial2Fecha, 'dd/MM/yyyy')}">
+                th:text="${#temporals.format(materia.parcial2Fecha, 'dd/MM/yyyy')}">
               </span>
               <span class="date-badge bg-warning"
-                th:text="${materia.exams.parcial2Hora} + 'hs'">
+                th:text="${materia.parcial2Hora} + 'hs'">
               </span>
             </span>
-            <div th:if="${materia.exams.parcial2Aula != null}">
-              Aula: <span th:text="${materia.exams.parcial2Aula}"></span>
+            <div th:if="${materia.parcial2Aula != null}">
+              Aula: <span th:text="${materia.parcial2Aula}"></span>
             </div>
           </article>
         </div>
       </div>
       <!-- Primer final -->
-      <div th:if="${not schedule.materias.?[exams.final1Fecha != null].empty}">
+      <div th:if="${not schedule.materias.?[final1Fecha != null].empty}">
         <h2>Primer Final</h5>
-        <div th:each="materia : ${schedule.materias.?[exams.final1Fecha != null]}">
+        <div th:each="materia : ${schedule.materias.?[final1Fecha != null]}">
           <article>
             <span th:text="${materia.nombreAsignatura}"></span>
             <span class="badge-container">
               <span class="date-badge" 
-                th:text="${#temporals.format(materia.exams.final1Fecha, 'dd/MM/yyyy')}">
+                th:text="${#temporals.format(materia.final1Fecha, 'dd/MM/yyyy')}">
               </span>
               <span class="date-badge bg-warning"
-                th:text="${materia.exams.final1Hora} + 'hs'">
+                th:text="${materia.final1Hora} + 'hs'">
               </span>
             </span>
-            <div th:if="${materia.exams.final1Aula != null}">
-              Aula: <span th:text="${materia.exams.final1Aula}"></span>
+            <div th:if="${materia.final1Aula != null}">
+              Aula: <span th:text="${materia.final1Aula}"></span>
             </div>
           </article>
         </div>
       </div>
       <!-- Segundo final -->
-      <div th:if="${not schedule.materias.?[exams.final2Fecha != null].empty}">
+      <div th:if="${not schedule.materias.?[final2Fecha != null].empty}">
         <h2>Segundo Final</h5>
-        <div th:each="materia : ${schedule.materias.?[exams.final2Fecha != null]}">
+        <div th:each="materia : ${schedule.materias.?[final2Fecha != null]}">
           <article>
             <span th:text="${materia.nombreAsignatura}"></span>
             <span class='badge-container'>
               <span class="date-badge" 
-                th:text="${#temporals.format(materia.exams.final2Fecha, 'dd/MM/yyyy')}">
+                th:text="${#temporals.format(materia.final2Fecha, 'dd/MM/yyyy')}">
               </span>
               <span class="date-badge bg-warning"
-                th:text="${materia.exams.final2Hora} + 'hs'">
+                th:text="${materia.final2Hora} + 'hs'">
               </span>
             </span>
-            <div th:if="${materia.exams.final2Aula != null}">
-              Aula: <span th:text="${materia.exams.final2Aula}"></span>
+            <div th:if="${materia.final2Aula != null}">
+              Aula: <span th:text="${materia.final2Aula}"></span>
             </div>
           </article>
         </div>
