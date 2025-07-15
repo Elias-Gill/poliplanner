@@ -106,7 +106,7 @@ public class ExcelHelperTest {
     @Test
     @Tag("integration")
     void testExcelDownload() throws Exception {
-        // Tratar de descargar un excel cualquiera y ver si es que funciona
+        // Tratar de descargar un excel conocido y ver si es que funciona
         // correctamente
         try {
             Path file = ExcelHelper.downloadFile(EXCEL_DOWNLOAD_URL);
