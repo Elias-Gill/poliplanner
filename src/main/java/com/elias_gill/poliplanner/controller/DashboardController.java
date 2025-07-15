@@ -35,16 +35,15 @@ public class DashboardController {
         }
 
         // Set the latest created schedule as default
+        // FUTURE: maybe migrate to a cookie
+        model.addAttribute("selectedSchedule", schedules.get(0));
         if (id != null) {
-            // FUTURE: maybe migrate to a cookie
             for (Schedule s : schedules) {
-                if (s.getId() == id) {
+                if (s.getId().equals(id)) {
                     model.addAttribute("selectedSchedule", s);
                     break;
                 }
             }
-        } else {
-            model.addAttribute("selectedSchedule", schedules.get(0));
         }
 
         return "pages/dashboard/home";
