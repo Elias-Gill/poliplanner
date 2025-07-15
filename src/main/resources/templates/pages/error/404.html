@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+  <head>
+    <title>Página no encontrada</title>
+  </head>
+  <main layout:fragment="content">
+    <h1>Error 404 - Página no encontrada</h1>
+    <p>La página que estás buscando no existe o ha sido movida.</p>
+    <p>Revisá la dirección o volvé a la <a th:href="@{/}">página principal</a>.</p>
+  </main>
+</html>

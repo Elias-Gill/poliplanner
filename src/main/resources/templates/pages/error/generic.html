@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+  <head>
+    <title>Error</title>
+  </head>
+  <main layout:fragment="content">
+    <h1>Ocurrió un error</h1>
+    <p>No pudimos procesar tu solicitud.</p>
+    <p>Volvé a la <a th:href="@{/}">página principal</a> e intentá de nuevo más tarde.</p>
+  </main>
+</html>

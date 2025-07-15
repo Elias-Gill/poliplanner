@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+  <head>
+    <title>Error Interno</title>
+  </head>
+  <main layout:fragment="content">
+    <h1>Error 500 - Algo salió mal</h1>
+    <p>Ocurrió un error inesperado en el servidor.</p>
+    <p>Intentá de nuevo más tarde o volvé a la <a th:href="@{/}">página principal</a>.</p>
+  </main>
+</html>
