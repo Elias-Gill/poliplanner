@@ -40,6 +40,11 @@ public class UserController {
             Model model,
             RedirectAttributes redirectAttributes) {
 
+        if (!user.getPassword().equals(user.getConfirmedPassword())) {
+            model.addAttribute("error", "Las contraseñas deben coincidir");
+            return "pages/auth/register";
+        }
+
         try {
             userService.registerUser(user.getUsername(), user.getPassword());
         } catch (BadArgumentsException e) {
