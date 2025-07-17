@@ -58,7 +58,9 @@ public class SecurityConfig {
                         .permitAll())
 
                 // CSRF deshabilitado para "/sync"
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/sync/ci"));
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/sync")
+                        .ignoringRequestMatchers("/sync/ci"));
 
         return http.build();
     }
