@@ -31,8 +31,10 @@
     <!-- Mensajes -->
     <div th:replace="~{fragments/alerts/error :: alert(${error})}"></div>
     <div th:replace="~{fragments/alerts/success :: alert(${success})}"></div>
+    <!-- Notificacion de nuevo excel disponible (+cookie) -->
     <div th:if="${hasNewExcel}">
-      <div th:replace="~{fragments/alerts/warning :: alert('Nueva version del excel disponible.')}"></div>
+      <div th:replace="~{fragments/alerts/warning :: alert('📢 ¡Nueva versión del Excel
+          disponible!.')}"></div>
     </div>
     <div th:if="${schedules?.empty}" role="alert">
       No tienes horarios registrados.

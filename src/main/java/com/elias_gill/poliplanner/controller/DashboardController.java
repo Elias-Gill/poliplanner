@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -12,6 +13,9 @@ import com.elias_gill.poliplanner.models.Schedule;
 import com.elias_gill.poliplanner.services.ScheduleService;
 import com.elias_gill.poliplanner.services.SheetVersionService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
 @Controller
@@ -20,14 +24,24 @@ public class DashboardController {
     private final ScheduleService scheduleService;
     private final SheetVersionService versionService;
 
+    private static final String COOKIE_EXCEL = "ultimaVersionExcelVisto";
+
     @GetMapping("/")
     public String home(
             @RequestParam(required = false) Long id,
+            @CookieValue(value = COOKIE_EXCEL, defaultValue = "default_value") String cookieVersion,
+            HttpServletResponse response,
             Authentication authentication,
             Model model) {
 
-        Boolean hasNewExcel = versionService.hasNewUpdates();
-        model.addAttribute("hasNewExcel", hasNewExcel);
+        Long ultimaVersionExcelId = versionService.findLatest().getId();
+
+        if (String.valueOf(ultimaVersionExcelId).equals(cookieVersion)) {
+            model.addAttribute("hasNewExcel", false);
+        } else {
+            model.addAttribute("hasNewExcel", true);
+            response.addCookie(new Cookie(COOKIE_EXCEL, ultimaVersionExcelId.toString()));
+        }
 
         String userName = authentication.getName();
         List<Schedule> schedules = scheduleService.findByUserName(userName);
@@ -37,8 +51,6 @@ public class DashboardController {
             return "pages/dashboard/home";
         }
 
-        // Set the latest created schedule as default
-        // FUTURE: maybe migrate to a cookie
         model.addAttribute("selectedSchedule", schedules.get(0));
         if (id != null) {
             for (Schedule s : schedules) {
