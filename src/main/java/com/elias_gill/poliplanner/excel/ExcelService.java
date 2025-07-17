@@ -39,6 +39,9 @@ public class ExcelService {
     @Autowired
     private SheetVersionService versionService;
 
+    @Autowired
+    private WebScrapper scrapper;
+
     /*
      * Esta función se divide en tres partes para facilitar el testeo de componentes
      * específicos
@@ -49,7 +52,7 @@ public class ExcelService {
     public void SyncronizeExcel() {
         try {
             logger.info("Iniciando actualizacion de excel");
-            ExcelDownloadSource source = WebScrapper.findLatestDownloadSource();
+            ExcelDownloadSource source = scrapper.findLatestDownloadSource();
             SheetVersion latestVersion = versionService.findLatest();
 
             String sourceUrl = source.url();

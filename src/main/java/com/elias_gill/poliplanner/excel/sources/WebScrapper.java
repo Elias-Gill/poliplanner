@@ -4,28 +4,31 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class WebScrapper {
     private static final Pattern XLS_PATTERN = Pattern.compile(".*\\.xlsx?$", Pattern.CASE_INSENSITIVE);
     private static final String TARGET_URL = "https://www.pol.una.py/academico/horarios-de-clases-y-examenes/";
-    private static final Pattern DATE_PATTERN = Pattern.compile("(\\d{2})(\\d{2})(\\d{4})\\.xlsx?$",
-            Pattern.CASE_INSENSITIVE);
 
-    public static ExcelDownloadSource findLatestDownloadSource() throws IOException {
+    @Autowired
+    private GoogleDriveHelper googleHelper;
+
+    public ExcelDownloadSource findLatestDownloadSource() throws IOException {
         Document doc = Jsoup.connect(TARGET_URL).timeout(10000).get();
 
         return findLatestDownloadSourceInDoc(doc);
     }
 
     // TEST: divido en partes para poder escribir tests
-    static ExcelDownloadSource findLatestDownloadSourceInDoc(Document doc) {
+    ExcelDownloadSource findLatestDownloadSourceInDoc(Document doc) {
         List<ExcelDownloadSource> sources = extractSourcesFromDoc(doc);
 
         if (sources == null || sources.isEmpty()) {
@@ -42,7 +45,7 @@ public class WebScrapper {
         return latestSource;
     }
 
-    static List<ExcelDownloadSource> extractSourcesFromDoc(Document doc) {
+    List<ExcelDownloadSource> extractSourcesFromDoc(Document doc) {
         List<ExcelDownloadSource> sources = new ArrayList<ExcelDownloadSource>();
 
         Elements links = doc.select("a[href]");
@@ -54,7 +57,7 @@ public class WebScrapper {
                     sources.add(aux);
                 }
             } else if (isGoogleDriveFolderUrl(url)) {
-                List<ExcelDownloadSource> aux = GoogleDriveHelper.listSourcesInUrl(url);
+                List<ExcelDownloadSource> aux = googleHelper.listSourcesInUrl(url);
                 if (aux != null && !aux.isEmpty()) {
                     sources.addAll(aux);
                 }
@@ -76,21 +79,12 @@ public class WebScrapper {
     }
 
     static ExcelDownloadSource extractDirectSource(String url) {
-        Matcher dateMatcher = DATE_PATTERN.matcher(url);
-        if (dateMatcher.find()) {
-            String day = dateMatcher.group(1);
-            String month = dateMatcher.group(2);
-            String year = dateMatcher.group(3);
-            LocalDate date = LocalDate.of(
-                    Integer.parseInt(year),
-                    Integer.parseInt(month),
-                    Integer.parseInt(day));
-
-            String fileName = url.substring(url.lastIndexOf('/') + 1);
-
-            return new ExcelDownloadSource(url, fileName, date);
-        } else {
+        String fileName = url.substring(url.lastIndexOf('/') + 1);
+        LocalDate date = Utils.extractDateFromFilename(fileName);
+        if (date == null) {
             return null;
         }
+
+        return new ExcelDownloadSource(url, fileName, date);
     }
 }
