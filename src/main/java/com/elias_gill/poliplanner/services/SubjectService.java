@@ -50,7 +50,8 @@ public class SubjectService {
      * grouped by subject name with their respective sections and professors.
      * </p>
      *
-     * @param subjects the list of {@link Subject} instances to be grouped
+     * @param subjects
+     *            the list of {@link Subject} instances to be grouped
      * @return a nested map grouping the subjects by semester and then by subject
      *         name
      */

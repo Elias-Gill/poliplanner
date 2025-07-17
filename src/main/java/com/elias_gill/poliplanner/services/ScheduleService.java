@@ -1,5 +1,6 @@
 package com.elias_gill.poliplanner.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,30 +38,6 @@ public class ScheduleService {
 
     public Optional<Schedule> findById(Long id) {
         return scheduleRepository.findById(id);
-    }
-
-    @Transactional
-    public void deleteSchedule(Long scheduleId, String username)
-            throws InternalServerErrorException, BadArgumentsException {
-
-        Optional<Schedule> optSchedule = scheduleRepository.findById(scheduleId);
-
-        if (optSchedule.isEmpty()) {
-            throw new BadArgumentsException("Schedule with id = '" + scheduleId + "' does not exist");
-        }
-
-        Schedule schedule = optSchedule.get();
-
-        // Make sure the user owns the schedule
-        if (!schedule.getUser().getUsername().equals(username)) {
-            throw new BadArgumentsException("You are not authorized to delete this schedule");
-        }
-
-        try {
-            scheduleRepository.delete(schedule);
-        } catch (Exception e) {
-            throw new InternalServerErrorException("Internal error deleting schedule", e);
-        }
     }
 
     @Transactional
@@ -111,5 +88,66 @@ public class ScheduleService {
         } catch (Exception e) {
             throw new InternalError("Error interno al guardar el horario", e);
         }
+    }
+
+    @Transactional
+    public void deleteSchedule(Long scheduleId, String username)
+            throws InternalServerErrorException, BadArgumentsException {
+
+        Optional<Schedule> optSchedule = scheduleRepository.findById(scheduleId);
+
+        if (optSchedule.isEmpty()) {
+            throw new BadArgumentsException("Schedule with id = '" + scheduleId + "' does not exist");
+        }
+
+        Schedule schedule = optSchedule.get();
+
+        // Make sure the user owns the schedule
+        if (!schedule.getUser().getUsername().equals(username)) {
+            throw new BadArgumentsException("You are not authorized to delete this schedule");
+        }
+
+        try {
+            scheduleRepository.delete(schedule);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Internal error deleting schedule", e);
+        }
+    }
+
+    @Transactional
+    public List<Subject> migrateSubjects(Long scheduleId, String username) {
+        // Make sure the user owns the schedule
+        Optional<Schedule> optSchedule = scheduleRepository.findById(scheduleId);
+        if (optSchedule.isEmpty()) {
+            throw new BadArgumentsException("Schedule with id = '" + scheduleId + "' does not exist");
+        }
+
+        Schedule schedule = optSchedule.get();
+        if (!schedule.getUser().getUsername().equals(username)) {
+            throw new BadArgumentsException("You are not authorized to delete this schedule");
+        }
+
+        // Start migration
+        List<Subject> subjects = schedule.getMaterias();
+        List<Subject> notMigratedSubjects = new ArrayList<Subject>();
+
+        for (int i = 0; i < subjects.size(); i++) {
+            String subjectName = subjects.get(i).getNombreAsignatura();
+
+            Subject newSubject = subjectRepository
+                    .findFirstByNombreAsignaturaOrderByCareer_Version_ParsedAtDesc(subjectName)
+                    .orElse(null);
+
+            if (newSubject != null) {
+                subjects.set(i, newSubject);
+            } else {
+                notMigratedSubjects.add(newSubject);
+            }
+        }
+
+        schedule.setMaterias(subjects);
+        scheduleRepository.save(schedule);
+
+        return notMigratedSubjects;
     }
 }

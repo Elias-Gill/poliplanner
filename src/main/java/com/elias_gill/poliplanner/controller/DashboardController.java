@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.elias_gill.poliplanner.models.Schedule;
 import com.elias_gill.poliplanner.services.ScheduleService;
+import com.elias_gill.poliplanner.services.SheetVersionService;
+
+import lombok.AllArgsConstructor;
 
 @Controller
+@AllArgsConstructor
 public class DashboardController {
     private final ScheduleService scheduleService;
-
-    public DashboardController(ScheduleService scheduleService) {
-        this.scheduleService = scheduleService;
-    }
+    private final SheetVersionService versionService;
 
     @GetMapping("/")
     public String home(
@@ -25,9 +26,11 @@ public class DashboardController {
             Authentication authentication,
             Model model) {
 
+        Boolean hasNewExcel = versionService.hasNewUpdates();
+        model.addAttribute("hasNewExcel", hasNewExcel);
+
         String userName = authentication.getName();
         List<Schedule> schedules = scheduleService.findByUserName(userName);
-
         model.addAttribute("schedules", schedules);
 
         if (schedules.isEmpty()) {

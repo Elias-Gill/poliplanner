@@ -215,6 +215,14 @@ button.error:hover {
     background-color: color-mix(in srgb, var(--color-error), black 10%);
 }
 
+button.warning {
+    background-color: var(--color-warning);
+}
+
+button.warning:hover {
+    background-color: color-mix(in srgb, var(--color-warning), black 10%);
+}
+
 
 /* === Formularios (inputs, selects, etc.) === */
 input,
@@ -419,6 +427,11 @@ aside,
 [role="alert"].success {
     background-color: color-mix(in srgb, var(--color-success), transparent 90%);
     border-left: 4px solid var(--color-success);
+}
+
+[role="alert"].warning {
+    background-color: color-mix(in srgb, var(--color-warning), transparent 90%);
+    border-left: 4px solid var(--color-warning);
 }
 
 /* === Utilidades (opcionales) === */

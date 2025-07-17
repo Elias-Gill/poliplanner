@@ -23,25 +23,35 @@ import java.util.List;
 @ActiveProfiles("test")
 class ExcelServiceIntegrationTest {
 
-    @Autowired private ExcelService excelService;
+    @Autowired
+    private ExcelService excelService;
 
-    @Autowired private SheetVersionRepository sheetVersionRepository;
+    @Autowired
+    private SheetVersionRepository sheetVersionRepository;
 
-    @Autowired private CareerRepository careerRepository;
+    @Autowired
+    private CareerRepository careerRepository;
 
-    @Autowired private SubjectRepository subjectRepository;
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     @Test
     @Tag("integration")
     /**
-     * Test de integración que verifica el proceso completo de parseo de un archivo Excel y la
+     * Test de integración que verifica el proceso completo de parseo de un archivo
+     * Excel y la
      * persistencia de sus datos en la base de datos.
      *
-     * <p>Flujo verificado: 1. Lectura y parseo del archivo Excel. 2. Persistencia de la versión del
-     * archivo (SheetVersion) con la URL asociada. 3. Creacion y persistencia de entidades Career y
+     * <p>
+     * Flujo verificado: 1. Lectura y parseo del archivo Excel. 2. Persistencia de
+     * la versión del
+     * archivo (SheetVersion) con la URL asociada. 3. Creacion y persistencia de
+     * entidades Career y
      * Subject a partir del contenido del Excel.
      *
-     * <p>Este test asume que el archivo testeado contiene datos validos y estructurados
+     * <p>
+     * Este test asume que el archivo testeado contiene datos validos y
+     * estructurados
      * correctamente.
      */
     void testExcelParsingPersistency() throws Exception {

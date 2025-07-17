@@ -179,8 +179,33 @@ public class SchedulesController {
             scheduleService.deleteSchedule(id, username);
             redirectAttributes.addFlashAttribute("success", "Schedule deleted successfully");
         } catch (BadArgumentsException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        } catch (InternalServerErrorException e) {
             redirectAttributes.addFlashAttribute("error",
-                    "Invalid argument. Schedule with id = " + id + " does not exist.");
+                    "Sorry, an internal server error occurred. Please try again later.");
+            logger.error("Error deleting schedule: " + e.getMessage(), e);
+        }
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/{id}/migrate")
+    public String migrateSubjectsExcel(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            List<Subject> notMigrated = scheduleService.migrateSubjects(id, username);
+            if (notMigrated.isEmpty()) {
+                redirectAttributes.addFlashAttribute("success", "Schedule migrated successfully");
+            } else {
+                StringBuilder warningMessage = new StringBuilder(
+                        "Schedule migrated successfully, but the following subjects were NOT migrated:\n");
+                for (Subject s : notMigrated) {
+                    warningMessage.append("- ").append(s.getNombreAsignatura()).append("\n");
+                }
+                redirectAttributes.addFlashAttribute("warning", warningMessage.toString());
+            }
+        } catch (BadArgumentsException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (InternalServerErrorException e) {
             redirectAttributes.addFlashAttribute("error",
                     "Sorry, an internal server error occurred. Please try again later.");

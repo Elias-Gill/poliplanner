@@ -5,11 +5,11 @@
       <nav>
         <ul>
           <li class="logo">
-            <a href="/"><i class="bi bi-calendar3"></i> Armador de Horarios</a>
+            <a href="/"><i class="bi bi-calendar3" aria-label="Menú de inicio"></i> Armador de Horarios</a>
           </li>
           <li><a th:href="@{/schedule/new}">Nuevo horario</a></li>
           <li><a th:href="@{/calculator}">Calculadora</a></li>
-          <li><a th:href="@{/guides/index}">Ayudas</a></li>
+          <li><a th:href="@{/guides/index}" aria-label="Guias para el estudiante">Ayudas</a></li>
           <li th:if="${isLoggedIn}">
             <form th:action="@{/logout}" method="post">
               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

@@ -8,10 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 
-public record ExcelDownloadSource(
-        String url,
-        String fileName,
-        LocalDate uploadDate) {
+public record ExcelDownloadSource(String url, String fileName, LocalDate uploadDate) {
 
     // FIX: errores de try catch
     public Path downloadThisSource() throws IOException {

@@ -171,6 +171,12 @@
         </div>
       </div>
     </section>
+    <section>
+      <form th:action="@{/schedule/{id}/migrate(id=${schedule.id})}" method="post">
+        <button type="submit" aria-label="Intentar migrar a un excel mas nuevo.">Sincronizar materias</button>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+      </form>
+    </section>
   </div>
   <style>
     .exam-list {
