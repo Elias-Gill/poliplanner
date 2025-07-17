@@ -17,7 +17,7 @@ public class ExcelParser {
     public static List<SubjectCsvDTO> cleanAndParseCsv(Path csvFile) throws CsvParsingException {
         try {
             Path cleanedCsv = cleanCsv(csvFile);
-            List<SubjectCsvDTO> subjects = extractSubjects(csvFile);
+            List<SubjectCsvDTO> subjects = extractSubjects(cleanedCsv);
             Files.delete(cleanedCsv);
 
             return subjects;

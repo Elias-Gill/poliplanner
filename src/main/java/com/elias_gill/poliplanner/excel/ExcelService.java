@@ -90,7 +90,7 @@ public class ExcelService {
         logger.info("Conversion exitosa");
 
         SheetVersion version = versionService.create(excelFile.toString(), url);
-        // Cada "sheet" representa una carrera diferente
+        // Cada "csv" representa una carrera diferente
         for (Path sheet : sheets) {
             try {
                 parseAndPersistCsv(sheet, version);
