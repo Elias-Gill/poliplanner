@@ -35,6 +35,10 @@
     <div th:if="${hasNewExcel}">
       <div th:replace="~{fragments/alerts/warning :: alert('📢 ¡Nueva versión del Excel
           disponible!.')}"></div>
+      <span>
+        Actualiza tu horario con el nuevo Excel usando nuestra <a href="#bottom">herramienta
+          de migración</a>.
+      </span>
     </div>
     <div th:if="${schedules?.empty}" role="alert">
       No tienes horarios registrados.
@@ -44,6 +48,7 @@
       <div th:replace="~{pages/dashboard/detail :: schedule(${selectedSchedule})}" 
             th:if="${selectedSchedule != null}">
       </div>
+      <div id="bottom"></div>
     </section>
     <style>
       .header-selector {
