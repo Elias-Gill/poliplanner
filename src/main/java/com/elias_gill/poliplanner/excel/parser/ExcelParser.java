@@ -1,28 +1,30 @@
-package com.elias_gill.poliplanner.excel;
+package com.elias_gill.poliplanner.excel.parser;
 
+import com.elias_gill.poliplanner.exception.CsvParsingException;
 import com.opencsv.bean.CsvToBeanBuilder;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ExcelHelper {
+public class ExcelParser {
+    private static final int GARBAGE_HEADER_LINES = 11;
 
-    private static final String targetUrl = "https://www.pol.una.py/academico/horarios-de-clases-y-examenes/";
+    public static List<SubjectCsvDTO> cleanAndParseCsv(Path csvFile) throws CsvParsingException {
+        try {
+            Path cleanedCsv = cleanCsv(csvFile);
+            List<SubjectCsvDTO> subjects = extractSubjects(csvFile);
+            Files.delete(cleanedCsv);
+
+            return subjects;
+        } catch (Exception e) {
+            throw new CsvParsingException("No se pudo parsear el archivo", e);
+        }
+    }
 
     static List<SubjectCsvDTO> extractSubjects(Path csvFile) throws RuntimeException {
         try {
@@ -42,47 +44,6 @@ public class ExcelHelper {
         }
     }
 
-    static String findLatestExcelUrl() throws IOException {
-        Document doc = Jsoup.connect(targetUrl).timeout(10000).get();
-
-        return extractUrlFromDoc(doc);
-    }
-
-    static String extractUrlFromDoc(Document doc) {
-        Pattern datePattern = Pattern.compile("(\\d{2})(\\d{2})(\\d{4})\\.xlsx?$", Pattern.CASE_INSENSITIVE);
-
-        String latestUrl = "";
-        String latestDate = "00000000";
-
-        Elements links = doc.select("a[href]");
-        for (Element link : links) {
-            String url = link.attr("abs:href");
-            if (url.toLowerCase().matches(".*\\.xls[x]?$") && url.toLowerCase().contains("exame")) {
-                Matcher dateMatcher = datePattern.matcher(url);
-                if (dateMatcher.find()) {
-                    String fileDate = dateMatcher.group(3) + dateMatcher.group(2) + dateMatcher.group(1);
-                    if (fileDate.compareTo(latestDate) > 0) {
-                        latestDate = fileDate;
-                        latestUrl = url;
-                    }
-                }
-            }
-        }
-
-        return latestUrl;
-    }
-
-    static Path downloadFile(String fileUrl) throws IOException {
-        URL url = new URL(fileUrl);
-        InputStream in = url.openStream();
-
-        Path tempFile = Files.createTempFile("horario_", ".xlsx");
-        Files.copy(in, tempFile, StandardCopyOption.REPLACE_EXISTING);
-
-        in.close();
-        return tempFile;
-    }
-
     // Limpia los encabezados que no nos sirven (primeras 11 lineas) dentro del csv
     // generado del horario. Retorna el path a un archivo temporal el cual es el CSV
     // limpio.
@@ -91,7 +52,7 @@ public class ExcelHelper {
         List<String> lines = Files.readAllLines(path);
 
         // Ignorar encabezados
-        List<String> cleanedLines = lines.stream().skip(11).collect(Collectors.toList());
+        List<String> cleanedLines = lines.stream().skip(GARBAGE_HEADER_LINES).collect(Collectors.toList());
 
         // Generar un archivo temporal el cual parsear
         Path tempFile = Files.createTempFile(path.getFileName().toString(), ".xlsx");
@@ -102,7 +63,7 @@ public class ExcelHelper {
 
     // Convierte cada "hoja" del archivo en archivos csv. Retorna la lista de
     // archivos convertidos
-    static List<Path> convertExcelToCsv(Path excelFile) throws IOException, InterruptedException {
+    public static List<Path> convertExcelToCsv(Path excelFile) throws IOException, InterruptedException {
         // Verificar si ssconvert está instalado
         if (!isSsconvertAvailable()) {
             throw new IOException("ssconvert no está instalado. Necesitas instalar Gnumeric.");
@@ -127,7 +88,8 @@ public class ExcelHelper {
             throw new IOException("Error en la conversión:\n" + processOutput);
         }
 
-        // Listar los archivos generados e ignorar el archivo de codigos de carrera
+        // Listar los archivos generados e ignorar los archivos basura como "Codigos de
+        // carrera" o "Carreras homologadas"
         try (Stream<Path> files = Files.list(outputDir)) {
             return files.filter(
                     path -> path.toString().endsWith(".csv")
@@ -136,7 +98,7 @@ public class ExcelHelper {
                             && !path.toString().contains("Asignaturas")
                             && !path.toString().contains("Homologadas")
                             && !path.toString().contains("Homólogas")
-                            // INFO: los semestres anteriores, eran super inconsistente
+                            // INFO: en semestres anteriores, eran super inconsistente
                             // && !path.toString().contains("oviedo")
                             // && !path.toString().contains("Oviedo")
                             // && !path.toString().contains("Villarrica")

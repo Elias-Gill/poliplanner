@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.excel;
+package com.elias_gill.poliplanner.excel.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -6,30 +6,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ExcelHelperTest {
-    private static final String EXCEL_DOWNLOAD_URL = "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx";
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
+import com.elias_gill.poliplanner.excel.sources.ExcelDownloadSource;
+
+public class ExcelParserTest {
     private static final String SRC_TEST_RESOURCES_INPUT_CSV = "src/test/resources/input.csv";
     private static final String SRC_TEST_RESOURCES_OUTPUT_CSV = "src/test/resources/output.csv";
+    private static final String EXCEL_DOWNLOAD_URL = "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx";
 
     @Test
     @Tag("unit")
     void testCleanCsv() throws Exception {
-        Path tempFile = ExcelHelper.cleanCsv(Path.of(SRC_TEST_RESOURCES_INPUT_CSV));
+        Path tempFile = ExcelParser.cleanCsv(Path.of(SRC_TEST_RESOURCES_INPUT_CSV));
 
         // Comparar con el output esperado
         Path expectedPath = Path.of(SRC_TEST_RESOURCES_OUTPUT_CSV);
@@ -54,7 +54,7 @@ public class ExcelHelperTest {
         File testFile = new File(SRC_TEST_RESOURCES_OUTPUT_CSV);
 
         // Ejecutar el método
-        List<SubjectCsvDTO> subjects = ExcelHelper.extractSubjects(testFile.toPath());
+        List<SubjectCsvDTO> subjects = ExcelParser.extractSubjects(testFile.toPath());
 
         // Verificar resultados
         assertNotNull(subjects, "La lista de subjects no debería ser null");
@@ -109,7 +109,8 @@ public class ExcelHelperTest {
         // Tratar de descargar un excel conocido y ver si es que funciona
         // correctamente
         try {
-            Path file = ExcelHelper.downloadFile(EXCEL_DOWNLOAD_URL);
+            ExcelDownloadSource source = new ExcelDownloadSource(EXCEL_DOWNLOAD_URL, "test_file", LocalDate.now());
+            Path file = source.downloadThisSource();
 
             assertNotNull(file);
             assertTrue(Files.exists(file));
@@ -123,7 +124,7 @@ public class ExcelHelperTest {
     @Test
     @Tag("integration")
     void testExcelToCsvConversion() throws Exception {
-        if (!ExcelHelper.isSsconvertAvailable()) {
+        if (!ExcelParser.isSsconvertAvailable()) {
             System.out.println("Test ignorado. 'Gnumeric' no instalado");
             assumeTrue(false);
         }
@@ -137,7 +138,7 @@ public class ExcelHelperTest {
         }
 
         // Ejecutar la conversión
-        List<Path> csvFiles = ExcelHelper.convertExcelToCsv(excelFile);
+        List<Path> csvFiles = ExcelParser.convertExcelToCsv(excelFile);
 
         // Esperados
         Set<String> nombresEsperados = Set.of(
@@ -192,17 +193,5 @@ public class ExcelHelperTest {
                             + generatedLines.get(i)
                             + "\n\n");
         }
-    }
-
-    @Test
-    @Tag("unit")
-    void testFindLatestExcelUrlFromLocalHtml() throws IOException {
-        Path htmlPath = Path.of("src/test/resources/pagina_facultad.html");
-        String htmlContent = Files.readString(htmlPath);
-
-        Document doc = Jsoup.parse(htmlContent);
-        String latestUrl = ExcelHelper.extractUrlFromDoc(doc);
-
-        assertEquals(EXCEL_DOWNLOAD_URL, latestUrl);
     }
 }

@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.excel;
+package com.elias_gill.poliplanner.excel.parser;
 
 import com.opencsv.bean.CsvBindByPosition;
 

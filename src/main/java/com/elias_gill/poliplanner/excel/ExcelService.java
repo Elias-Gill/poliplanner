@@ -1,5 +1,19 @@
 package com.elias_gill.poliplanner.excel;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.elias_gill.poliplanner.excel.parser.ExcelParser;
+import com.elias_gill.poliplanner.excel.parser.SubjectCsvDTO;
+import com.elias_gill.poliplanner.excel.parser.SubjectMapper;
+import com.elias_gill.poliplanner.excel.sources.ExcelDownloadSource;
+import com.elias_gill.poliplanner.excel.sources.WebScrapper;
 import com.elias_gill.poliplanner.exception.CsvParsingException;
 import com.elias_gill.poliplanner.exception.ExcelSynchronizationException;
 import com.elias_gill.poliplanner.models.Career;
@@ -10,16 +24,6 @@ import com.elias_gill.poliplanner.services.SheetVersionService;
 import com.elias_gill.poliplanner.services.SubjectService;
 
 import jakarta.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 
 @Service
 public class ExcelService {
@@ -45,21 +49,24 @@ public class ExcelService {
     public void SyncronizeExcel() {
         try {
             logger.info("Iniciando actualizacion de excel");
-            String url = ExcelHelper.findLatestExcelUrl();
+            ExcelDownloadSource source = WebScrapper.findLatestDownloadSource();
             SheetVersion latestVersion = versionService.findLatest();
 
+            String sourceUrl = source.url();
+
             if (latestVersion != null) {
-                if (latestVersion.getUrl().equals(url)) {
+                if (latestVersion.getUrl().equals(sourceUrl)) {
                     logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.getUrl());
                     return;
                 }
             }
 
-            logger.info("Descargando latest url: {}", url);
-            Path excelFile = ExcelHelper.downloadFile(url);
+            logger.info("Descargando latest source: {}", source.toString());
+            Path excelFile = source.downloadThisSource();
 
             logger.info("Descarga exitosa. Iniciando parseo y persistencia");
-            persistSubjectsFromExcel(excelFile, url);
+            persistSubjectsFromExcel(excelFile, sourceUrl);
+
             logger.info("Actualizacion exitosa");
         } catch (InterruptedException | IOException e) {
             String message = "Error sincronizando el archivo Excel. Se inició el rollback";
@@ -68,12 +75,15 @@ public class ExcelService {
         }
     }
 
+    // NOTE: dividio en dos metodos diferentes para poder exponer dos tipos de
+    // endpoints. Uno para descarga automatizada ('/sync/ci') y un formulario para
+    // actualizacion manual ('/sync').
     @Transactional
     public void persistSubjectsFromExcel(Path excelFile, String url)
             throws IOException, InterruptedException {
 
         logger.info("Iniciando conversion a csv");
-        List<Path> sheets = ExcelHelper.convertExcelToCsv(excelFile);
+        List<Path> sheets = ExcelParser.convertExcelToCsv(excelFile);
         logger.info("Conversion exitosa");
 
         SheetVersion version = versionService.create(excelFile.toString(), url);
@@ -88,15 +98,12 @@ public class ExcelService {
         }
     }
 
+    // NOTE: publico porque se utiliza dentro del DatabaseSeeder.
     @Transactional
-    public void parseAndPersistCsv(Path sheet, SheetVersion version)
-            throws IOException {
+    public void parseAndPersistCsv(Path sheet, SheetVersion version) {
         logger.info("Parseando csv: {}", sheet.toString());
-        logger.info("Limpiando");
-        Path cleanedCsv = ExcelHelper.cleanCsv(sheet);
 
-        logger.info("Extrayendo materias");
-        List<SubjectCsvDTO> subjectscsv = ExcelHelper.extractSubjects(cleanedCsv);
+        List<SubjectCsvDTO> subjectscsv = ExcelParser.cleanAndParseCsv(sheet);
 
         logger.info("Enlazando la carrera y persistiendo");
         String careerName = sheet.getFileName().toString().replace(".csv", "");
@@ -107,8 +114,5 @@ public class ExcelService {
             subject.setCareer(carrera);
             subjectService.create(subject);
         }
-
-        // Limpiar archivos temporales
-        Files.delete(cleanedCsv);
     }
 }

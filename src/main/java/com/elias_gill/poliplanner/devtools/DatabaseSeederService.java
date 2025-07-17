@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
@@ -26,15 +28,16 @@ import jakarta.transaction.Transactional;
 public class DatabaseSeederService {
 
     @Autowired
-    ExcelService excelService;
+    private ExcelService excelService;
     @Autowired
-    ScheduleService scheduleService;
+    private ScheduleService scheduleService;
     @Autowired
-    SheetVersionService versionService;
+    private SheetVersionService versionService;
+
     @Autowired
-    UserRepository userRepo;
+    private UserRepository userRepo;
     @Autowired
-    SubjectRepository subjectRepository;
+    private SubjectRepository subjectRepository;
 
     @Autowired
     private List<JpaRepository<?, ?>> repositories;
@@ -42,7 +45,9 @@ public class DatabaseSeederService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    static final Path excelFile = Path.of("src/test/resources/output.csv");
+    private static final Path excelFile = Path.of("src/test/resources/output.csv");
+
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseSeeder.class);
 
     @Transactional
     public void cleanAndSeed() throws Exception {
@@ -61,7 +66,7 @@ public class DatabaseSeederService {
 
     @Transactional
     public void seedDatabase() throws Exception {
-        System.out.println("Cargando los datos semilla desde: " + excelFile.toString() + "\n");
+        logger.warn("Cargando los datos semilla desde: {}\n", excelFile.toString());
 
         // Parse Excel data
         try {
@@ -91,6 +96,6 @@ public class DatabaseSeederService {
         // Crear horario con los IDs REALES
         scheduleService.create(user.getUsername(), "Horario de pruebas", subjectIds);
 
-        System.out.println("Datos semilla cargados satisfactoriamente");
+        logger.warn("Datos semilla cargados satisfactoriamente");
     }
 }

@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.excel;
+package com.elias_gill.poliplanner.excel.parser;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -6,8 +6,6 @@ import java.time.format.DateTimeParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.elias_gill.poliplanner.models.Subject;

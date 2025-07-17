@@ -1,7 +1,6 @@
 package com.elias_gill.poliplanner.services;
 
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
