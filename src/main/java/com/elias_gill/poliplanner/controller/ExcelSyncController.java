@@ -28,6 +28,12 @@ public class ExcelSyncController {
 
     private final static Logger logger = LoggerFactory.getLogger(ExcelSyncController.class);
 
+    @GetMapping("/sync")
+    public String showSyncForm() {
+        logger.info("Accediendo a formulario de sincronizacion excel");
+        return "pages/sync/form";
+    }
+
     /**
      * Sincroniza el archivo Excel más reciente disponible desde la web de origen.
      *
@@ -107,11 +113,5 @@ public class ExcelSyncController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("No se pudo sincronizar: " + e.getMessage());
         }
-    }
-
-    @GetMapping("/sync")
-    public String showSyncForm() {
-        logger.info("Accediendo a formulario de sincronizacion excel");
-        return "pages/sync/form";
     }
 }

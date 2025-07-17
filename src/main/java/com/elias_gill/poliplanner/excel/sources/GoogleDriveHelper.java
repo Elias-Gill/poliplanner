@@ -43,6 +43,9 @@ public class GoogleDriveHelper {
                 if (name != null && name.toLowerCase().endsWith(".xlsx")) {
                     String downloadUrl = String.format(DOWNLOAD_URL_FORMAT, id);
                     LocalDate fileDate = extractDateFromFilename(name);
+                    if (fileDate == null) {
+                        continue;
+                    }
                     sources.add(new ExcelDownloadSource(downloadUrl, name, fileDate));
                 }
             }
@@ -83,6 +86,7 @@ public class GoogleDriveHelper {
             int day = Integer.parseInt(dateMatcher.group(1));
             int month = Integer.parseInt(dateMatcher.group(2));
             int year = Integer.parseInt(dateMatcher.group(3));
+
             return LocalDate.of(year, month, day);
         }
         return null;

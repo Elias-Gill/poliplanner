@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/sync").permitAll()
                         .requestMatchers(HttpMethod.POST, "/sync").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/sync/ci").permitAll()
                         .requestMatchers(
                                 "/calculator",
                                 "/guides/**",
@@ -57,8 +58,7 @@ public class SecurityConfig {
                         .permitAll())
 
                 // CSRF deshabilitado para "/sync"
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/sync"));
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/sync/ci"));
 
         return http.build();
     }
