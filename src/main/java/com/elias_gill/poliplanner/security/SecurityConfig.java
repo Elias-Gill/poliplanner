@@ -41,6 +41,8 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/img/**",
+                                "/favicon.ico",
+                                "/favicon.png",
                                 "/robots.txt",
                                 "/sitemap.xml")
                         .permitAll()
