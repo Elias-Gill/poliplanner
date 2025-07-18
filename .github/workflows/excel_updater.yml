@@ -1,8 +1,8 @@
-name: Actualizar Excel cada 10h
+name: Actualizar Excel cada 12h
 
 on:
   schedule:
-    - cron: '0 */10 * * *'  # A las 00:00, 10:00, 20:00 UTC
+    - cron: '0 */12 * * *'  # A las 00:00 y 12:00 UTC
 
 jobs:
   actualizar-excel:
