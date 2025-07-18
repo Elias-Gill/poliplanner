@@ -1,7 +1,7 @@
-name: Actualizar Excel cada 6h
+name: Actualizar Excel cada 10h
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Cada 6 horas (UTC)
+    - cron: '0 */10 * * *'  # Cada 10 horas (UTC)
 
 jobs:
   actualizar-excel:
@@ -10,5 +10,5 @@ jobs:
       - name: Llamar al endpoint protegido
         run: |
           # TODO: cambiar el url
-          curl -X POST https://tuapp.fly.dev/admin/actualizar-excel \
+          curl -X POST https://poliplanner.fly.dev/sync/ci \
           -d "password=${{ secrets.ADMIN_PASSWORD }}"
