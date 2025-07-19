@@ -16,6 +16,7 @@ No existen roles diferenciados:
 todos los usuarios tienen las mismas capacidades.
 
 El frontend está compuesto por HTML y CSS con plantillas de Thymeleaf.
+Para mas informacion sobre los estilos, consultar la guia de [estilos](estilos_css.md).
 
 ## Componentes
 

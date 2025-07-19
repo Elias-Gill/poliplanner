@@ -12,6 +12,9 @@ más reciente del archivo Excel, que luego se parsea y se guarda en la base de d
   el archivo Excel más reciente.
 - El nombre del archivo Excel sigue la convención **`Horario *** date_of_update.xlsx`**.
   Esto permite identificar el archivo más reciente comparando las fechas de actualización.
+- Los archivos pueden alojarse en carpetas publicas de Google Drive, en ese caso se listan
+  todos los links pertenecientes a Drive y se extraen los archivos y fuentes.
+  Para mas informacion sobre este proceso consultar esta [guia](google_drive.md).
 
 2. **Descarga del archivo Excel**: 
 - Una vez encontrado el archivo más reciente, se descarga el archivo a través de una solicitud
@@ -21,6 +24,7 @@ más reciente del archivo Excel, que luego se parsea y se guarda en la base de d
 - El archivo Excel descargado se parsea inmediatamente, y la información contenida se guarda
   directamente en las tablas de la base de datos.
 - Los archivos Excel como tal no se almacenan; solo se guarda la información parseada.
+- Para mas detalles sobre el proceso de parseo consultar esta [guia](parser-excel.md).
 
 4. **Versión de archivos Excel**:
 - El nombre del archivo se usa para determinar la versión más reciente.
@@ -37,7 +41,7 @@ más reciente del archivo Excel, que luego se parsea y se guarda en la base de d
 
 6. **Automatización**:
 - La actualización automática se programa utilizando **GitHub Actions** con un cron job
-  configurado para ejecutarse cada 6 horas.
+  configurado para ejecutarse cada 10 horas.
 - Un endpoint protegido con contraseña (almacenada en la variable de entorno `UPDATE_KEY`) es
   llamado para disparar el proceso de sincronización.
 
