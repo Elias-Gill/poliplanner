@@ -3,60 +3,37 @@
 Este documento describe la arquitectura general de la aplicación web para armado de horarios
 universitarios.
 
-# Indice de documentacion
-
-- `[Arquitectura general](arquitectura.md)`:
-- `[sincronizacion-excel.md](sincronizacion-excel.md)`:
-  descarga, scraping y parseo
-- `[parser-excel.md](parser-excel.md)`:
-  cómo se transforma un Excel en estructuras persistentes
-- `horarios.md`:
-  lógica de armado de horarios y estructura de datos
-- `usuarios.md`:
-  modelo de usuario, autenticación y sesiones
-
 ## Visión general
 
 La aplicación permite a los usuarios:
 - Registrarse e iniciar sesión
-- Elegir una versión de horario (proveniente de un archivo Excel parseado)
 - Consultar materias disponibles
-- Crear uno o más horarios personales basados en dicha versión
+- Crear uno o más horarios personales
+- Calcular su promedio de examenes
+- Consultar guias educativas
 
 No existen roles diferenciados:
 todos los usuarios tienen las mismas capacidades.
 
-El frontend está compuesto por HTML y CSS con plantillas de Spring Boot y algo de **htmx** para
-una experiencia más fluida sin utilizar JavaScript frontend moderno.
+El frontend está compuesto por HTML y CSS con plantillas de Thymeleaf.
+Para mas informacion sobre los estilos, consultar la guia de [estilos](estilos_css.md).
 
-## Componentes principales
+## Componentes
 
-```ascii
-+-------------------------------+
-|         Usuario final         |
-+-------------------------------+
-        |
-        v
-+-------------------------------+
-|         Controlador web       |
-|  (Login, elección Excel, UI) |
-+-------------------------------+
-        |
-        v
-+-------------------------------+
-|         Backend Spring        |
-| - Parser de Excel             |
-| - Armador de horarios         |
-| - Servicio de autenticación   |
-+-------------------------------+
-        |
-        v
-+-------------------------------+
-|         Base de datos         |
-| (Usuarios, Horarios, Materias |
-|  Versiones Excel parseadas)   |
-+-------------------------------+
-```
+La aplicacion se divide en componentes siguiendo las practicas de desarrollo de Spring Boot:
+
+- Services
+- Controllers
+- Models
+
+El parser de excel es considerado un modulo de servicio independiente.
+Este modulo se divide en:
+- Web Scrapper:
+  busca los links de descarga de nuevas versiones de excel.
+- Parser:
+  Convierte un excel a csv, luego parsea dicho csv para generar el un DTO.
+  Este DTO luego se mapea a los modelos de la base de datos, realizandose la limpieza y
+  desambiguacion de los campos.
 
 ## Flujo principal de uso
 
@@ -79,4 +56,4 @@ una experiencia más fluida sin utilizar JavaScript frontend moderno.
 
 - No se aplican validaciones sobre solapamiento de materias, ya que es común que los alumnos
   lleven materias superpuestas
-- Se considera más adelante agregar advertencias visuales en el frontend para solapamientos
+- Las guias y la calculadora son accesibles sin inicio de sesión.

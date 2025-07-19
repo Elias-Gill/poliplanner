@@ -4,17 +4,13 @@
   pasos recomendados para iniciar, correr y modificar el proyecto.
 - `[Arquitectura del sistema](arquitectura.md)`:
   estructura general del proyecto y sus módulos.
-- `[Extracción de datos desde Excel (scraper)](sincronizacion-excel.md)`:
+- `[Scrapping y sincronizacion de archivos excel](sincronizacion-excel.md)`:
   scraping y descarga de archivos desde la web.
-- `[Procesamiento de archivos Excel](parser-excel.md)`:
+- `[Procesamiento y parseo de archivos Excel](parser-excel.md)`:
   transformación de Excel a estructuras de datos persistentes.
-- `[Lógica de horarios](horarios.md)`:
-  armado de horarios y modelo de datos asociado.
-- `[Gestión de usuarios](usuarios.md)`:
-  autenticación, sesiones y modelo de usuario.
 
 ## Otros archivos
 
 - [Eschema de base de datos](media/db_scheme.png)
-- [Calculo de notas](media/calculo_de_notas.jpeg), [escala](media/escala_politecnica.pdf)
-- [Conexion con Google Drive](google_drive.md)
+- [Calculo de notas](media/calculo_de_notas.jpeg)
+- [PDF escala de notas](media/escala_politecnica.pdf)

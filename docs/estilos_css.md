@@ -1,15 +1,27 @@
 # Documentación del Framework CSS Minimalista
 
 ## Visión general
+
 Un sistema de estilos minimalista basado en HTML semántico que proporciona estilos consistentes
 y responsivos sin necesidad de clases CSS adicionales en la mayoría de casos.
+
 El framework está diseñado para:
 
 - Funcionar con HTML estándar sin requerir clases CSS
 - Ser completamente responsive (mobile-first)
 - Incluir soporte para modo claro/oscuro
 - Mantener consistencia visual en todos los componentes
-- Requerir muy poco JavaScript para su funcionamiento básico (`burguer.js` y `dropdown.js`)
+- Requerir muy poco JavaScript para su funcionamiento básico (ej:
+  burguer.js)
+
+De requerirse codigo css o javascript custom para ciertos componentes de una pagina especifica,
+entonces se escribe directamente dentro de la plantilla.
+Se debe evitar lo mas posible el uso de css custom dentro de las paginas.
+
+La filosofia es de utilidad y facilidad de mantenimientos por sobre frontend complejo y
+saturado.
+Valoramos la utilidad, el performance y facilidad de uso por sobre estilos visuales
+extravagantes y librerias de frontend pesadas.
 
 ## Estructura básica
 
@@ -49,6 +61,12 @@ El sistema utiliza variables CSS para una fácil personalización:
 - Padding consistente
 - Centrado automático
 
+```html
+<section>
+```
+- Margin arriba y abajo
+- Ampliamente utilizado para generar espacios de separacion en la vista
+
 #### Sistema de navegación
 ```html
 <nav>
@@ -67,8 +85,10 @@ El sistema utiliza variables CSS para una fácil personalización:
 #### Botones
 ```html
 <button>Primario</button>
-<button type="secondary">Secundario</button>
-<button type="success">Éxito</button>
+<button class="secondary">Secundario</button>
+<button class="success">Éxito</button>
+<button class="error">error</button>
+<button class="warning">warning</button>
 ```
 
 Características:
@@ -79,12 +99,14 @@ Características:
 
 #### Formularios
 ```html
-<input type="text">
+<form>
+    <input type="text">
     <select>
         <option>Opción 1</option>
     </select>
-<textarea></textarea>
-<label><input type="checkbox"> Acepto términos</label>
+    <textarea></textarea>
+    <label><input type="checkbox"> Acepto términos</label>
+</form>
 ```
 
 Estilos:
@@ -142,23 +164,7 @@ Para modificar el diseño:
 1. Ajustar variables CSS en `:root`
 2. Sobreescribir estilos específicos cuando sea necesario
 3. Para componentes especiales, usar el atributo `style` directamente en el HTML
-
-## Ventajas clave
-
-1. **Consistencia**:
-   Todos los componentes comparten la misma paleta de colores y espaciado
-2. **Mantenibilidad**:
-   Cambios globales se realizan modificando variables
-3. **Performance**:
-   CSS ligero sin dependencias
-4. **Accesibilidad**:
-   Contraste adecuado y estados focus visibles
-
-## Limitaciones
-
-1. No incluye componentes complejos como modales o tooltips
-2. Requiere HTML semántico para funcionar correctamente
-3. La personalización avanzada puede requerir CSS adicional
+4. Usar siempre variables definidas dentro del `main.css`
 
 ## Ejemplo completo
 
