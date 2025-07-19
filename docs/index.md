@@ -1,12 +1,12 @@
 # Indice de documentacion
 
-- `[Guía de desarrollo](workflow.md)`:
+- [Guía de desarrollo](workflow.md):
   pasos recomendados para iniciar, correr y modificar el proyecto.
-- `[Arquitectura del sistema](arquitectura.md)`:
+- [Arquitectura del sistema](arquitectura.md):
   estructura general del proyecto y sus módulos.
-- `[Scrapping y sincronizacion de archivos excel](sincronizacion-excel.md)`:
+- [Scrapping y sincronizacion de archivos excel](sincronizacion-excel.md):
   scraping y descarga de archivos desde la web.
-- `[Procesamiento y parseo de archivos Excel](parser-excel.md)`:
+- [Procesamiento y parseo de archivos Excel](parser-excel.md):
   transformación de Excel a estructuras de datos persistentes.
 
 ## Otros archivos
