@@ -23,31 +23,26 @@ import com.elias_gill.poliplanner.services.ScheduleService;
 import com.elias_gill.poliplanner.services.SheetVersionService;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class DatabaseSeederService {
-
-    @Autowired
-    private ExcelService excelService;
-    @Autowired
-    private ScheduleService scheduleService;
-    @Autowired
-    private SheetVersionService versionService;
-
-    @Autowired
-    private UserRepository userRepo;
-    @Autowired
-    private SubjectRepository subjectRepository;
-
-    @Autowired
-    private List<JpaRepository<?, ?>> repositories;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     private static final Path excelFile = Path.of("src/test/resources/output.csv");
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseSeeder.class);
+
+    private final ExcelService excelService;
+    private final ScheduleService scheduleService;
+    private final SheetVersionService versionService;
+
+    private final UserRepository userRepo;
+    private final SubjectRepository subjectRepository;
+
+    private final List<JpaRepository<?, ?>> repositories;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public void cleanAndSeed() throws Exception {

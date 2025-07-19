@@ -12,18 +12,15 @@ import com.elias_gill.poliplanner.exception.UserNameAlreadyExistsException;
 import com.elias_gill.poliplanner.models.User;
 import com.elias_gill.poliplanner.repositories.UserRepository;
 
-@Service
-public class UserService {
+import lombok.RequiredArgsConstructor;
 
+@Service
+@RequiredArgsConstructor
+public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     private static final Pattern VALID_USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]+$");
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public Optional<User> findByUsername(String name) {
         return userRepository.findByUsername(name);

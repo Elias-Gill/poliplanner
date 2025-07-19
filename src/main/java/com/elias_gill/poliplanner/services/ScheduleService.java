@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.elias_gill.poliplanner.exception.BadArgumentsException;
@@ -19,18 +18,14 @@ import com.elias_gill.poliplanner.repositories.ScheduleRepository;
 import com.elias_gill.poliplanner.repositories.SubjectRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ScheduleService {
-
-    @Autowired
-    private ScheduleRepository scheduleRepository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private SubjectRepository subjectRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final UserService userService;
+    private final SubjectRepository subjectRepository;
 
     public List<Schedule> findByUserName(String user) {
         return scheduleRepository.findByUserUsernameOrderByCreatedAtDesc(user);

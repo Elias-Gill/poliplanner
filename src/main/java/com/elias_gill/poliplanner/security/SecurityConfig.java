@@ -19,7 +19,6 @@ public class SecurityConfig {
     @SuppressWarnings("unused")
     private final SecurityUserDetailsService userDetailsService;
 
-    @Autowired
     public SecurityConfig(SecurityUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }

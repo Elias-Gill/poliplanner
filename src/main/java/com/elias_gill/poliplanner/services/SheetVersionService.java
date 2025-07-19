@@ -1,22 +1,21 @@
 package com.elias_gill.poliplanner.services;
 
-import com.elias_gill.poliplanner.models.SheetVersion;
-import com.elias_gill.poliplanner.repositories.SheetVersionRepository;
-
-import jakarta.transaction.Transactional;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class SheetVersionService {
+import com.elias_gill.poliplanner.models.SheetVersion;
+import com.elias_gill.poliplanner.repositories.SheetVersionRepository;
 
-    @Autowired
-    private SheetVersionRepository repository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class SheetVersionService {
+    private final SheetVersionRepository repository;
 
     @Transactional
     public SheetVersion create(String fileName, String url) {

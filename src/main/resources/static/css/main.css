@@ -73,6 +73,10 @@ body {
     margin: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 /* === Contenedor principal (limita ancho en desktop) === */
 body>header,
 body>nav,

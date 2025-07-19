@@ -3,6 +3,8 @@ package com.elias_gill.poliplanner.services;
 import com.elias_gill.poliplanner.models.User;
 import com.elias_gill.poliplanner.repositories.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,12 +12,9 @@ import org.springframework.stereotype.Service;
 
 // Nuevo servicio solo para seguridad
 @Service
+@RequiredArgsConstructor
 public class SecurityUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
-
-    public SecurityUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     // Método requerido por UserDetailsService (para Spring Security)
     @Override

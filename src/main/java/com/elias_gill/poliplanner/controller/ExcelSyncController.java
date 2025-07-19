@@ -18,13 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.elias_gill.poliplanner.excel.ExcelService;
 import com.elias_gill.poliplanner.security.TokenValidator;
 
-@Controller
-public class ExcelSyncController {
-    @Autowired
-    ExcelService service;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-    @Autowired
-    TokenValidator tokenValidator;
+@Controller
+@RequiredArgsConstructor
+public class ExcelSyncController {
+    private final ExcelService service;
+    private final TokenValidator tokenValidator;
 
     private final static Logger logger = LoggerFactory.getLogger(ExcelSyncController.class);
 
@@ -47,9 +48,9 @@ public class ExcelSyncController {
      * lo parsea, y actualiza la base de datos con la nueva información.
      *
      * @param authHeader
-     *            Header HTTP de autorización con el token Bearer.
+     *                   Header HTTP de autorización con el token Bearer.
      * @param file
-     *            El nuevo archivo subido de manera manual.
+     *                   El nuevo archivo subido de manera manual.
      * @return {@code 200 OK} si la sincronización fue exitosa,
      *         {@code 403 Forbidden} si el token es incorrecto o no está presente,
      *         {@code 500 Internal Server Error} si ocurre un error durante la
