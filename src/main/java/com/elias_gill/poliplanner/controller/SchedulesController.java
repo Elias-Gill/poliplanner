@@ -30,6 +30,7 @@ import com.elias_gill.poliplanner.services.SheetVersionService;
 import com.elias_gill.poliplanner.services.SubjectService;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 /**
  * FIX: comentario choto de IA
@@ -67,19 +68,13 @@ import jakarta.servlet.http.HttpSession;
  */
 @Controller
 @RequestMapping("/schedule")
+@RequiredArgsConstructor
 public class SchedulesController {
     private final static Logger logger = LoggerFactory.getLogger(SchedulesController.class);
 
     private final ScheduleService scheduleService;
     private final SubjectService subjectService;
     private final CareerService careerService;
-
-    public SchedulesController(ScheduleService scheduleService,
-            SubjectService subjectService, CareerService careerService, SheetVersionService sheetVersionService) {
-        this.careerService = careerService;
-        this.scheduleService = scheduleService;
-        this.subjectService = subjectService;
-    }
 
     // Mostrar formulario para seleccionar carrera y descripción
     @GetMapping("/new")

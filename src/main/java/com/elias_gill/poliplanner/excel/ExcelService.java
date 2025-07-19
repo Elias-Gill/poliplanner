@@ -24,23 +24,17 @@ import com.elias_gill.poliplanner.services.SheetVersionService;
 import com.elias_gill.poliplanner.services.SubjectService;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ExcelService {
-
     private final static Logger logger = LoggerFactory.getLogger(ExcelService.class);
 
-    @Autowired
-    private SubjectService subjectService;
-
-    @Autowired
-    private CareerService careerService;
-
-    @Autowired
-    private SheetVersionService versionService;
-
-    @Autowired
-    private WebScrapper scrapper;
+    private final SubjectService subjectService;
+    private final CareerService careerService;
+    private final SheetVersionService versionService;
+    private final WebScrapper scrapper;
 
     /*
      * Esta función se divide en tres partes para facilitar el testeo de componentes

@@ -15,16 +15,14 @@ import com.elias_gill.poliplanner.exception.UserNameAlreadyExistsException;
 import com.elias_gill.poliplanner.models.User;
 import com.elias_gill.poliplanner.services.UserService;
 
-@Controller
-public class UserController {
+import lombok.RequiredArgsConstructor;
 
+@Controller
+@RequiredArgsConstructor
+public class UserController {
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     // Muestra el formulario de registro
     @GetMapping("/register")

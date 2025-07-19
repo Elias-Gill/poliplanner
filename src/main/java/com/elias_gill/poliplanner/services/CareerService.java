@@ -7,18 +7,18 @@ import com.elias_gill.poliplanner.models.SheetVersion;
 import com.elias_gill.poliplanner.repositories.CareerRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CareerService {
-    @Autowired
-    private CareerRepository careerRepository;
-    @Autowired
-    private SheetVersionService sheetVersionService;
+    private final CareerRepository careerRepository;
+    private final SheetVersionService sheetVersionService;
 
     public Career findByName(String name) {
         return careerRepository.findByNameIgnoreCase(name);

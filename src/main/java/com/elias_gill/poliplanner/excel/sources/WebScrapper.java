@@ -18,8 +18,11 @@ public class WebScrapper {
     private static final Pattern XLS_PATTERN = Pattern.compile(".*\\.xlsx?$", Pattern.CASE_INSENSITIVE);
     private static final String TARGET_URL = "https://www.pol.una.py/academico/horarios-de-clases-y-examenes/";
 
-    @Autowired
     private GoogleDriveHelper googleHelper;
+
+    public WebScrapper(GoogleDriveHelper googleHelper) {
+        this.googleHelper = googleHelper;
+    }
 
     public ExcelDownloadSource findLatestDownloadSource() throws IOException {
         Document doc = Jsoup.connect(TARGET_URL).timeout(10000).get();

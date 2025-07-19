@@ -4,6 +4,8 @@ import com.elias_gill.poliplanner.models.Subject;
 import com.elias_gill.poliplanner.repositories.SubjectRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,10 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class SubjectService {
-
-    @Autowired
-    private SubjectRepository subjectRepository;
+    private final SubjectRepository subjectRepository;
 
     @Transactional
     public Subject create(Subject subject) {
@@ -51,7 +52,7 @@ public class SubjectService {
      * </p>
      *
      * @param subjects
-     *            the list of {@link Subject} instances to be grouped
+     *                 the list of {@link Subject} instances to be grouped
      * @return a nested map grouping the subjects by semester and then by subject
      *         name
      */

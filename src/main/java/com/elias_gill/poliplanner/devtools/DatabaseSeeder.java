@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class DatabaseSeeder implements CommandLineRunner {
-    @Autowired
-    private DatabaseSeederService seederService;
+    private final DatabaseSeederService seederService;
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseSeeder.class);
 
