@@ -33,22 +33,22 @@ public class UserServiceTest {
     @Test
     @Tag("unit")
     void testUserNameValidation() throws Exception {
-        // Casos inválidos para validateUserName:
-        assertThrows(BadArgumentsException.class, () -> UserService.validateUserName(""),
+        // Casos inválidos para validateAndCleanUserName:
+        assertThrows(BadArgumentsException.class, () -> UserService.validateAndCleanUserName(""),
                 "Debe lanzar excepción si está vacío");
-        assertThrows(BadArgumentsException.class, () -> UserService.validateUserName("   "),
+        assertThrows(BadArgumentsException.class, () -> UserService.validateAndCleanUserName("   "),
                 "Debe lanzar excepción si solo espacios");
-        assertThrows(BadArgumentsException.class, () -> UserService.validateUserName("user!name"),
+        assertThrows(BadArgumentsException.class, () -> UserService.validateAndCleanUserName("user!name"),
                 "No debe permitir caracteres inválidos");
-        assertThrows(BadArgumentsException.class, () -> UserService.validateUserName("user name"),
+        assertThrows(BadArgumentsException.class, () -> UserService.validateAndCleanUserName("user name"),
                 "No debe permitir espacios internos");
 
-        // Casos validos para validateUserName:
-        assertDoesNotThrow(() -> UserService.validateUserName("username"));
-        assertDoesNotThrow(() -> UserService.validateUserName("user-name_123"));
+        // Casos validos para validateAndCleanUserName:
+        assertDoesNotThrow(() -> UserService.validateAndCleanUserName("username"));
+        assertDoesNotThrow(() -> UserService.validateAndCleanUserName("user-name_123"));
 
         // Mayusculas validas en el metodo pero luego se bajan a lowercase
-        assertDoesNotThrow(() -> UserService.validateUserName("USERname"));
+        assertDoesNotThrow(() -> UserService.validateAndCleanUserName("USERname"));
     }
 
     @Test
