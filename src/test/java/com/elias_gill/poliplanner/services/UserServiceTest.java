@@ -42,13 +42,12 @@ public class UserServiceTest {
                 "No debe permitir caracteres inválidos");
         assertThrows(BadArgumentsException.class, () -> UserService.validateAndCleanUserName("user name"),
                 "No debe permitir espacios internos");
+        assertThrows(BadArgumentsException.class, () -> UserService.validateAndCleanUserName("USERname"),
+                "No debe permitir mayusculas");
 
         // Casos validos para validateAndCleanUserName:
         assertDoesNotThrow(() -> UserService.validateAndCleanUserName("username"));
         assertDoesNotThrow(() -> UserService.validateAndCleanUserName("user-name_123"));
-
-        // Mayusculas validas en el metodo pero luego se bajan a lowercase
-        assertDoesNotThrow(() -> UserService.validateAndCleanUserName("USERname"));
     }
 
     @Test
