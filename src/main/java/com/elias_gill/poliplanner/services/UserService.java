@@ -20,7 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private static final Pattern VALID_USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]+$");
+    private static final Pattern VALID_USERNAME_PATTERN = Pattern.compile("^[a-z0-9_-]+$");
 
     public Optional<User> findByUsername(String name) {
         return userRepository.findByUsername(name);
@@ -40,9 +40,7 @@ public class UserService {
         }
 
         // Los nombres de usuario se guardan solo en lowercase para ser mas estandar
-        username = username.toLowerCase().trim();
-
-        validateUserName(username);
+        username = validateAndCleanUserName(username);
         validateRawPassword(rawPassword);
 
         if (userRepository.findByUsername(username).isPresent()) {
@@ -60,14 +58,17 @@ public class UserService {
         }
     }
 
-    static void validateUserName(String username) throws BadArgumentsException {
+    static String validateAndCleanUserName(String username) throws BadArgumentsException {
+        username = username.trim();
         if (username.isEmpty()) {
             throw new BadArgumentsException("El nombre de usuario no puede estar vacio.");
         }
 
         if (!VALID_USERNAME_PATTERN.matcher(username).matches()) {
-            throw new BadArgumentsException("El nombre de usuario solo puede contener letras, números, '-' o '_'.");
+            throw new BadArgumentsException("El nombre de usuario solo puede contener letras minúsculas, números, '-' o '_'.");
         }
+
+        return username.toLowerCase();
     }
 
     static void validateRawPassword(String rawPassword) throws BadArgumentsException {
