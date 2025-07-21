@@ -64,7 +64,6 @@ npm-debug.log
 
 # Docker
 .docker/
-Dockerfile*
 
 # Archivos de configuración sensibles
 .env
