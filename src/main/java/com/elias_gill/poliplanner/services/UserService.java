@@ -20,7 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private static final Pattern VALID_USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]+$");
+    private static final Pattern VALID_USERNAME_PATTERN = Pattern.compile("^[a-z0-9_-]+$");
 
     public Optional<User> findByUsername(String name) {
         return userRepository.findByUsername(name);
@@ -66,7 +66,7 @@ public class UserService {
         }
 
         if (!VALID_USERNAME_PATTERN.matcher(username).matches()) {
-            throw new BadArgumentsException("El nombre de usuario solo puede contener letras, números, '-' o '_'.");
+            throw new BadArgumentsException("El nombre de usuario solo puede contener letras minúsculas, números, '-' o '_'.");
         }
     }
 
