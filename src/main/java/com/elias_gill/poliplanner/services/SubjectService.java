@@ -4,7 +4,6 @@ import com.elias_gill.poliplanner.models.Subject;
 import com.elias_gill.poliplanner.repositories.SubjectRepository;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.LinkedHashMap;
@@ -13,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -7,7 +7,6 @@ import com.elias_gill.poliplanner.models.SheetVersion;
 import com.elias_gill.poliplanner.repositories.CareerRepository;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
