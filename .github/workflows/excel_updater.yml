@@ -10,5 +10,5 @@ jobs:
     steps:
       - name: Llamar al endpoint protegido
         run: |
-          curl -X POST "https://poliplanner.fly.dev/sync/ci" -H "Authorization: ${{ secrets.ADMIN_PASSWORD }}"
+          curl -X POST "https://poliplanner.fly.dev/sync/ci" -H "Authorization: Bearer ${{ secrets.ADMIN_PASSWORD }}"
           

@@ -2,11 +2,12 @@ package com.elias_gill.poliplanner.excel;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.elias_gill.poliplanner.excel.parser.ExcelParser;
@@ -43,18 +44,27 @@ public class ExcelService {
      * de desarrollo.
      */
     @Transactional
-    public void SyncronizeExcel() {
+    public Boolean SyncronizeExcel() {
         try {
             logger.info("Iniciando actualizacion de excel");
             ExcelDownloadSource source = scrapper.findLatestDownloadSource();
-            SheetVersion latestVersion = versionService.findLatest();
 
-            String sourceUrl = source.url();
+            SheetVersion latestVersion = versionService.findLatest();
+            // Convert Date to LocalDate
+            LocalDate latestVersionDate = latestVersion.getParsedAt().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
 
             if (latestVersion != null) {
-                if (latestVersion.getUrl().equals(sourceUrl)) {
+                if (source.uploadDate().isBefore(latestVersionDate)) {
                     logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.getUrl());
-                    return;
+                    return false;
+                }
+
+                // Si se parsearon el mismo dia, verificar el url de descarga
+                if (latestVersion.getUrl().equals(source.url())) {
+                    logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.getUrl());
+                    return false;
                 }
             }
 
@@ -62,9 +72,11 @@ public class ExcelService {
             Path excelFile = source.downloadThisSource();
 
             logger.info("Descarga exitosa. Iniciando parseo y persistencia");
-            persistSubjectsFromExcel(excelFile, sourceUrl);
+            persistSubjectsFromExcel(excelFile, source.url());
 
             logger.info("Actualizacion exitosa");
+
+            return true;
         } catch (InterruptedException | IOException e) {
             String message = "Error sincronizando el archivo Excel. Se inició el rollback";
             logger.error(message, e);

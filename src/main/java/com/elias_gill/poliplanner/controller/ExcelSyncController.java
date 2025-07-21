@@ -19,13 +19,14 @@ import com.elias_gill.poliplanner.excel.ExcelService;
 import com.elias_gill.poliplanner.security.TokenValidator;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ExcelSyncController {
-    private final ExcelService service;
-    private final TokenValidator tokenValidator;
+    ExcelService service;
+
+    @Autowired
+    TokenValidator tokenValidator;
 
     private final static Logger logger = LoggerFactory.getLogger(ExcelSyncController.class);
 
@@ -98,19 +99,29 @@ public class ExcelSyncController {
     }
 
     /*
-     * Funciona exactamente igual que el endpoint "/sync", per esta pensado para
+     * Funciona exactamente igual que el endpoint "/sync", pero esta pensado para
      * automatizacion con web scrapping.
      *
      * Este endpoint al recibir una request, tratara de scrapear la web de la
      * universidad en busca de nuevos horarios.
+     *
+     * Require del header: "Authorization: Bearer <key>"
      */
     @PostMapping("/sync/ci")
     public ResponseEntity<?> automaticExcelSync(@RequestHeader("Authorization") String authHeader) {
         logger.warn(">>> POST '/sync/ci' alcanzado desde CI/CD");
         try {
-            tokenValidator.isValid(authHeader);
-            service.SyncronizeExcel();
-            return ResponseEntity.status(HttpStatus.OK).build();
+            if (!tokenValidator.isValid(authHeader)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Credenciales invalidas");
+            }
+
+            Boolean hasNewVersion = service.SyncronizeExcel();
+            if (hasNewVersion) {
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body("Version de excel actualizada a la nueva version disponible");
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body("Excel ya se encuentra en su ultima version");
         } catch (Exception e) {
             logger.error("Error al sincronizar Excel", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
