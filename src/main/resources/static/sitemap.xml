@@ -40,4 +40,7 @@
         <lastmod>2025-07-15T19:11:15+00:00</lastmod>
         <priority>0.64</priority>
     </url>
+    <image:image>
+        <image:loc>https://poliplanner.fly.dev/favicon.ico</image:loc>
+    </image:image>
 </urlset>
