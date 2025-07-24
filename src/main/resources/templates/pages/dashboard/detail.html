@@ -1,7 +1,7 @@
 <div th:fragment="schedule(schedule)">
   <div th:if="${schedule}">
     <!-- Tabla de horarios -->
-    <div class="table-container" th:if="${not schedule.materias?.empty}">
+    <div class="table-container" th:if="${not schedule.subjects?.empty}">
       <table>
         <thead>
           <tr>
@@ -15,7 +15,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr th:each="materia : ${schedule.materias}">
+          <tr th:each="materia : ${schedule.subjects}">
             <td>
               <span th:text="${materia.nombreAsignatura}"></span>
             </td>
@@ -59,16 +59,16 @@
         </tbody>
       </table>
     </div>
-    <div th:if="${schedule.materias?.empty}" class="center text-muted">
+    <div th:if="${schedule.subjects?.empty}" class="center text-muted">
       No hay materias en este horario
     </div>
     <!-- Lista de exámenes -->
     <h1>Próximos exámenes</h1>
     <article class="exam-list">
       <!-- Primer Parcial -->
-      <div th:if="${not schedule.materias.?[parcial1Fecha != null].empty}">
+      <div th:if="${not schedule.subjects.?[parcial1Fecha != null].empty}">
         <h2>Primer Parcial</h5>
-        <div th:each="materia : ${schedule.materias.?[parcial1Fecha != null]}">
+        <div th:each="materia : ${schedule.subjects.?[parcial1Fecha != null]}">
           <article>
             <span th:text="${materia.nombreAsignatura}"></span>
             <span class="badge-container">
@@ -86,9 +86,9 @@
         </div>
       </div>
       <!-- Segundo Parcial -->
-      <div th:if="${not schedule.materias.?[parcial2Fecha != null].empty}">
+      <div th:if="${not schedule.subjects.?[parcial2Fecha != null].empty}">
         <h2>Segundo Parcial</h2>
-        <div th:each="materia : ${schedule.materias.?[parcial2Fecha != null]}">
+        <div th:each="materia : ${schedule.subjects.?[parcial2Fecha != null]}">
           <article>
             <span th:text="${materia.nombreAsignatura}"></span>
             <span class="badge-container">
@@ -106,9 +106,9 @@
         </div>
       </div>
       <!-- Primer final -->
-      <div th:if="${not schedule.materias.?[final1Fecha != null].empty}">
+      <div th:if="${not schedule.subjects.?[final1Fecha != null].empty}">
         <h2>Primer Final</h5>
-        <div th:each="materia : ${schedule.materias.?[final1Fecha != null]}">
+        <div th:each="materia : ${schedule.subjects.?[final1Fecha != null]}">
           <article>
             <span th:text="${materia.nombreAsignatura}"></span>
             <span class="badge-container">
@@ -126,9 +126,9 @@
         </div>
       </div>
       <!-- Segundo final -->
-      <div th:if="${not schedule.materias.?[final2Fecha != null].empty}">
+      <div th:if="${not schedule.subjects.?[final2Fecha != null].empty}">
         <h2>Segundo Final</h5>
-        <div th:each="materia : ${schedule.materias.?[final2Fecha != null]}">
+        <div th:each="materia : ${schedule.subjects.?[final2Fecha != null]}">
           <article>
             <span th:text="${materia.nombreAsignatura}"></span>
             <span class='badge-container'>
@@ -146,11 +146,11 @@
         </div>
       </div>
     </article>
-    <!-- Información adicional de las materias -->
-    <section th:if="${not schedule.materias?.empty}">
+    <!-- Información adicional de las subjects -->
+    <section th:if="${not schedule.subjects?.empty}">
       <h1 class="section">Información adicional</h1>
       <div class="grid-2">
-        <div th:each="materia : ${schedule.materias}">
+        <div th:each="materia : ${schedule.subjects}">
           <article>
             <h3 th:text="${materia.nombreAsignatura}"></h3>
             <p>
