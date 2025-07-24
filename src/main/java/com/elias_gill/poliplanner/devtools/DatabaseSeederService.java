@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class DatabaseSeederService {
     private static final Path excelFile = Path.of("src/test/resources/output.csv");
 
-    private static final Logger logger = LoggerFactory.getLogger(DatabaseSeeder.class);
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseSeederService.class);
 
     private final ExcelService excelService;
     private final ScheduleService scheduleService;
@@ -44,12 +44,21 @@ public class DatabaseSeederService {
 
     @Transactional
     public void cleanAndSeed() throws Exception {
-        this.cleanDatabase();
-        this.seedDatabase();
+        this.clean();
+        this.seed();
     }
 
     @Transactional
-    public void cleanDatabase() {
+    public void cleanDatabase() throws Exception {
+        clean();
+    }
+
+    @Transactional
+    public void seedDatabase() throws Exception {
+        seed();
+    }
+
+    private void clean() throws Exception {
         repositories.forEach(repo -> {
             if (repo instanceof CrudRepository) {
                 ((CrudRepository<?, ?>) repo).deleteAll();
@@ -57,8 +66,7 @@ public class DatabaseSeederService {
         });
     }
 
-    @Transactional
-    public void seedDatabase() throws Exception {
+    private void seed() throws Exception {
         logger.warn("Cargando los datos semilla desde: {}\n", excelFile.toString());
 
         // Parsear datos del excel
