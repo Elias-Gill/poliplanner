@@ -54,7 +54,7 @@ public class UserService {
         try {
             return userRepository.save(newUser);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Error while registering a new user: ", e);
+            throw new InternalServerErrorException("Error registrando usuario: ", e);
         }
     }
 
@@ -65,7 +65,8 @@ public class UserService {
         }
 
         if (!VALID_USERNAME_PATTERN.matcher(username).matches()) {
-            throw new BadArgumentsException("El nombre de usuario solo puede contener letras minúsculas, números, '-' o '_'.");
+            throw new BadArgumentsException(
+                    "El nombre de usuario solo puede contener letras minúsculas, números, '-' o '_'.");
         }
 
         return username.toLowerCase();

@@ -53,7 +53,8 @@ public class UserController {
             return "pages/auth/register";
         } catch (InternalServerErrorException e) {
             logger.error("Error interno en registro de usuario: " + e.getMessage(), e);
-            redirectAttributes.addFlashAttribute("error", "Internal server error. Please try again later");
+            redirectAttributes.addFlashAttribute("error",
+                    "Un error interno acaba de ocurrir. Por favor inténtalo más tarde.");
             return "redirect:/login";
         }
 

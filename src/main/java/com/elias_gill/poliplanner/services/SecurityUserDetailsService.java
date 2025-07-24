@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class SecurityUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
-    // Método requerido por UserDetailsService (para Spring Security)
+    // Metodo requerido por UserDetailsService (para Spring Security)
     @Override
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository

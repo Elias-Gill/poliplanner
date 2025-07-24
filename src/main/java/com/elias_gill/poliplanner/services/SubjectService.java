@@ -25,34 +25,25 @@ public class SubjectService {
     }
 
     /**
-     * Groups a list of {@link Subject} objects first by their semester number
-     * and then, within each semester, by the subject name.
+     * Agrupa una lista de objetos {@link Subject} primero por numero de semestre,
+     * y luego por nombre de materia dentro de cada semestre.
      *
+     * El Map resultante tiene:
      * <p>
-     * The resulting map has the following structure:
-     * </p>
-     * 
-     * <pre>
-     * Map&lt;Integer, Map&lt;String, List&lt;Subject&gt;&gt;&gt;
-     * </pre>
-     * 
      * <ul>
-     * <li>The outer {@code Integer} key represents the semester number.</li>
-     * <li>The inner {@code String} key represents the subject name.</li>
-     * <li>The innermost {@code List&lt;Subject&gt;} contains all sections (or
-     * groups) of the same subject within the same semester.</li>
+     * <li>La clave externa (Integer) representa el semestre.</li>
+     * <li>La clave interna (String) representa el nombre de la materia.</li>
+     * <li>La lista contiene todas las secciones o grupos de esa materia en ese</li>
+     * semestre.
      * </ul>
      *
-     * <p>
-     * This is useful for displaying subjects grouped first by semester, and within
-     * each semester,
-     * grouped by subject name with their respective sections and professors.
-     * </p>
+     * Esto sirve para mostrar las materias organizadas por semestre, y dentro de
+     * cada
+     * semestre, agrupadas por nombre con sus secciones y profesores.
      *
-     * @param subjects
-     *                 the list of {@link Subject} instances to be grouped
-     * @return a nested map grouping the subjects by semester and then by subject
-     *         name
+     * @param subjects lista de instancias de {@link Subject} a agrupar
+     * @return un mapa anidado que agrupa las materias por semestre y luego por
+     *         nombre
      */
     public Map<Integer, Map<String, List<Subject>>> findByCareer(Long careerId) {
         // TODO: si es que el id de carrera no se encuentra, lanzar una excepcion

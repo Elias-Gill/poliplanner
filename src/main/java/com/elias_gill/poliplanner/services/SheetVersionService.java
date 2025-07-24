@@ -40,7 +40,7 @@ public class SheetVersionService {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
 
-        // Notifica solo 2 dias despues de la fecha de parseo del ultimo excel
+        // Notifica durante 2 dias despues de la fecha de parseo del ultimo excel
         long daysBetween = ChronoUnit.DAYS.between(parseDate, LocalDate.now());
         return daysBetween <= 2;
     }

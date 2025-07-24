@@ -19,23 +19,23 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            // NOTE: if not exit 0, the server would still run after the seeding/cleaning
-            // process
+            // NOTE: si no se pone exit 0, el server continuara ejecutandose luego del
+            // seeding/cleaning
             if (Arrays.asList(args).contains("--clean") && Arrays.asList(args).contains("--seed")) {
-                logger.info("Performing database clean and seed...");
+                logger.info("Realizando clean and seed...");
                 this.seederService.cleanAndSeed();
                 System.exit(0);
             } else if (Arrays.asList(args).contains("--seed")) {
-                logger.info("Seeding database...");
+                logger.info("Insertando datos semilla...");
                 this.seederService.seedDatabase();
                 System.exit(0);
             } else if (Arrays.asList(args).contains("--clean")) {
-                logger.info("Cleaning database...");
+                logger.info("Limpiando base de datos...");
                 this.seederService.cleanDatabase();
                 System.exit(0);
             }
         } catch (Exception e) {
-            logger.error("Cannot complete operation: " + e.getMessage());
+            logger.error("No se pudo completar la operacion: " + e.getMessage());
             System.exit(1);
         }
     }

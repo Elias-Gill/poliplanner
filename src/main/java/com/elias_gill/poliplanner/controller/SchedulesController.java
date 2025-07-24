@@ -32,7 +32,6 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 /**
- * FIX: comentario choto de IA
  * Controlador responsable del flujo de creación de un nuevo horario académico.
  * <p>
  *
@@ -54,12 +53,7 @@ import lombok.RequiredArgsConstructor;
  * crea el horario en la base de datos.
  * <p>
  *
- * Notas:
- * - Se usa el nombre de usuario autenticado para asociar el horario al usuario.
- * - Se utiliza PRG (Post/Redirect/Get) para evitar reenvíos accidentales al
- * recargar.
- * - En caso de errores de validación o sistema, se redirige con mensajes
- * adecuados.
+ * Nota: Se usa el nombre de usuario autenticado para asociar el horario
  * <p>
  *
  * Esto permite una experiencia de usuario sencilla y facilita la
@@ -171,13 +165,13 @@ public class SchedulesController {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             scheduleService.deleteSchedule(id, username);
-            redirectAttributes.addFlashAttribute("success", "Schedule deleted successfully");
+            redirectAttributes.addFlashAttribute("success", "Horario eliminado satisfactoriamente");
         } catch (BadArgumentsException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (InternalServerErrorException e) {
             redirectAttributes.addFlashAttribute("error",
-                    "Sorry, an internal server error occurred. Please try again later.");
-            logger.error("Error deleting schedule: " + e.getMessage(), e);
+                    "Un error interno acaba de ocurrir. Por favor inténtalo más tarde.");
+            logger.error("Error eliminando horario: " + e.getMessage(), e);
         }
 
         return "redirect:/";
@@ -189,10 +183,10 @@ public class SchedulesController {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             List<Subject> notMigrated = scheduleService.migrateSubjects(id, username);
             if (notMigrated.isEmpty()) {
-                redirectAttributes.addFlashAttribute("success", "Schedule migrated successfully");
+                redirectAttributes.addFlashAttribute("success", "Horario migrado satisfactoriamente");
             } else {
                 StringBuilder warningMessage = new StringBuilder(
-                        "Schedule migrated successfully, but the following subjects were NOT migrated:\n");
+                        "Las siguientes materias no pudieron ser migradas:\n");
                 for (Subject s : notMigrated) {
                     warningMessage.append("- ").append(s.getNombreAsignatura()).append("\n");
                 }
@@ -202,8 +196,8 @@ public class SchedulesController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (InternalServerErrorException e) {
             redirectAttributes.addFlashAttribute("error",
-                    "Sorry, an internal server error occurred. Please try again later.");
-            logger.error("Error deleting schedule: " + e.getMessage(), e);
+                    "Un error interno acaba de ocurrir. Por favor inténtalo más tarde.");
+            logger.error("Error migrando horario: {}", e.getMessage());
         }
 
         return "redirect:/";

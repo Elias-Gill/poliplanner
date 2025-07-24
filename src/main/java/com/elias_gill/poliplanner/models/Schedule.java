@@ -45,5 +45,5 @@ public class Schedule {
     @ManyToMany
     @JoinTable(name = "schedule_subjects", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
     @OrderBy("parcial1Fecha ASC")
-    private List<Subject> materias;
+    private List<Subject> subjects;
 }

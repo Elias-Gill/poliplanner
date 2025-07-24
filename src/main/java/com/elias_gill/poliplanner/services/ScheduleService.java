@@ -39,7 +39,7 @@ public class ScheduleService {
     public Schedule updateList(Long id, List<Long> subjectIds) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow();
         List<Subject> subjects = subjectRepository.findAllById(subjectIds);
-        schedule.setMaterias(subjects);
+        schedule.setSubjects(subjects);
 
         return scheduleRepository.save(schedule);
     }
@@ -78,7 +78,7 @@ public class ScheduleService {
             Schedule schedule = new Schedule();
             schedule.setUser(userOpt.get());
             schedule.setDescription(description.trim());
-            schedule.setMaterias(subjects);
+            schedule.setSubjects(subjects);
             scheduleRepository.save(schedule);
         } catch (Exception e) {
             throw new InternalError("Error interno al guardar el horario", e);
@@ -92,38 +92,38 @@ public class ScheduleService {
         Optional<Schedule> optSchedule = scheduleRepository.findById(scheduleId);
 
         if (optSchedule.isEmpty()) {
-            throw new BadArgumentsException("Schedule with id = '" + scheduleId + "' does not exist");
+            throw new BadArgumentsException("Horario con id='" + scheduleId + "' no existe");
         }
 
         Schedule schedule = optSchedule.get();
 
-        // Make sure the user owns the schedule
+        // Ver que el usuario sea el dueno del horario
         if (!schedule.getUser().getUsername().equals(username)) {
-            throw new BadArgumentsException("You are not authorized to delete this schedule");
+            throw new BadArgumentsException("No tienes autorizacion para eliminar este horario");
         }
 
         try {
             scheduleRepository.delete(schedule);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Internal error deleting schedule", e);
+            throw new InternalServerErrorException("Error interno del servidor al borrar el horario: ", e);
         }
     }
 
     @Transactional
     public List<Subject> migrateSubjects(Long scheduleId, String username) {
-        // Make sure the user owns the schedule
+        // Ver que el usuario sea el dueno del horario
         Optional<Schedule> optSchedule = scheduleRepository.findById(scheduleId);
         if (optSchedule.isEmpty()) {
-            throw new BadArgumentsException("Schedule with id = '" + scheduleId + "' does not exist");
+            throw new BadArgumentsException("Horario con id='" + scheduleId + "' no existe");
         }
 
         Schedule schedule = optSchedule.get();
         if (!schedule.getUser().getUsername().equals(username)) {
-            throw new BadArgumentsException("You are not authorized to delete this schedule");
+            throw new BadArgumentsException("No tienes autorizacion para modificar este horario");
         }
 
-        // Start migration
-        List<Subject> subjects = schedule.getMaterias();
+        // Comenzar migracion
+        List<Subject> subjects = schedule.getSubjects();
         List<Subject> notMigratedSubjects = new ArrayList<Subject>();
 
         for (int i = 0; i < subjects.size(); i++) {
@@ -140,7 +140,7 @@ public class ScheduleService {
             }
         }
 
-        schedule.setMaterias(subjects);
+        schedule.setSubjects(subjects);
         scheduleRepository.save(schedule);
 
         return notMigratedSubjects;

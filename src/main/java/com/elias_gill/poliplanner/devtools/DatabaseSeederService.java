@@ -61,13 +61,13 @@ public class DatabaseSeederService {
     public void seedDatabase() throws Exception {
         logger.warn("Cargando los datos semilla desde: {}\n", excelFile.toString());
 
-        // Parse Excel data
+        // Parsear datos del excel
         try {
             SheetVersion version = versionService.create("VersionPrueba", excelFile.toString());
             excelService.parseAndPersistCsv(excelFile, version);
         } catch (Exception e) {
             System.err.println("No se pudo cargar los datos semilla: \n" + e);
-            throw new RuntimeException("Excel data loading failed", e);
+            throw new RuntimeException("La carga de datos del excel ha fallado: ", e);
         }
 
         // Cargar materias al horario
