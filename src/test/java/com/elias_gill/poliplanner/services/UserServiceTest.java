@@ -62,20 +62,24 @@ public class UserServiceTest {
     @Test
     @Tag("integration")
     void testRegisterUser_success() throws Exception {
-        String username = "TestUser";
+        String username = "test-user";
         String rawPassword = "password123";
 
         // Limpiar si ya existe (por si se repite el test)
-        userRepository.findByUsername(username.toLowerCase()).ifPresent(user -> userRepository.delete(user));
+        userRepository.findByUsername(username).ifPresent(user -> userRepository.delete(user));
 
+        // Throws si es que se pasa un nombre invalido
+        assertThrows(BadArgumentsException.class,
+                () -> userService.registerUser(username.toUpperCase(), rawPassword));
+
+        // Creacion valida
         User createdUser = userService.registerUser(username, rawPassword);
-
         assertNotNull(createdUser);
-        assertEquals(username.toLowerCase(), createdUser.getUsername());
+        assertEquals(username, createdUser.getUsername());
         assertTrue(passwordEncoder.matches(rawPassword, createdUser.getPassword()));
 
         // Verificar que esté en BD
-        assertTrue(userRepository.findByUsername(username.toLowerCase()).isPresent());
+        assertTrue(userRepository.findByUsername(username).isPresent());
     }
 
     @Test
