@@ -17,12 +17,16 @@ aceptan PRs para mejorar dicha experiencia).
 
 - Java 17
 - Maven
-- PostgreSQL con una base de datos llamada `poliplanner`
+- PostgreSQL con una base de datos creada
 - Configurar las variables de entorno especificadas en el archivo `example.env`
 - (Recomendado) GNU Make
 
 No se utiliza Docker ni servicios externos.
 Toda la ejecución es local.
+
+NOTA:
+el URL de conexion de PostgreSQL local en formato jdbc es:
+`jdbc:postgresql://localhost:5432/<nombre-de-la-bd>`
 
 ## Carga de Datos Semilla
 

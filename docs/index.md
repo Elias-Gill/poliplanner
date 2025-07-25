@@ -1,5 +1,7 @@
 # Indice de documentacion
 
+- [Guía de deploy](deploy.md):
+  pasos para levantar el entorno de produccion.
 - [Guía de desarrollo](workflow.md):
   pasos recomendados para iniciar, correr y modificar el proyecto.
 - [Arquitectura del sistema](arquitectura.md):
