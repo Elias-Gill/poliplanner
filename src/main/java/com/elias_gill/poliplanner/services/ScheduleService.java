@@ -133,7 +133,7 @@ public class ScheduleService {
                     .findFirstByNombreAsignaturaAndSeccionOrderByCareer_Version_ParsedAtDesc(subjectName, section)
                     .orElse(null);
 
-            if (newSubject != null && isNewerVersion(newSubject, oldSubject)) {
+            if (newSubject != null) {
                 updatedSubjects.add(newSubject);
             } else {
                 updatedSubjects.add(oldSubject);
