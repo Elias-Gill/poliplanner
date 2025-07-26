@@ -34,4 +34,9 @@ public class Career {
     public Career(String name) {
         this.name = name;
     }
+
+    public Career(String name, SheetVersion version) {
+        this.name = name;
+        this.version = version;
+    }
 }

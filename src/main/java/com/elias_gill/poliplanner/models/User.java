@@ -24,7 +24,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -35,6 +34,11 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    public User(String name, String password) {
+        this.username = name;
+        this.password = password;
+    }
 
     // NOTE: solo se usa para el formulario de registro
     @Transient

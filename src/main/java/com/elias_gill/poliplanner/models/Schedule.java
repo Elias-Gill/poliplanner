@@ -46,4 +46,10 @@ public class Schedule {
     @JoinTable(name = "schedule_subjects", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
     @OrderBy("parcial1Fecha ASC")
     private List<Subject> subjects;
+
+    public Schedule(User user, String description, List<Subject> subjects) {
+        this.subjects = subjects;
+        this.user = user;
+        this.description = description;
+    }
 }

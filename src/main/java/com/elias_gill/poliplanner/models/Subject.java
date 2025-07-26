@@ -26,6 +26,12 @@ public class Subject {
     @Column(name = "subject_id")
     private Long id;
 
+    public Subject(String name, String seccion, Career career) {
+        this.career = career;
+        this.nombreAsignatura = name;
+        this.seccion = seccion;
+    }
+
     // ######################
     // #### INFO GENERAL ####
     // ######################
