@@ -1,0 +1,41 @@
+<tr th:fragment="day(materia)">
+  <td>
+    <span th:text="${materia.nombreAsignatura}"></span>
+  </td>
+  <!-- Lunes -->
+  <td th:if="${materia.lunes != null and materia.lunes != ''}">
+    <span th:text="${materia.lunes}"></span><br>
+    <span th:if="${materia.aulaLunes != null}" th:text="'Aula: ' + ${materia.aulaLunes}"></span>
+  </td>
+  <td th:if="${materia.lunes == null or materia.lunes == ''}"></td>
+  <!-- Martes -->
+  <td th:if="${materia.martes != null and materia.martes != ''}">
+    <span th:text="${materia.martes}"></span><br>
+    <span th:if="${materia.aulaMartes != null}" th:text="'Aula: ' + ${materia.aulaMartes}"></span>
+  </td>
+  <td th:if="${materia.martes == null or materia.martes == ''}"></td>
+  <!-- Miércoles -->
+  <td th:if="${materia.miercoles != null and materia.miercoles != ''}">
+    <span th:text="${materia.miercoles}"></span><br>
+    <span th:if="${materia.aulaMiercoles != null}" th:text="'Aula: ' + ${materia.aulaMiercoles}"></span>
+  </td>
+  <td th:if="${materia.miercoles == null or materia.miercoles == ''}"></td>
+  <!-- Jueves -->
+  <td th:if="${materia.jueves != null and materia.jueves != ''}">
+    <span th:text="${materia.jueves}"></span><br>
+    <span th:if="${materia.aulaJueves != null}" th:text="'Aula: ' + ${materia.aulaJueves}"></span>
+  </td>
+  <td th:if="${materia.jueves == null or materia.jueves == ''}"></td>
+  <!-- Viernes -->
+  <td th:if="${materia.viernes != null and materia.viernes != ''}">
+    <span th:text="${materia.viernes}"></span><br>
+    <span th:if="${materia.aulaViernes != null}" th:text="'Aula: ' + ${materia.aulaViernes}"></span>
+  </td>
+  <td th:if="${materia.viernes == null or materia.viernes == ''}"></td>
+  <!-- Sábado -->
+  <td th:if="${materia.sabado != null and materia.sabado != ''}">
+    <span th:text="${materia.sabado}"></span><br>
+    <span th:if="${materia.fechasSabadoNoche != null}" th:text="'Fechas: ' + ${materia.fechasSabadoNoche}"></span>
+  </td>
+  <td th:if="${materia.sabado == null or materia.sabado == ''}"></td>
+</tr>
