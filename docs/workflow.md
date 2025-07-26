@@ -26,7 +26,7 @@ Toda la ejecución es local.
 
 NOTA:
 el URL de conexion de PostgreSQL local en formato jdbc es:
-`jdbc:postgresql://localhost:5432/<nombre-de-la-bd>`
+`jdbc:postgresql://localhost:5432/poliplanner?user=postgres&password=postgres`
 
 ## Carga de Datos Semilla
 

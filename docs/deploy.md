@@ -6,7 +6,7 @@
 - Java 17
 - Postgresql 17
 - Gnumeric (comando ssconvert)
-- [API KEY](google_drive.md) de Google Console
+- [API KEY](google_drive.md) de Google Console
 
 NOTA:
 de momento solo funciona en servers Linux, dado que se depende de Gnumeric, solo disponible
@@ -27,11 +27,15 @@ Se deben configurar las siguientes variables de entorno:
   encargados de la actualización de planillas Excel.
   No corresponde a ninguna API externa.
 * `DB_URL`:
-  URL de conexión a la base de datos PostgreSQL.
+  URL de conexión a la base de datos PostgreSQL en formato JDBC.
 * `LOG_PATH`:
   Ruta donde se guardan los logs de la aplicación.
 * `GOOGLE_API_KEY`:
   Clave de API para acceder a carpetas y archivos publicos de Google Drive.
+
+NOTA:
+ejemplo de url jdbc:
+`jdbc:postgresql://localhost:5432/poliplanner?user=postgres&password=postgres`
 
 ## Startup del server
 
