@@ -1,6 +1,6 @@
 <div th:fragment="alert(successMessage)">
   <section th:if="${successMessage != null and !#strings.isEmpty(successMessage)}" role="alert" class="success">
-    <span th:text="${successMessage}"></span>
+    <span th:utext="${successMessage}"></span>
     <button type="button" style="background-color: var(--color-success);" onclick="this.parentElement.remove()" aria-label="Cerrar alerta">×</button>
   </section>
 </div>

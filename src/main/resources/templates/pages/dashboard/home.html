@@ -39,6 +39,9 @@
         Actualiza tu horario usando nuestra <a href="#bottom">herramienta de migración</a>.
       </span>
     </div>
+    <div th:if="${warning}">
+      <div th:replace="~{fragments/alerts/warning :: alert(${warning})}"></div>
+    </div>
     <div th:if="${schedules?.empty}" role="alert">
       No tienes horarios registrados.
     </div>
