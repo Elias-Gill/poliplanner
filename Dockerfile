@@ -21,7 +21,7 @@ RUN apt-get update && \
 WORKDIR /app
 
 # Copia el JAR compilado desde la etapa anterior
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/target/*.jar app.jar --spring.profiles.active=prod
 
 # Expone el puerto por defecto de Spring Boot
 ENV PORT 8080
