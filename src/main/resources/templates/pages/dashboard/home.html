@@ -33,11 +33,7 @@
     <div th:replace="~{fragments/alerts/success :: alert(${success})}"></div>
     <!-- Notificacion de nuevo excel disponible (+cookie) -->
     <div th:if="${hasNewExcel}">
-      <div th:replace="~{fragments/alerts/warning :: alert('📢 ¡Nueva versión del Excel
-          disponible!.')}"></div>
-      <span>
-        Actualiza tu horario usando nuestra <a href="#bottom">herramienta de migración</a>.
-      </span>
+      <div th:replace="~{fragments/alerts/warning :: alert(${hasNewExcel})}"></div>
     </div>
     <div th:if="${warning}">
       <div th:replace="~{fragments/alerts/warning :: alert(${warning})}"></div>
