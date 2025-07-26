@@ -1,5 +1,6 @@
 package com.elias_gill.poliplanner.services;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -110,39 +111,45 @@ public class ScheduleService {
     }
 
     @Transactional
-    public List<Subject> migrateSubjects(Long scheduleId, String username) {
-        // Ver que el usuario sea el dueno del horario
-        Optional<Schedule> optSchedule = scheduleRepository.findById(scheduleId);
-        if (optSchedule.isEmpty()) {
-            throw new BadArgumentsException("Horario con id='" + scheduleId + "' no existe");
-        }
+    public List<Subject> migrateSubjects(String username, Long scheduleId) {
+        // Verificar que el usuario sea dueño del horario
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new BadArgumentsException("Horario con id='" + scheduleId + "' no existe"));
 
-        Schedule schedule = optSchedule.get();
         if (!schedule.getUser().getUsername().equals(username)) {
             throw new BadArgumentsException("No tienes autorizacion para modificar este horario");
         }
 
-        // Comenzar migracion
-        List<Subject> subjects = schedule.getSubjects();
-        List<Subject> notMigratedSubjects = new ArrayList<Subject>();
+        // Crear una nueva lista mutable para los subjects actualizados
+        List<Subject> updatedSubjects = new ArrayList<>();
+        List<Subject> notMigratedSubjects = new ArrayList<>();
 
-        for (int i = 0; i < subjects.size(); i++) {
-            String subjectName = subjects.get(i).getNombreAsignatura();
+        // Migrar cada asignatura
+        for (Subject oldSubject : schedule.getSubjects()) {
+            String subjectName = oldSubject.getNombreAsignatura();
+            String section = oldSubject.getSeccion();
 
             Subject newSubject = subjectRepository
-                    .findFirstByNombreAsignaturaOrderByCareer_Version_ParsedAtDesc(subjectName)
+                    .findFirstByNombreAsignaturaAndSeccionOrderByCareer_Version_ParsedAtDesc(subjectName, section)
                     .orElse(null);
 
-            if (newSubject != null) {
-                subjects.set(i, newSubject);
+            if (newSubject != null && isNewerVersion(newSubject, oldSubject)) {
+                updatedSubjects.add(newSubject);
             } else {
-                notMigratedSubjects.add(newSubject);
+                updatedSubjects.add(oldSubject);
+                notMigratedSubjects.add(oldSubject);
             }
         }
 
-        schedule.setSubjects(subjects);
+        // Actualizar la lista de subjects
+        schedule.setSubjects(updatedSubjects);
         scheduleRepository.save(schedule);
 
         return notMigratedSubjects;
+    }
+
+    private boolean isNewerVersion(Subject newSubject, Subject oldSubject) {
+        return newSubject.getCareer().getVersion().getParsedAt()
+                .after(oldSubject.getCareer().getVersion().getParsedAt());
     }
 }

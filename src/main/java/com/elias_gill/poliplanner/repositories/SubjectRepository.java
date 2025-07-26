@@ -10,5 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
     public List<Subject> findByCareerIdOrderBySemestreAsc(Long careerId);
 
-    public Optional<Subject> findFirstByNombreAsignaturaOrderByCareer_Version_ParsedAtDesc(String name);
+    public Optional<Subject> findFirstByNombreAsignaturaAndSeccionOrderByCareer_Version_ParsedAtDesc(String name,
+            String section);
 }

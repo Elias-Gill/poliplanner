@@ -181,15 +181,17 @@ public class SchedulesController {
     public String migrateSubjectsExcel(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            List<Subject> notMigrated = scheduleService.migrateSubjects(id, username);
+            List<Subject> notMigrated = scheduleService.migrateSubjects(username, id);
             if (notMigrated.isEmpty()) {
                 redirectAttributes.addFlashAttribute("success", "Horario migrado satisfactoriamente");
             } else {
                 StringBuilder warningMessage = new StringBuilder(
-                        "Las siguientes materias no pudieron ser migradas:\n");
+                        "Las siguientes materias no pudieron ser migradas:<ul>");
                 for (Subject s : notMigrated) {
-                    warningMessage.append("- ").append(s.getNombreAsignatura()).append("\n");
+                    warningMessage.append("<li>").append(s.getNombreAsignatura()).append("</li>");
                 }
+                warningMessage.append("</ul>");
+
                 redirectAttributes.addFlashAttribute("warning", warningMessage.toString());
             }
         } catch (BadArgumentsException e) {
@@ -200,6 +202,6 @@ public class SchedulesController {
             logger.error("Error migrando horario: {}", e.getMessage());
         }
 
-        return "redirect:/";
+        return "redirect:/?id=" + id;
     }
 }
