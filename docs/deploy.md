@@ -39,7 +39,10 @@ ejemplo de url jdbc:
 
 ## Startup del server
 
-Se puede inicilizar el server directamente con `mvn spring-boot:run` o ejecutando el jar
-compilado. 
-
 Los binarios exportados por el comando `mvn package` son autocontenidos y distribuibles.
+
+Para iniciar el server en el perfil de produccion:
+
+```bash
+java -jar <compiled_file>.jar --spring.profiles.active=prod
+```
