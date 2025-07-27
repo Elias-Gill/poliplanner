@@ -134,7 +134,11 @@ public class ScheduleService {
                     .orElse(null);
 
             if (newSubject != null) {
-                updatedSubjects.add(newSubject);
+                if (isNewerVersion(newSubject, oldSubject)) {
+                    updatedSubjects.add(newSubject);
+                } else {
+                    updatedSubjects.add(oldSubject);
+                }
             } else {
                 updatedSubjects.add(oldSubject);
                 notMigratedSubjects.add(oldSubject);

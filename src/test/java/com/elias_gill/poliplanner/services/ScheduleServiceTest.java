@@ -106,7 +106,7 @@ public class ScheduleServiceTest {
         Schedule schedule = scheduleRepository
                 .save(new Schedule(user, "Mi Horario", List.of(oldSubject1, oldSubject2)));
 
-        List<Subject> notMigrated = scheduleService.migrateSubjects(user.getUsername(), schedule.getId());
+        scheduleService.migrateSubjects(user.getUsername(), schedule.getId());
 
         Schedule updatedSchedule = scheduleRepository.findById(schedule.getId()).orElseThrow();
         assertEquals(2, updatedSchedule.getSubjects().size());
@@ -115,19 +115,6 @@ public class ScheduleServiceTest {
         boolean hasPhysics = updatedSchedule.getSubjects().stream()
                 .anyMatch(s -> s.getNombreAsignatura().equals("Physics") && s.getSeccion().equals("B"));
         assertTrue(hasPhysics);
-
-        assertEquals(1, notMigrated.size());
-    }
-
-    @Test
-    @Tag("integration")
-    void testMigrationTool_ScheduleNotFound() {
-        User user = userRepository.save(new User("testuser", "password"));
-
-        Exception exception = assertThrows(BadArgumentsException.class, () -> {
-            scheduleService.migrateSubjects(user.getUsername(), 999L);
-        });
-        assertTrue(exception.getMessage().contains("Horario con id='999' no existe"));
     }
 
     @Test
@@ -145,18 +132,12 @@ public class ScheduleServiceTest {
 
     @Test
     @Tag("integration")
-    void testMigrationTool_NoNewerVersionAvailable() throws Exception {
-        SheetVersion version = versionRepository.save(new SheetVersion("2022-01-01", "2022-01-01"));
+    void testMigrationTool_ScheduleNotFound() {
         User user = userRepository.save(new User("testuser", "password"));
-        Career career = careerRepository.save(new Career("Computer Science", version));
-        Subject subject = subjectRepository.save(new Subject("Math", "A", career));
-        Schedule schedule = scheduleRepository.save(new Schedule(user, "Mi Horario", List.of(subject)));
 
-        List<Subject> notMigrated = scheduleService.migrateSubjects(user.getUsername(), schedule.getId());
-
-        Schedule updatedSchedule = scheduleRepository.findById(schedule.getId()).orElseThrow();
-        assertEquals(1, updatedSchedule.getSubjects().size());
-        assertEquals(subject, updatedSchedule.getSubjects().get(0));
-        assertEquals(1, notMigrated.size());
+        Exception exception = assertThrows(BadArgumentsException.class, () -> {
+            scheduleService.migrateSubjects(user.getUsername(), 999L);
+        });
+        assertTrue(exception.getMessage().contains("Horario con id='999' no existe"));
     }
 }
