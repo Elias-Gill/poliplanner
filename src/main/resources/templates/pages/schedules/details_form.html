@@ -7,31 +7,41 @@
     <div th:replace="~{fragments/alerts/error :: alert(${error})}"></div>
     <!-- Formulario -->
     <h2>Selecciona las materias</h2>
-    <form th:action="@{/schedule/new/details}" method="post">
-      <!-- Campo oculto para descripción -->
-      <input type="hidden" name="description" th:value="${description}" />
-      <!-- Materias agrupadas por semestre -->
-      <div th:each="semesterEntry : ${subjects}">
-        <details>
-          <summary th:text="'Semestre ' + ${semesterEntry.key}"></summary>
-          <div th:each="subjectEntry : ${semesterEntry.value}">
-            <section>
-              <h4 th:text="${subjectEntry.key}" style="margin: var(--space-sm) 0;"></h4>
-              <ul>
-                <li th:each="subject : ${subjectEntry.value}">
-                  <label>
-                    <input type="checkbox"
+    <!-- buscador -->
+    <div class="buscador">
+      <label for="subjectSearch">Buscar por materia, profesor y/o seccion:</label><br>
+      <input type="text" id="subjectSearch" placeholder="Ej. Física, 2, Juan ..." style="width: 100%; padding: var(--space-sm);">
+    </div>
+    <!-- formulario con lista de materias -->
+    <form th:action="@{/schedule/new/details}"method="post">
+      <div class="form-list">
+        <!-- Campo oculto para descripción -->
+        <input type="hidden" name="description" th:value="${description}" />
+        <!-- Materias agrupadas por semestre -->
+        <div th:each="semesterEntry : ${subjects}">
+          <details>
+            <summary th:text="'Semestre ' + ${semesterEntry.key}"></summary>
+            <div th:each="subjectEntry : ${semesterEntry.value}">
+              <section>
+                <h4 th:text="${subjectEntry.key}" style="margin: var(--space-sm) 0;"></h4>
+                <ul>
+                  <li th:each="subject : ${subjectEntry.value}">
+                    <label>
+                      <input type="checkbox"
                                th:id="'subject-' + ${subject.id}"
                                th:name="subjectIds"
                                th:value="${subject.id}" />
-                    <span th:text="'Sección ' + ${subject.seccion}"></span> –
-                    <small th:text="${subject.tituloProfesor + ' ' + subject.nombreProfesor + ' ' + subject.apellidoProfesor}"></small>
-                  </label>
-                </li>
-              </ul>
-            </section>
-          </div>
-        </details>
+                      <span th:text="'Sección ' + ${subject.seccion}"></span> –
+                      <small th:text="${subject.tituloProfesor + ' ' + subject.nombreProfesor + ' ' + subject.apellidoProfesor}"></small>
+                      <!-- NOTE: necesario para el buscador -->
+                      <div hidden th:text="${subject.nombreAsignatura}"></div>
+                    </label>
+                  </li>
+                </ul>
+              </section>
+            </div>
+          </details>
+        </div>
       </div>
       <!-- Botón de envío -->
       <div style="margin-top: var(--space-xl);">
@@ -46,51 +56,82 @@
       </article>
     </section>
     <style>
-      details {
-          margin-top: var(--space-md);
-      }
-
-      details ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      details ul li {
+      .form-list {
+        max-height: 40vh;
+        overflow-y: auto;
+        padding-right: 1rem; /* espacio para scroll */
         border: 1px solid var(--color-border);
-        border-radius: 0.25rem;
-        padding: var(--space-sm) var(--space-md);
-        margin-bottom: var(--space-sm);
-        background-color: var(--color-bg);
-        transition: background-color 0.2s;
-        display: flex;
-        align-items: flex-start;
+        border-radius: var(--radius);
+        padding: var(--space-md);
+        margin-bottom: var(--space-lg);
+        /* background-color: var(--color-surface, #fff); */
+        scroll-behavior: smooth;
       }
 
-      details ul li:hover {
-        background-color: color-mix(in srgb, var(--color-primary), transparent 95%);
+      /* Opcional: scrollbar estilizado */
+      .form-list::-webkit-scrollbar {
+        width: 8px;
       }
 
-      details ul li label {
-        display: flex;
-        gap: var(--space-sm);
-        cursor: pointer;
-        width: 100%;
-        flex-wrap: wrap;
+      .form-list::-webkit-scrollbar-thumb {
+        background-color: var(--color-muted, #bbb);
+        border-radius: 4px;
       }
 
-      details ul li input[type="checkbox"] {
-        margin-top: 0.2rem;
+      .form-list::-webkit-scrollbar-track {
+        background-color: transparent;
       }
 
-      details ul li strong {
-        font-weight: 600;
-      }
+            details {
+                margin-top: var(--space-md);
+            }
 
-      details ul li small {
-        color: var(--color-muted);
-        font-size: 0.85rem;
-      }
+            details ul {
+              list-style: none;
+              margin: 0;
+              padding: 0;
+            }
+
+            details ul li {
+              border: 1px solid var(--color-border);
+              border-radius: 0.25rem;
+              padding: var(--space-sm) var(--space-md);
+              margin-bottom: var(--space-sm);
+              background-color: var(--color-bg);
+              transition: background-color 0.2s;
+              display: flex;
+              align-items: flex-start;
+            }
+
+            details ul li:hover {
+              background-color: color-mix(in srgb, var(--color-primary), transparent 95%);
+            }
+
+            details ul li label {
+              display: flex;
+              gap: var(--space-sm);
+              cursor: pointer;
+              width: 100%;
+              flex-wrap: wrap;
+            }
+
+            details ul li input[type="checkbox"] {
+              margin-top: 0.2rem;
+            }
+
+            details ul li strong {
+              font-weight: 600;
+            }
+
+            details ul li small {
+              color: var(--color-muted);
+              font-size: 0.85rem;
+            }
+
+            .buscador {
+                margin-top: var(--space-md);
+                margin-bottom: var(--space-md);
+            }
     </style>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
@@ -146,6 +187,35 @@
 
         checkboxes.forEach(cb => cb.addEventListener('change', updateSelectedSubjects));
         updateSelectedSubjects();
+      });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('subjectSearch');
+        const subjectItems = document.querySelectorAll('details ul li');
+
+        searchInput.addEventListener('input', () => {
+          const raw = searchInput.value.trim().toLowerCase();
+
+          // Separar por comas, eliminar espacios sobrantes, filtrar términos vacíos
+          const terms = raw.split(',').map(t => t.trim()).filter(t => t.length > 0);
+
+          subjectItems.forEach(item => {
+            const label = item.querySelector('label');
+            const fullText = label.textContent.toLowerCase();
+
+            // Coincide si TODOS los términos están presentes en el texto
+            const match = terms.every(term => fullText.includes(term));
+            item.style.display = match ? '' : 'none';
+          });
+
+          // Mostrar u ocultar los <details> según si tienen resultados visibles
+          const allDetails = document.querySelectorAll('details');
+          allDetails.forEach(details => {
+            const visibleItems = details.querySelectorAll('li:not([style*="display: none"])');
+            details.style.display = visibleItems.length > 0 ? '' : 'none';
+          });
+        });
       });
     </script>
   </main>
