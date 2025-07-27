@@ -36,9 +36,10 @@ public class DashboardController {
         Long ultimaVersionExcelId = versionService.findLatest().getId();
 
         if (!String.valueOf(ultimaVersionExcelId).equals(cookieVersion)) {
-            model.addAttribute("hasNewExcel",
-                    "📢 ¡Nueva versión del Excel disponible!. Actualiza tu horario usando nuestra <a href=\"#bottom\">herramienta de migración</a>.");
             response.addCookie(new Cookie(COOKIE_EXCEL, ultimaVersionExcelId.toString()));
+            model.addAttribute("hasNewExcel",
+                    "📢 ¡Nueva versión del Excel disponible!. Actualiza tu horario usando nuestra"
+                            + "<a href=\"#bottom\">herramienta de migración</a>.");
         }
 
         String userName = authentication.getName();

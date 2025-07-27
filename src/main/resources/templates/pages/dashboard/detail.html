@@ -120,7 +120,25 @@
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.2rem;
+      gap: 0rem 1.2rem;
+    }
+
+    .date-badge {
+      background-color: var(--color-secondary);
+      color: var(--color-bg);
+      font-size: 0.85rem;
+      padding: 0.2em 0.6em;
+      border-radius: 8%;
+      margin-right: 0.25em;
+    }
+    .badge-container {
+      display: inline-block;
+      float: right;
+      white-space: nowrap;
+    }
+    .date-badge.bg-warning {
+      background-color: var(--color-primary);
+      color: var(--color-bg);
     }
   </style>
 </div>

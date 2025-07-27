@@ -11,6 +11,6 @@ public class LoggedControllerAdvice {
     @ModelAttribute("isLoggedIn")
     public boolean isLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null || !(authentication instanceof AnonymousAuthenticationToken);
+        return authentication != null && !(authentication instanceof AnonymousAuthenticationToken);
     }
 }
