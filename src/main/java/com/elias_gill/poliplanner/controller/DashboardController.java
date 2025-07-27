@@ -38,7 +38,7 @@ public class DashboardController {
         if (!String.valueOf(ultimaVersionExcelId).equals(cookieVersion)) {
             response.addCookie(new Cookie(COOKIE_EXCEL, ultimaVersionExcelId.toString()));
             model.addAttribute("hasNewExcel",
-                    "📢 ¡Nueva versión del Excel disponible!. Actualiza tu horario usando nuestra"
+                    "📢 ¡Nueva versión del Excel disponible!. Actualiza tu horario usando nuestra "
                             + "<a href=\"#bottom\">herramienta de migración</a>.");
         }
 

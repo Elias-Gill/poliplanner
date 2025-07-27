@@ -31,6 +31,7 @@
                              th:value="${subject.id}" />
                       <span th:text="'Sección ' + ${subject.seccion}"></span> –
                       <small th:text="${subject.tituloProfesor + ' ' + subject.nombreProfesor + ' ' + subject.apellidoProfesor}"></small>
+                      <!-- NOTE: necesario para el buscador -->
                       <div hidden th:text="${subject.nombreAsignatura}"></div>
                     </label>
                   </li>
@@ -49,7 +50,7 @@
     <section id="selectedSubjectsPreview" style="display: none; margin-top: var(--space-xl);">
       <h3>Materias seleccionadas</h3>
       <article>
-        <ul id="selectedSubjectsList" style="list-style: square; padding-left: 0;"></ul>
+        <ul id="selectedSubjectsList"></ul>
       </article>
     </section>
     <style>
@@ -65,7 +66,7 @@
       }
 
       .form-list::-webkit-scrollbar {
-        width: 8px;
+        width: 2px;
       }
 
       .form-list::-webkit-scrollbar-thumb {

@@ -315,12 +315,8 @@ th {
 /* === Navbar Rediseñado === */
 nav {
     background-color: var(--color-bg);
-    /* Mismo color de fondo que el body */
     border-bottom: 1px solid var(--color-border);
     padding: var(--space-sm) 0;
-    /* Espaciado más ajustado */
-    margin-bottom: var(--space-lg);
-    /* Separación del contenido */
 }
 
 nav ul {
