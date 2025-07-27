@@ -38,6 +38,13 @@
         <button type="submit">Crear horario</button>
       </div>
     </form>
+    <!-- Vista previa de materias seleccionadas -->
+    <section id="selectedSubjectsPreview">
+      <h3>Materias seleccionadas</h3>
+      <article>
+        <ul id="selectedSubjectsList" style="list-style: square; padding-left: 0;"></ul>
+      </article>
+    </section>
     <style>
       details {
           margin-top: var(--space-md);
@@ -85,5 +92,61 @@
         font-size: 0.85rem;
       }
     </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="subjectIds"]');
+        const listContainer = document.getElementById('selectedSubjectsList');
+        const previewSection = document.getElementById('selectedSubjectsPreview');
+
+        function updateSelectedSubjects() {
+          listContainer.innerHTML = '';
+          const selected = Array.from(checkboxes).filter(cb => cb.checked);
+
+          if (selected.length === 0) {
+            previewSection.style.display = 'none';
+            return;
+          }
+
+          previewSection.style.display = 'block';
+
+          selected.forEach(cb => {
+            const label = cb.closest('label');
+            const seccion = label.querySelector('span')?.textContent || '';
+            const profesor = label.querySelector('small')?.textContent || '';
+            const materia = label.closest('section').querySelector('h4')?.textContent || '';
+
+            const li = document.createElement('li');
+            li.style.marginBottom = 'var(--space-md)';
+            li.style.display = 'flex';
+            li.style.justifyContent = 'space-between';
+            li.style.alignItems = 'center';
+            li.style.gap = '1rem';
+
+            const infoDiv = document.createElement('div');
+            infoDiv.innerHTML = `<strong>${materia}</strong> – ${seccion}<br><small>${profesor}</small>`;
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.textContent = 'X';
+            btn.style.border = 'none';
+            btn.style.padding = '0.25rem 0.5rem';
+            btn.style.borderRadius = '4px';
+            btn.style.cursor = 'pointer';
+
+            btn.addEventListener('click', () => {
+              cb.checked = false;
+              updateSelectedSubjects(); // actualiza la lista
+            });
+
+            li.appendChild(infoDiv);
+            li.appendChild(btn);
+            listContainer.appendChild(li);
+          });
+        }
+
+        checkboxes.forEach(cb => cb.addEventListener('change', updateSelectedSubjects));
+        updateSelectedSubjects();
+      });
+    </script>
   </main>
 </html>
