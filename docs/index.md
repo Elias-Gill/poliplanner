@@ -14,5 +14,7 @@
 ## Otros archivos
 
 - [Eschema de base de datos](media/db_scheme.png)
+- [Eschema tablas de metadatos](media/metadata_db_scheme.png):
+  Aqui se guardan la malla curricular para tratar de resolver inconsistencias del excel.
 - [Calculo de notas](media/calculo_de_notas.jpeg)
 - [PDF escala de notas](media/escala_politecnica.pdf)
