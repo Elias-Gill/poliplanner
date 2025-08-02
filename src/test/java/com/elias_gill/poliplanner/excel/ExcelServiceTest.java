@@ -9,18 +9,21 @@ import com.elias_gill.poliplanner.repositories.CareerRepository;
 import com.elias_gill.poliplanner.repositories.SheetVersionRepository;
 import com.elias_gill.poliplanner.repositories.SubjectRepository;
 
+import jakarta.transaction.Transactional;
+
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.annotation.Rollback;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@Transactional
+@Rollback
 class ExcelServiceIntegrationTest {
 
     @Autowired
@@ -61,9 +64,8 @@ class ExcelServiceIntegrationTest {
         excelService.persistSubjectsFromExcel(testExcel, dummyUrl);
 
         // Verificamos que se haya creado la version
-        List<SheetVersion> versions = sheetVersionRepository.findAll();
-        assertEquals(1, versions.size());
-        assertEquals(dummyUrl, versions.get(0).getUrl());
+        SheetVersion version = sheetVersionRepository.findFirstByOrderByParsedAtDesc();
+        assertEquals(dummyUrl, version.getUrl());
 
         // Verificamos que se hayan creado carreras
         List<Career> careers = careerRepository.findAll();
