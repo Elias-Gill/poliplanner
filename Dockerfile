@@ -33,9 +33,9 @@ COPY --from=build --chown=springuser:springuser /app/target/*.jar app.jar
 ENV JAVA_OPTS="\
     -XX:+UseSerialGC \
     -Xss256k \
-    -Xmx250m \
+    -Xmx350m \
     -Xms100m \
-    -XX:MaxRAM=280m \
+    -XX:MaxRAM=380m \
     -Djava.awt.headless=true \
     -Dfile.encoding=UTF-8"
 
