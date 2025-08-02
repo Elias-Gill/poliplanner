@@ -1,7 +1,6 @@
 package com.elias_gill.poliplanner.services;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 import org.springframework.stereotype.Service;
@@ -36,9 +35,7 @@ public class SheetVersionService {
             return false;
         }
 
-        LocalDate parseDate = latest.getParsedAt().toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+        LocalDate parseDate = latest.getParsedAt().toLocalDate();
 
         // Notifica durante 2 dias despues de la fecha de parseo del ultimo excel
         long daysBetween = ChronoUnit.DAYS.between(parseDate, LocalDate.now());

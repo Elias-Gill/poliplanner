@@ -1,6 +1,6 @@
 package com.elias_gill.poliplanner.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -10,7 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +35,7 @@ public class SheetVersion {
 
     @Column(name = "parsed_at", nullable = false)
     @CreationTimestamp
-    private Date parsedAt;
+    private LocalDateTime parsedAt;
 
     public SheetVersion(String fileName, String url) {
         this.fileName = fileName;

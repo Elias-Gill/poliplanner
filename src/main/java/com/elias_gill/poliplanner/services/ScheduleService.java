@@ -1,6 +1,6 @@
 package com.elias_gill.poliplanner.services;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -153,7 +153,9 @@ public class ScheduleService {
     }
 
     private boolean isNewerVersion(Subject newSubject, Subject oldSubject) {
-        return newSubject.getCareer().getVersion().getParsedAt()
-                .after(oldSubject.getCareer().getVersion().getParsedAt());
+        LocalDateTime oldDate = oldSubject.getCareer().getVersion().getParsedAt();
+        LocalDateTime newDate = oldSubject.getCareer().getVersion().getParsedAt();
+
+        return newDate.isAfter(oldDate);
     }
 }
