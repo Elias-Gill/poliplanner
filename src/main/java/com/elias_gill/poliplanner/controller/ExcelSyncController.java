@@ -115,7 +115,7 @@ public class ExcelSyncController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Credenciales invalidas");
             }
 
-            Boolean hasNewVersion = service.SyncronizeExcel();
+            Boolean hasNewVersion = service.autonomousExcelSync();
             if (hasNewVersion) {
                 return ResponseEntity.status(HttpStatus.OK)
                         .body("Version de excel actualizada a la nueva version disponible");

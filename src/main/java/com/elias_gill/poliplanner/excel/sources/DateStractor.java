@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Utils {
+public class DateStractor {
     private static final Pattern DATE_PATTERN = Pattern.compile("(\\d{2})(\\d{2})(\\d{2,4})\\.xlsx?$",
             Pattern.CASE_INSENSITIVE);
 

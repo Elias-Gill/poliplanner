@@ -80,9 +80,9 @@ public class WebScrapper {
         return url.contains("drive") && url.contains("folders");
     }
 
-    static ExcelDownloadSource extractDirectSource(String url) {
+    private static ExcelDownloadSource extractDirectSource(String url) {
         String fileName = url.substring(url.lastIndexOf('/') + 1);
-        LocalDate date = Utils.extractDateFromFilename(fileName);
+        LocalDate date = DateStractor.extractDateFromFilename(fileName);
         if (date == null) {
             return null;
         }

@@ -42,7 +42,7 @@ public class GoogleDriveHelper {
 
                 if (name != null && name.toLowerCase().endsWith(".xlsx")) {
                     String downloadUrl = String.format(DOWNLOAD_URL_FORMAT, id);
-                    LocalDate fileDate = Utils.extractDateFromFilename(name);
+                    LocalDate fileDate = DateStractor.extractDateFromFilename(name);
                     if (fileDate == null) {
                         continue;
                     }

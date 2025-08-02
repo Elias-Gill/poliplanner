@@ -3,7 +3,6 @@ package com.elias_gill.poliplanner.excel;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -43,17 +42,14 @@ public class ExcelService {
      * y permitir reutilizar la lógica en herramientas como el seeder para entornos
      * de desarrollo.
      */
-    @Transactional
-    public Boolean SyncronizeExcel() {
+    public Boolean autonomousExcelSync() {
         try {
             logger.info("Iniciando actualizacion de excel");
             ExcelDownloadSource source = scrapper.findLatestDownloadSource();
 
             SheetVersion latestVersion = versionService.findLatest();
-            // Convert Date to LocalDate
-            LocalDate latestVersionDate = latestVersion.getParsedAt().toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
+
+            LocalDate latestVersionDate = latestVersion.getParsedAt().toLocalDate();
 
             if (latestVersion != null) {
                 if (source.uploadDate().isBefore(latestVersionDate)) {
@@ -87,7 +83,6 @@ public class ExcelService {
     // NOTE: dividio en dos metodos diferentes para poder exponer dos tipos de
     // endpoints. Uno para descarga automatizada ('/sync/ci') y un formulario para
     // actualizacion manual ('/sync').
-    @Transactional
     public void persistSubjectsFromExcel(Path excelFile, String url)
             throws IOException, InterruptedException {
 
@@ -108,6 +103,8 @@ public class ExcelService {
     }
 
     // NOTE: publico porque se utiliza dentro del DatabaseSeeder.
+    // Solo esta funcion necesita ser transactional porque es la unica que realiza
+    // escrituras a disco.
     @Transactional
     public void parseAndPersistCsv(Path sheet, SheetVersion version) {
         logger.info("Parseando csv: {}", sheet.toString());
