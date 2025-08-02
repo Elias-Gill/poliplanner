@@ -1,15 +1,17 @@
 package com.elias_gill.poliplanner.excel.parser;
 
-import com.elias_gill.poliplanner.exception.CsvParsingException;
-import com.opencsv.bean.CsvToBeanBuilder;
-
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.elias_gill.poliplanner.exception.CsvParsingException;
+import com.opencsv.bean.CsvToBeanBuilder;
 
 public class ExcelParser {
     private static final int GARBAGE_HEADER_LINES = 11;
@@ -61,17 +63,16 @@ public class ExcelParser {
         return tempFile;
     }
 
-    // Convierte cada "hoja" del archivo en archivos csv. Retorna la lista de
-    // archivos convertidos
+    // Convierte cada "hoja" del archivo en archivos CSV. Retorna la lista de
+    // archivos convertidos.
     public static List<Path> convertExcelToCsv(Path excelFile) throws IOException, InterruptedException {
-        // Verificar si ssconvert está instalado
         if (!isSsconvertAvailable()) {
             throw new IOException("ssconvert no está instalado. Necesitas instalar Gnumeric.");
         }
 
+        // Se mantiene el nombre del archivo como prefijo del directorio temporal
         Path outputDir = Files.createTempDirectory(excelFile.getFileName().toString());
 
-        // Convertir todas las "hojas" del documento a csv
         ProcessBuilder pb = new ProcessBuilder(
                 "ssconvert",
                 "--export-file-per-sheet",
@@ -80,32 +81,37 @@ public class ExcelParser {
 
         pb.redirectErrorStream(true);
 
-        Process p = pb.start();
-        String processOutput = new String(p.getInputStream().readAllBytes());
-        int exitCode = p.waitFor();
+        Process process = pb.start();
 
-        if (exitCode != 0) {
-            throw new IOException("Error en la conversión:\n" + processOutput);
+        // Leer la salida del proceso con manejo explícito de recursos
+        String processOutput;
+        try (InputStream is = process.getInputStream()) {
+            processOutput = new String(is.readAllBytes(), StandardCharsets.UTF_8);
         }
 
-        // Listar los archivos generados e ignorar los archivos basura como "Codigos de
-        // carrera" o "Carreras homologadas"
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new IOException("Error en la conversión con ssconvert:\n" + processOutput);
+        }
+
+        // Filtrar archivos generados, excluyendo hojas irrelevantes o basura
         try (Stream<Path> files = Files.list(outputDir)) {
-            return files.filter(
-                    path -> path.toString().endsWith(".csv")
+            List<Path> result = files
+                    .filter(path -> path.toString().endsWith(".csv")
                             && !path.toString().contains("odigos")
                             && !path.toString().contains("ódigos")
                             && !path.toString().contains("Asignaturas")
                             && !path.toString().contains("Homologadas")
                             && !path.toString().contains("Homólogas")
-                            // INFO: en semestres anteriores, eran super inconsistente
-                            // && !path.toString().contains("oviedo")
-                            // && !path.toString().contains("Oviedo")
-                            // && !path.toString().contains("Villarrica")
-                            // && !path.toString().contains("villarrica")
                             && !path.toString().equalsIgnoreCase("códigos"))
                     .sorted()
                     .collect(Collectors.toList());
+
+            if (result.isEmpty()) {
+                throw new IOException("ssconvert terminó exitosamente pero no generó archivos CSV válidos.");
+            }
+
+            return result;
         }
     }
 
