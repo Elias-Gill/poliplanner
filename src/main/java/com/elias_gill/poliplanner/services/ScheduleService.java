@@ -27,6 +27,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserService userService;
     private final SubjectRepository subjectRepository;
+    private final SheetVersionService sheetVersionService;
 
     public List<Schedule> findByUserName(String user) {
         return scheduleRepository.findByUserUsernameOrderByCreatedAtDesc(user);
@@ -80,6 +81,8 @@ public class ScheduleService {
             schedule.setUser(userOpt.get());
             schedule.setDescription(description.trim());
             schedule.setSubjects(subjects);
+            schedule.setVersion(sheetVersionService.findLatest());
+
             scheduleRepository.save(schedule);
         } catch (Exception e) {
             throw new InternalError("Error interno al guardar el horario", e);
@@ -147,6 +150,8 @@ public class ScheduleService {
 
         // Actualizar la lista de subjects
         schedule.setSubjects(updatedSubjects);
+        schedule.setVersion(sheetVersionService.findLatest());
+
         scheduleRepository.save(schedule);
 
         return notMigratedSubjects;

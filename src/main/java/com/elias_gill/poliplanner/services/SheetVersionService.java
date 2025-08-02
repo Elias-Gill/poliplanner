@@ -1,8 +1,5 @@
 package com.elias_gill.poliplanner.services;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-
 import org.springframework.stereotype.Service;
 
 import com.elias_gill.poliplanner.models.SheetVersion;
@@ -23,22 +20,5 @@ public class SheetVersionService {
 
     public SheetVersion findLatest() {
         return repository.findFirstByOrderByParsedAtDesc();
-    }
-
-    public Boolean hasNewUpdates() {
-        SheetVersion latest = findLatest();
-        if (latest == null) {
-            return false;
-        }
-
-        if (latest.getParsedAt() == null) {
-            return false;
-        }
-
-        LocalDate parseDate = latest.getParsedAt().toLocalDate();
-
-        // Notifica durante 2 dias despues de la fecha de parseo del ultimo excel
-        long daysBetween = ChronoUnit.DAYS.between(parseDate, LocalDate.now());
-        return daysBetween <= 2;
     }
 }
