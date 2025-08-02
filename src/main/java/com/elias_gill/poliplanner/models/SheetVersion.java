@@ -1,6 +1,7 @@
 package com.elias_gill.poliplanner.models;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -40,5 +41,9 @@ public class SheetVersion {
     public SheetVersion(String fileName, String url) {
         this.fileName = fileName;
         this.url = url;
+    }
+
+    public String getParsedAtFormatted() {
+        return parsedAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 }
