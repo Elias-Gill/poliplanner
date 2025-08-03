@@ -18,7 +18,8 @@
       <div class="form-list">
         <div th:each="semesterEntry : ${subjects}">
           <details>
-            <summary th:text="'Semestre ' + ${semesterEntry.key}"></summary>
+            <summary th:if="${semesterEntry.key} != 0" th:text="'Semestre ' + ${semesterEntry.key}"></summary>
+            <summary th:if="${semesterEntry.key} == 0" th:text="'Materias sin semestre (Excel inconsistente)'"></summary>
             <div th:each="subjectEntry : ${semesterEntry.value}">
               <section>
                 <h4 th:text="${subjectEntry.key}" style="margin: var(--space-sm) 0;"></h4>
