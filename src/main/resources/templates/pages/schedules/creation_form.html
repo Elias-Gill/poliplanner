@@ -9,14 +9,16 @@
     <h2>Crear nuevo horario</h2>
     <section>
       <form th:action="@{/schedule/new}" method="post">
-        <!-- Descripción -->
-        <article>
-          <label for="description">Descripción</label>
+        <section>
+          <!-- Descripción -->
+          <label for="description">
+            <h3>Descripción</h3>
+          </label>
           <input type="text" id="description" name="description" placeholder="Ej: Horario primer semestre 2025" required>
-        </article>
-        <!-- Selección de carrera -->
-        <article>
-          <label for="careerId">Carrera</label>
+          <!-- Selección de carrera -->
+          <label for="careerId">
+            <h3>Carrera</h3>
+          </label>
           <select id="careerId" name="careerId" required>
             <option disabled selected value="">Selecciona una carrera</option>
             <option th:each="career : ${careers}"
@@ -24,7 +26,7 @@
                     th:text="${career.name}">
             </option>
           </select>
-        </article>
+        </section>
         <!-- Versión de hoja -->
         <article>
           <label>Versión de Excel</label>
