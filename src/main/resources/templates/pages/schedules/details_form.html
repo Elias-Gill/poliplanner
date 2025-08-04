@@ -9,8 +9,8 @@
     <h2>Selecciona las materias</h2>
     <!-- Buscador -->
     <div class="buscador">
-      <label for="subjectSearch">Buscar por materia, profesor y/o sección:</label><br>
-      <input type="text" id="subjectSearch" placeholder="Ej. Física, 2, Juan ..." style="width: 100%; padding: var(--space-sm);">
+      <label for="subjectSearch">Buscar por materia, profesor y/o sección:</label>
+      <input type="text" id="subjectSearch" placeholder="Ej. Física, 2, Juan ..." style="width: 100%;">
     </div>
     <!-- Formulario con materias -->
     <form th:action="@{/schedule/new/details}" method="post">
@@ -22,7 +22,7 @@
             <summary th:if="${semesterEntry.key} == 0" th:text="'Materias sin semestre (Excel inconsistente)'"></summary>
             <div th:each="subjectEntry : ${semesterEntry.value}">
               <section>
-                <h4 th:text="${subjectEntry.key}" style="margin: var(--space-sm) 0;"></h4>
+                <h4 th:text="${subjectEntry.key}"></h4>
                 <ul>
                   <li th:each="subject : ${subjectEntry.value}">
                     <label>
@@ -55,92 +55,136 @@
       </article>
     </section>
     <style>
+      .buscador {
+          margin: var(--space-lg) 0;
+          display: flex;
+          flex-direction: column;
+          gap: var(--space-sm);
+      }
+
+      .buscador label {
+          font-weight: 500;
+      }
+
       .form-list {
-        max-height: 40vh;
-        overflow-y: auto;
-        padding-right: 1rem;
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius);
-        padding: var(--space-md);
-        margin-bottom: var(--space-lg);
-        scroll-behavior: smooth;
+          max-height: 50vh;
+          overflow-y: auto;
+          padding: var(--space-md);
+          scroll-behavior: smooth;
+          scrollbar-width: auto;
       }
 
       .form-list::-webkit-scrollbar {
-        width: 2px;
+          width: 4px;
       }
 
       .form-list::-webkit-scrollbar-thumb {
-        background-color: var(--color-muted, #bbb);
-        border-radius: 4px;
+          background-color: var(--color-muted);
+          border-radius: 4px;
       }
 
       details {
-        margin-top: var(--space-md);
+          margin: var(--space-md) 0;
+          background-color: color-mix(in srgb, var(--color-bg), var(--color-secondary-bg) 10%);
+          border-radius: 0.25rem;
+          padding: var(--space-sm);
+      }
+
+      details summary {
+          padding: var(--space-sm) var(--space-md);
+          font-weight: 600;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+      }
+
+      details summary:hover {
+          background-color: color-mix(in srgb, var(--color-primary), transparent 95%);
       }
 
       details ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
+          margin: var(--space-sm) 0;
+          padding: 0;
+          list-style: none;
       }
 
       details ul li {
-        border: 1px solid var(--color-border);
-        border-radius: 0.25rem;
-        padding: var(--space-sm) var(--space-md);
-        margin-bottom: var(--space-sm);
-        background-color: var(--color-bg);
-        transition: background-color 0.2s;
-        display: flex;
-        align-items: flex-start;
+          padding: var(--space-sm) var(--space-md);
+          margin-bottom: var(--space-sm);
+          transition: background-color 0.2s ease;
       }
 
       details ul li:hover {
-        background-color: color-mix(in srgb, var(--color-primary), transparent 95%);
+          background-color: color-mix(in srgb, var(--color-primary), transparent 90%);
       }
 
       details ul li label {
-        display: flex;
-        gap: var(--space-sm);
-        cursor: pointer;
-        width: 100%;
-        flex-wrap: wrap;
+          gap: var(--space-sm);
+          cursor: pointer;
+          flex-wrap: wrap;
       }
 
-      details ul li input[type="checkbox"] {
-        margin-top: 0.2rem;
+      details ul li span {
+          font-weight: 500;
       }
 
       details ul li small {
-        color: var(--color-muted);
-        font-size: 0.85rem;
+          font-size: 0.875rem;
+          line-height: 1.4;
       }
 
-      .buscador {
-        margin-top: var(--space-md);
-        margin-bottom: var(--space-md);
+      #selectedSubjectsPreview article {
+          padding: var(--space-md);
       }
 
       #selectedSubjectsList li {
-        margin-bottom: var(--space-md);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
+          gap: var(--space-md);
+          padding: var(--space-sm);
       }
 
       #selectedSubjectsList button {
-        background-color: transparent;
-        border: 1px solid var(--color-border);
-        border-radius: 0.25rem;
-        padding: 0.25rem 0.5rem;
-        cursor: pointer;
-        color: var(--color-text);
+          background-color: var(--color-error);
+          color: white;
+          border: none;
+          padding: var(--space-xs) var(--space-sm);
+          font-size: 0.875rem;
       }
 
       #selectedSubjectsList button:hover {
-        background-color: var(--color-secondary-bg);
+          background-color: color-mix(in srgb, var(--color-error), black 15%);
+      }
+
+      @media (max-width: 768px) {
+          .form-list {
+              max-height: 60vh;
+              padding: var(--space-sm);
+          }
+
+          details {
+              margin: var(--space-sm) 0;
+          }
+
+          details summary {
+              font-size: 0.95rem;
+              padding: var(--space-xs) var(--space-sm);
+          }
+
+          details ul li {
+              padding: var(--space-xs) var(--space-sm);
+              font-size: 0.95rem;
+          }
+
+          details ul li small {
+              font-size: 0.85rem;
+          }
+
+          #selectedSubjectsList li {
+              font-size: 0.95rem;
+              padding: var(--space-xs);
+          }
+
+          #selectedSubjectsList button {
+              font-size: 0.85rem;
+          }
       }
     </style>
     <script>
@@ -148,45 +192,35 @@
         const checkboxes = document.querySelectorAll('input[type="checkbox"][name="subjectIds"]');
         const listContainer = document.getElementById('selectedSubjectsList');
         const previewSection = document.getElementById('selectedSubjectsPreview');
-
         function updateSelectedSubjects() {
           listContainer.innerHTML = '';
           const selected = Array.from(checkboxes).filter(cb => cb.checked);
-
           if (selected.length === 0) {
             previewSection.style.display = 'none';
             return;
           }
-
           previewSection.style.display = 'block';
-
           selected.forEach(cb => {
             const label = cb.closest('label');
             const seccion = label.querySelector('span')?.textContent || '';
             const profesor = label.querySelector('small')?.textContent || '';
             const materia = label.closest('section').querySelector('h4')?.textContent || '';
-
             const li = document.createElement('li');
-
             const infoDiv = document.createElement('div');
             infoDiv.innerHTML = `<strong>${materia}</strong> – ${seccion}<br><small>${profesor}</small>`;
-
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.textContent = 'X';
             btn.title = 'Quitar materia';
-
             btn.addEventListener('click', () => {
               cb.checked = false;
               updateSelectedSubjects();
             });
-
             li.appendChild(infoDiv);
             li.appendChild(btn);
             listContainer.appendChild(li);
           });
         }
-
         checkboxes.forEach(cb => cb.addEventListener('change', updateSelectedSubjects));
         updateSelectedSubjects();
       });
@@ -195,18 +229,15 @@
       document.addEventListener('DOMContentLoaded', () => {
         const searchInput = document.getElementById('subjectSearch');
         const subjectItems = document.querySelectorAll('details ul li');
-
         searchInput.addEventListener('input', () => {
           const raw = searchInput.value.trim().toLowerCase();
           const terms = raw.split(',').map(t => t.trim()).filter(t => t.length > 0);
-
           subjectItems.forEach(item => {
             const label = item.querySelector('label');
             const fullText = label.textContent.toLowerCase();
             const match = terms.every(term => fullText.includes(term));
             item.style.display = match ? '' : 'none';
           });
-
           document.querySelectorAll('details').forEach(details => {
             const visibleItems = details.querySelectorAll('li:not([style*="display: none"])');
             details.style.display = visibleItems.length > 0 ? '' : 'none';
