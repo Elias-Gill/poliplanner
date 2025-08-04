@@ -1,15 +1,15 @@
 /* === Variables CSS y paleta de colores === */
 :root {
-    --color-bg: #f8f8f8;
-    --color-secondary-bg: #dddddd;
-    --color-text: #333333;
-    --color-border: #e0e0e0;
-    --color-primary: #2563eb;
-    --color-secondary: #6b7280;
-    --color-muted: #666666;
-    --color-success: #10b981;
-    --color-error: #ef4444;
-    --color-warning: #f59e0b;
+    --color-bg: #fcfaf5;            /* Blanco cálido para fondo */
+    --color-secondary-bg: #f0ece5;  /* Gris cálido claro para secciones */
+    --color-text: #2d2a26;          /* Gris oscuro cálido para texto principal */
+    --color-border: #d1cbc2;        /* Gris medio suave para bordes */
+    --color-primary: #1d4ed8;       /* Azul vibrante pero profesional */
+    --color-secondary: #64748b;     /* Gris azulado para elementos secundarios */
+    --color-muted: #78716c;         /* Gris cálido para texto secundario */
+    --color-success: #059669;       /* Verde vibrante y profesional */
+    --color-error: #dc2626;         /* Rojo cálido para errores */
+    --color-warning: #d97706;       /* Ámbar cálido para advertencias */
 
     /* Espaciado (basado en rem) */
     --space-xs: 0.25rem;
@@ -27,15 +27,16 @@
 
 /* Modo Oscuro */
 .dark-mode {
-    --color-bg: #232323;
-    --color-secondary-bg: #323232;
-    --color-text: #f0f0f0;
-    --color-muted: #9e9e9e;
-    --color-border: #444;
-    --color-primary: #3b82f6;
-    --color-secondary: #9ca3af;
-    --color-success: #10b981;
-    --color-error: #ef4444;
+    --color-bg: #1c1917;            /* Fondo oscuro cálido */
+    --color-secondary-bg: #2c2a27;  /* Fondo secundario oscuro */
+    --color-text: #f5f5f4;          /* Texto claro para legibilidad */
+    --color-muted: #a8a29e;         /* Gris claro para texto secundario */
+    --color-border: #4b4743;        /* Bordes oscuros suaves */
+    --color-primary: #3b82f6;       /* Azul más claro para modo oscuro */
+    --color-secondary: #94a3b8;     /* Gris azulado claro */
+    --color-success: #10b981;       /* Verde que resalta en oscuro */
+    --color-error: #f87171;         /* Rojo claro para errores */
+    --color-warning: #f59e0b;       /* Ámbar que resalta en oscuro */
 }
 
 /* === Reset básico === */
