@@ -52,8 +52,9 @@ public class Schedule {
     @OrderBy("parcial1Fecha ASC")
     private List<Subject> subjects;
 
-    public Schedule(User user, String description, List<Subject> subjects) {
+    public Schedule(User user, String description, List<Subject> subjects, SheetVersion version) {
         this.subjects = subjects;
+        this.version = version;
         this.user = user;
         this.description = description;
     }
