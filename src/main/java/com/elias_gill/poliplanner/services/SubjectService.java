@@ -47,7 +47,7 @@ public class SubjectService {
      */
     public Map<Integer, Map<String, List<Subject>>> findByCareer(Long careerId) {
         // TODO: si es que el id de carrera no se encuentra, lanzar una excepcion
-        List<Subject> subjects = subjectRepository.findByCareerIdOrderBySemestreAsc(careerId);
+        List<Subject> subjects = subjectRepository.findByCareerIdOrderBySemestreAscNombreAsignaturaAsc(careerId);
 
         Map<Integer, Map<String, List<Subject>>> grouped = subjects.stream()
                 .collect(Collectors.groupingBy(
