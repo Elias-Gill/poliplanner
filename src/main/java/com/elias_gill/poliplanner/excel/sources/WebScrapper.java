@@ -12,16 +12,25 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class WebScrapper {
-    private static final Pattern XLS_PATTERN = Pattern.compile(".*\\.xlsx?$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern DIRECT_DOWNLOAD_PATTERN = Pattern
+            .compile(".*(?i)(horario|clases|examen(?:es)?|exame|exam)[\\w\\-_.]*\\.xlsx$");
+    private static final Pattern GOOGLE_DRIVE_FOLDER_PATTERN = Pattern.compile(
+            "^https://drive\\.google\\.com/(?:drive/)?folders/[\\w-]+", Pattern.CASE_INSENSITIVE);
+    private static final Pattern GOOGLE_SPREADSHEET_PATTERN = Pattern.compile(
+            "^https://docs\\.google\\.com/spreadsheets/d/[\\w-]+", Pattern.CASE_INSENSITIVE);
+
     private static final String TARGET_URL = "https://www.pol.una.py/academico/horarios-de-clases-y-examenes/";
 
-    private GoogleDriveHelper googleHelper;
+    private final GoogleDriveHelper googleHelper;
 
-    public WebScrapper(GoogleDriveHelper googleHelper) {
-        this.googleHelper = googleHelper;
-    }
+    // ================================
+    // ======== Public API ============
+    // ================================
 
     public ExcelDownloadSource findLatestDownloadSource() throws IOException {
         Document doc = Jsoup.connect(TARGET_URL).timeout(10000).get();
@@ -29,7 +38,6 @@ public class WebScrapper {
         return findLatestDownloadSourceInDoc(doc);
     }
 
-    // TEST: divido en partes para poder escribir tests
     ExcelDownloadSource findLatestDownloadSourceInDoc(Document doc) {
         List<ExcelDownloadSource> sources = extractSourcesFromDoc(doc);
 
@@ -47,6 +55,10 @@ public class WebScrapper {
         return latestSource;
     }
 
+    // =====================================
+    // ======== Private methods ============
+    // =====================================
+
     List<ExcelDownloadSource> extractSourcesFromDoc(Document doc) {
         List<ExcelDownloadSource> sources = new ArrayList<ExcelDownloadSource>();
 
@@ -54,30 +66,36 @@ public class WebScrapper {
         for (Element link : links) {
             String url = link.attr("abs:href");
             if (isDirectExcelDownloadUrl(url)) {
-                ExcelDownloadSource aux = extractDirectSource(url);
-                if (aux != null) {
-                    sources.add(aux);
+                ExcelDownloadSource extractedSource = extractDirectSource(url);
+                if (extractedSource != null) {
+                    sources.add(extractedSource);
                 }
             } else if (isGoogleDriveFolderUrl(url)) {
-                List<ExcelDownloadSource> aux = googleHelper.listSourcesInUrl(url);
-                if (aux != null && !aux.isEmpty()) {
-                    sources.addAll(aux);
+                List<ExcelDownloadSource> extractedSources = googleHelper.listSourcesInUrl(url);
+                if (extractedSources != null && !extractedSources.isEmpty()) {
+                    sources.addAll(extractedSources);
+                }
+            } else if (isGoogleSpreadsheetUrl(url)) {
+                ExcelDownloadSource extractedSource = googleHelper.getSourceFromSpreadsheetLink(url);
+                if (extractedSource != null) {
+                    sources.add(extractedSource);
                 }
             }
-
-            // FIX: el caso donde sea un link directo a la plantilla (url de ejemplo:
-            // https://docs.google.com/spreadsheets/d/1-GgXSaTTQxDOmew1H3XRqHVTVghSc7ek/edit?usp=drive_link&ouid=114258085620852093405&rtpof=true&sd=true)
         }
 
         return sources;
     }
 
     private static boolean isDirectExcelDownloadUrl(String url) {
-        return XLS_PATTERN.matcher(url).matches() && url.toLowerCase().contains("exame");
+        return DIRECT_DOWNLOAD_PATTERN.matcher(url).matches();
     }
 
     private static boolean isGoogleDriveFolderUrl(String url) {
-        return url.contains("drive") && url.contains("folders");
+        return GOOGLE_DRIVE_FOLDER_PATTERN.matcher(url).find();
+    }
+
+    private static boolean isGoogleSpreadsheetUrl(String url) {
+        return GOOGLE_SPREADSHEET_PATTERN.matcher(url).find();
     }
 
     private static ExcelDownloadSource extractDirectSource(String url) {

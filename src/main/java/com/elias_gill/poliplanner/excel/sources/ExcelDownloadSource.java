@@ -9,16 +9,14 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 
 public record ExcelDownloadSource(String url, String fileName, LocalDate uploadDate) {
-
-    // FIX: errores de try catch
     public Path downloadThisSource() throws IOException {
-        URL url = new URL(this.url);
-        InputStream in = url.openStream();
+        URL sourceUrl = new URL(this.url);
 
-        Path tempFile = Files.createTempFile("horario_", ".xlsx");
-        Files.copy(in, tempFile, StandardCopyOption.REPLACE_EXISTING);
+        Path tempFile = Files.createTempFile("horario_" + this.fileName() + "__", ".xlsx");
+        try (InputStream in = sourceUrl.openStream()) {
+            Files.copy(in, tempFile, StandardCopyOption.REPLACE_EXISTING);
+        }
 
-        in.close();
         return tempFile;
     }
 }
