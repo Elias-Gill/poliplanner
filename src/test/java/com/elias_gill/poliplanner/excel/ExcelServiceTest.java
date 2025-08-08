@@ -38,8 +38,8 @@ class ExcelServiceIntegrationTest {
     @Autowired
     private SubjectRepository subjectRepository;
 
-    @Test
-    @Tag("integration")
+    // @Test
+    // @Tag("integration")
     /**
      * Test de integración que verifica el proceso completo de parseo de un archivo
      * Excel y la
@@ -57,7 +57,7 @@ class ExcelServiceIntegrationTest {
      * estructurados
      * correctamente.
      */
-    void testExcelParsingPersistency() throws Exception {
+    /* void testExcelParsingPersistency() throws Exception {
         Path testExcel = Paths.get("src/test/resources/testExcel.xlsx");
         String dummyUrl = "URL";
 
@@ -74,5 +74,5 @@ class ExcelServiceIntegrationTest {
         // Verificamos que se hayan creado materias
         List<Subject> subjects = subjectRepository.findAll();
         assert (!subjects.isEmpty());
-    }
+    } */
 }

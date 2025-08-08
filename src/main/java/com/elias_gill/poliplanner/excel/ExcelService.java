@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,7 @@ import com.elias_gill.poliplanner.excel.parser.SubjectCsvDTO;
 import com.elias_gill.poliplanner.excel.parser.SubjectMapper;
 import com.elias_gill.poliplanner.excel.sources.ExcelDownloadSource;
 import com.elias_gill.poliplanner.excel.sources.WebScrapper;
-import com.elias_gill.poliplanner.exception.CsvParsingException;
+import com.elias_gill.poliplanner.exception.ExcelPersistenceException;
 import com.elias_gill.poliplanner.exception.ExcelSynchronizationException;
 import com.elias_gill.poliplanner.models.Career;
 import com.elias_gill.poliplanner.models.SheetVersion;
@@ -36,89 +38,85 @@ public class ExcelService {
     private final SheetVersionService versionService;
     private final WebScrapper scrapper;
 
-    /*
-     * Esta función se divide en tres partes para facilitar el testeo de componentes
-     * específicos
-     * y permitir reutilizar la lógica en herramientas como el seeder para entornos
-     * de desarrollo.
-     */
-    public Boolean autonomousExcelSync() {
+    // Expuesto para el endpoint '/sync/ci'.
+    public boolean autonomousExcelSync() {
         try {
             logger.info("Iniciando actualizacion de excel");
             ExcelDownloadSource source = scrapper.findLatestDownloadSource();
-
             SheetVersion latestVersion = versionService.findLatest();
 
-            LocalDate latestVersionDate = latestVersion.getParsedAt().toLocalDate();
-
-            if (latestVersion != null) {
-                if (source.uploadDate().isBefore(latestVersionDate)) {
-                    logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.getUrl());
-                    return false;
-                }
-
-                // Si se parsearon el mismo dia, verificar el url de descarga
-                if (latestVersion.getUrl().equals(source.url())) {
-                    logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.getUrl());
-                    return false;
-                }
-            }
+            if (source == null || !isNewerVersion(latestVersion, source))
+                return false;
 
             logger.info("Descargando latest source: {}", source.toString());
             Path excelFile = source.downloadThisSource();
 
             logger.info("Descarga exitosa. Iniciando parseo y persistencia");
-            persistSubjectsFromExcel(excelFile, source.url());
+            parseAndPersistExcel(excelFile, source.url());
 
             logger.info("Actualizacion exitosa");
 
             return true;
-        } catch (InterruptedException | IOException e) {
+        } catch (ExcelPersistenceException e) {
             String message = "Error sincronizando el archivo Excel. Se inició el rollback";
+            logger.error(message, e);
+            throw new ExcelSynchronizationException(message, e);
+        } catch (IOException e) {
+            String message = "Error descargando el archivo del source remoto.";
             logger.error(message, e);
             throw new ExcelSynchronizationException(message, e);
         }
     }
 
-    // NOTE: dividio en dos metodos diferentes para poder exponer dos tipos de
-    // endpoints. Uno para descarga automatizada ('/sync/ci') y un formulario para
-    // actualizacion manual ('/sync').
-    public void persistSubjectsFromExcel(Path excelFile, String url)
-            throws IOException, InterruptedException {
-
-        logger.info("Iniciando conversion a csv");
-        List<Path> sheets = ExcelParser.convertExcelToCsv(excelFile);
-        logger.info("Conversion exitosa");
+    // Expuesto para actualizacion manual con el endpoint '/sync'.
+    @Transactional
+    public void parseAndPersistExcel(Path excelFile, String url) throws ExcelPersistenceException {
+        logger.info("Iniciando conversion y parseado del excel");
 
         SheetVersion version = versionService.create(excelFile.toString(), url);
-        // Cada "csv" representa una carrera diferente
-        for (Path sheet : sheets) {
+
+        Map<String, List<SubjectCsvDTO>> entries = ExcelParser.parseExcel(excelFile);
+
+        for (Entry<String, List<SubjectCsvDTO>> entry : entries.entrySet()) {
+            String careerName = entry.getKey();
+            List<SubjectCsvDTO> subjects = entry.getValue();
+
             try {
-                parseAndPersistCsv(sheet, version);
+                persistSubjects(careerName, subjects, version);
             } catch (Exception e) {
-                logger.error("Error procesando el archivo CSV: {}", sheet, e);
-                throw new CsvParsingException("Error procesando el archivo: " + sheet, e);
+                logger.error("Error procesando carrera: {}", careerName, e);
+                throw new ExcelPersistenceException("Error procesando: " + careerName, e);
             }
         }
     }
 
-    // NOTE: publico porque se utiliza dentro del DatabaseSeeder.
-    // Solo esta funcion necesita ser transactional porque es la unica que realiza
-    // escrituras a disco.
-    @Transactional
-    public void parseAndPersistCsv(Path sheet, SheetVersion version) {
-        logger.info("Parseando csv: {}", sheet.toString());
+    // =====================================
+    // ======== Private methods ============
+    // =====================================
 
-        List<SubjectCsvDTO> subjectscsv = ExcelParser.cleanAndParseCsv(sheet);
-
-        logger.info("Enlazando la carrera y persistiendo");
-        String careerName = sheet.getFileName().toString().replace(".csv", "");
+    private void persistSubjects(String careerName, List<SubjectCsvDTO> subjectsCsv, SheetVersion version) {
         Career carrera = careerService.create(careerName, version);
 
-        for (SubjectCsvDTO subjectcsv : subjectscsv) {
-            Subject subject = SubjectMapper.mapToSubject(subjectcsv);
+        for (SubjectCsvDTO rawSubject : subjectsCsv) {
+            Subject subject = SubjectMapper.mapToSubject(rawSubject);
             subject.setCareer(carrera);
             subjectService.create(subject);
         }
+    }
+
+    private boolean isNewerVersion(SheetVersion latestVersion, ExcelDownloadSource source) {
+        LocalDate latestVersionDate = latestVersion.getParsedAt().toLocalDate();
+        if (source.uploadDate().isBefore(latestVersionDate)) {
+            logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.getUrl());
+            return false;
+        }
+
+        // Si se parsearon el mismo dia, verificar el url de descarga
+        if (latestVersion.getUrl().equals(source.url())) {
+            logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.getUrl());
+            return false;
+        }
+
+        return true;
     }
 }

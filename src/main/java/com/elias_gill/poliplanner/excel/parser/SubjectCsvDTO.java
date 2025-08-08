@@ -1,133 +1,67 @@
 package com.elias_gill.poliplanner.excel.parser;
 
-import com.opencsv.bean.CsvBindByPosition;
-
 public class SubjectCsvDTO {
-    @CsvBindByPosition(position = 1)
+    // Info general
     public String departamento;
-
-    @CsvBindByPosition(position = 2)
     public String nombreAsignatura;
-
-    // NOTE: algunas materias tienen semestre y nivel, otras solo semestre, y otras
-    // solo nivel la verdad es que no tengo ni idea de que significa esa
-    // nomenclatura para los de la facultad.
-    @CsvBindByPosition(position = 3)
-    public String nivel;
-
-    @CsvBindByPosition(position = 4)
+    public String nivel; // Cantidad de correlativas
     public String semestre;
-
-    @CsvBindByPosition(position = 9)
     public String seccion;
 
-    @CsvBindByPosition(position = 11)
+    // Info del docente
     public String tituloProfesor;
-
-    @CsvBindByPosition(position = 12)
     public String apellidoProfesor;
-
-    @CsvBindByPosition(position = 13)
     public String nombreProfesor;
-
-    @CsvBindByPosition(position = 14)
     public String emailProfesor;
 
-    // Exámenes compactados
-    @CsvBindByPosition(position = 15)
+    // -- Exámenes --
+    // Primer parcial
     public String parcial1Fecha;
-
-    @CsvBindByPosition(position = 16)
     public String parcial1Hora;
-
-    @CsvBindByPosition(position = 17)
     public String parcial1Aula;
 
-    @CsvBindByPosition(position = 18)
+    // Segundo parcial
     public String parcial2Fecha;
-
-    @CsvBindByPosition(position = 19)
     public String parcial2Hora;
-
-    @CsvBindByPosition(position = 20)
     public String parcial2Aula;
 
-    @CsvBindByPosition(position = 21)
+    // Primer Final
     public String final1Fecha;
-
-    @CsvBindByPosition(position = 22)
     public String final1Hora;
-
-    @CsvBindByPosition(position = 23)
     public String final1Aula;
-
-    @CsvBindByPosition(position = 24)
     public String final1RevFecha;
-
-    @CsvBindByPosition(position = 25)
     public String final1RevHora;
 
-    @CsvBindByPosition(position = 26)
+    // Segundo Final
     public String final2Fecha;
-
-    @CsvBindByPosition(position = 27)
     public String final2Hora;
-
-    @CsvBindByPosition(position = 28)
     public String final2Aula;
-
-    @CsvBindByPosition(position = 29)
     public String final2RevFecha;
-
-    @CsvBindByPosition(position = 30)
     public String final2RevHora;
 
-    @CsvBindByPosition(position = 31)
+    // Cosas de Revision
     public String comitePresidente;
-
-    @CsvBindByPosition(position = 32)
     public String comiteMiembro1;
-
-    @CsvBindByPosition(position = 33)
     public String comiteMiembro2;
 
-    @CsvBindByPosition(position = 34)
+    // Horario semanal
     public String aulaLunes;
-
-    @CsvBindByPosition(position = 35)
     public String lunes;
 
-    @CsvBindByPosition(position = 36)
     public String aulaMartes;
-
-    @CsvBindByPosition(position = 37)
     public String martes;
 
-    @CsvBindByPosition(position = 38)
     public String aulaMiercoles;
-
-    @CsvBindByPosition(position = 39)
     public String miercoles;
 
-    @CsvBindByPosition(position = 40)
     public String aulaJueves;
-
-    @CsvBindByPosition(position = 41)
     public String jueves;
 
-    @CsvBindByPosition(position = 42)
     public String aulaViernes;
-
-    @CsvBindByPosition(position = 43)
     public String viernes;
 
-    @CsvBindByPosition(position = 44)
     public String aulaSabado;
-
-    @CsvBindByPosition(position = 45)
     public String sabado;
-
-    @CsvBindByPosition(position = 46)
     public String fechasSabadoNoche;
 
     // Método auxiliar opcional (no se persiste, solo para depurar o mostrar)

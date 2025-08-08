@@ -86,6 +86,12 @@
       <artifactId>jsoup</artifactId>
       <version>1.16.1</version>
     </dependency>
+    <!-- Excel parsing -->
+    <dependency>
+      <groupId>org.dhatim</groupId>
+      <artifactId>fastexcel-reader</artifactId>
+      <version>0.18.4</version>
+    </dependency>
     <!-- Testing -->
     <dependency>
       <groupId>com.h2database</groupId>

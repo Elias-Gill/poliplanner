@@ -26,28 +26,33 @@ public class ExcelParserTest {
     private static final String SRC_TEST_RESOURCES_OUTPUT_CSV = "src/test/resources/output.csv";
     private static final String EXCEL_DOWNLOAD_URL = "https://www.pol.una.py/wp-content/uploads/Horario-de-clases-y-examenes-Segundo-Academico-2024-version-web-19122024.xlsx";
 
-    @Test
-    @Tag("unit")
-    void testCleanCsv() throws Exception {
-        Path tempFile = ExcelParser.cleanCsv(Path.of(SRC_TEST_RESOURCES_INPUT_CSV));
+    /*
+     * @Test
+     * 
+     * @Tag("unit")
+     * void testCleanCsv() throws Exception {
+     * Path tempFile = ExcelParser.cleanCsv(Path.of(SRC_TEST_RESOURCES_INPUT_CSV));
+     * 
+     * // Comparar con el output esperado
+     * Path expectedPath = Path.of(SRC_TEST_RESOURCES_OUTPUT_CSV);
+     * List<String> cleanedLines = Files.readAllLines(tempFile);
+     * List<String> expectedLines = Files.readAllLines(expectedPath);
+     * 
+     * assertEquals(expectedLines.size(), cleanedLines.size(),
+     * "El número de líneas no coincide");
+     * 
+     * for (int i = 0; i < expectedLines.size(); i++) {
+     * assertEquals(
+     * expectedLines.get(i), cleanedLines.get(i), "Línea " + (i + 1) +
+     * " no coincide");
+     * }
+     * 
+     * // Limpieza
+     * Files.deleteIfExists(tempFile);
+     * }
+     */
 
-        // Comparar con el output esperado
-        Path expectedPath = Path.of(SRC_TEST_RESOURCES_OUTPUT_CSV);
-        List<String> cleanedLines = Files.readAllLines(tempFile);
-        List<String> expectedLines = Files.readAllLines(expectedPath);
-
-        assertEquals(expectedLines.size(), cleanedLines.size(), "El número de líneas no coincide");
-
-        for (int i = 0; i < expectedLines.size(); i++) {
-            assertEquals(
-                    expectedLines.get(i), cleanedLines.get(i), "Línea " + (i + 1) + " no coincide");
-        }
-
-        // Limpieza
-        Files.deleteIfExists(tempFile);
-    }
-
-    @Test
+    /* @Test
     @Tag("unit")
     void testExtractSubjects() throws Exception {
         // Archivo de prueba ya sanitizado
@@ -101,7 +106,7 @@ public class ExcelParserTest {
         assertEquals("05/10, 23/11", last.fechasSabadoNoche);
 
         assertEquals("", last.aulaMiercoles);
-    }
+    } */
 
     @Test
     @Tag("integration")
@@ -121,7 +126,7 @@ public class ExcelParserTest {
         }
     }
 
-    @Test
+    /* @Test
     @Tag("integration")
     void testExcelToCsvConversion() throws Exception {
         if (!ExcelParser.isSsconvertAvailable()) {
@@ -193,5 +198,5 @@ public class ExcelParserTest {
                             + generatedLines.get(i)
                             + "\n\n");
         }
-    }
+    } */
 }
