@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.excel.parser;
+package poliplanner.excel.parser;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,7 +18,7 @@ import org.dhatim.fastexcel.reader.ReadingOptions;
 import org.dhatim.fastexcel.reader.Row;
 import org.dhatim.fastexcel.reader.Sheet;
 
-import com.elias_gill.poliplanner.exception.ExcelPersistenceException;
+import poliplanner.exception.ExcelPersistenceException;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 public class ExcelParser {

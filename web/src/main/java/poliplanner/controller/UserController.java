@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.controller;
+package poliplanner.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.elias_gill.poliplanner.exception.BadArgumentsException;
-import com.elias_gill.poliplanner.exception.InternalServerErrorException;
-import com.elias_gill.poliplanner.exception.UserNameAlreadyExistsException;
-import com.elias_gill.poliplanner.models.User;
-import com.elias_gill.poliplanner.services.UserService;
+import poliplanner.exception.BadArgumentsException;
+import poliplanner.exception.InternalServerErrorException;
+import poliplanner.exception.UserNameAlreadyExistsException;
+import poliplanner.models.User;
+import poliplanner.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 

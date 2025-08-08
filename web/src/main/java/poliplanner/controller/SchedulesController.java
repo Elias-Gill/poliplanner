@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.controller;
+package poliplanner.controller;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -17,16 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriUtils;
 
-import com.elias_gill.poliplanner.exception.BadArgumentsException;
-import com.elias_gill.poliplanner.exception.InternalServerErrorException;
-import com.elias_gill.poliplanner.exception.InvalidScheduleException;
-import com.elias_gill.poliplanner.exception.SubjectNotFoundException;
-import com.elias_gill.poliplanner.exception.UserNotFoundException;
-import com.elias_gill.poliplanner.models.Career;
-import com.elias_gill.poliplanner.models.Subject;
-import com.elias_gill.poliplanner.services.CareerService;
-import com.elias_gill.poliplanner.services.ScheduleService;
-import com.elias_gill.poliplanner.services.SubjectService;
+import poliplanner.exception.BadArgumentsException;
+import poliplanner.exception.InternalServerErrorException;
+import poliplanner.exception.InvalidScheduleException;
+import poliplanner.exception.SubjectNotFoundException;
+import poliplanner.exception.UserNotFoundException;
+import poliplanner.models.Career;
+import poliplanner.models.Subject;
+import poliplanner.services.CareerService;
+import poliplanner.services.ScheduleService;
+import poliplanner.services.SubjectService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

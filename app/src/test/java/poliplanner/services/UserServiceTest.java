@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.services;
+package poliplanner.services;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,10 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.elias_gill.poliplanner.exception.BadArgumentsException;
-import com.elias_gill.poliplanner.exception.UserNameAlreadyExistsException;
-import com.elias_gill.poliplanner.models.User;
-import com.elias_gill.poliplanner.repositories.UserRepository;
+import poliplanner.exception.BadArgumentsException;
+import poliplanner.exception.UserNameAlreadyExistsException;
+import poliplanner.models.User;
+import poliplanner.repositories.UserRepository;
 
 @SpringBootTest
 @Transactional

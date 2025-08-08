@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.services;
+package poliplanner.services;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,16 +7,16 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.elias_gill.poliplanner.exception.BadArgumentsException;
-import com.elias_gill.poliplanner.exception.InternalServerErrorException;
-import com.elias_gill.poliplanner.exception.InvalidScheduleException;
-import com.elias_gill.poliplanner.exception.SubjectNotFoundException;
-import com.elias_gill.poliplanner.exception.UserNotFoundException;
-import com.elias_gill.poliplanner.models.Schedule;
-import com.elias_gill.poliplanner.models.Subject;
-import com.elias_gill.poliplanner.models.User;
-import com.elias_gill.poliplanner.repositories.ScheduleRepository;
-import com.elias_gill.poliplanner.repositories.SubjectRepository;
+import poliplanner.exception.BadArgumentsException;
+import poliplanner.exception.InternalServerErrorException;
+import poliplanner.exception.InvalidScheduleException;
+import poliplanner.exception.SubjectNotFoundException;
+import poliplanner.exception.UserNotFoundException;
+import poliplanner.models.Schedule;
+import poliplanner.models.Subject;
+import poliplanner.models.User;
+import poliplanner.repositories.ScheduleRepository;
+import poliplanner.repositories.SubjectRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

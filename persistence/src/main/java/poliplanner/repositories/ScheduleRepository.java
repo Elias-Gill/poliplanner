@@ -1,6 +1,6 @@
-package com.elias_gill.poliplanner.repositories;
+package poliplanner.repositories;
 
-import com.elias_gill.poliplanner.models.Schedule;
+import poliplanner.models.Schedule;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

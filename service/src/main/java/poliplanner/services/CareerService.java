@@ -1,10 +1,10 @@
-package com.elias_gill.poliplanner.services;
+package poliplanner.services;
 
-import com.elias_gill.poliplanner.exception.BadArgumentsException;
-import com.elias_gill.poliplanner.exception.InternalServerErrorException;
-import com.elias_gill.poliplanner.models.Career;
-import com.elias_gill.poliplanner.models.SheetVersion;
-import com.elias_gill.poliplanner.repositories.CareerRepository;
+import poliplanner.exception.BadArgumentsException;
+import poliplanner.exception.InternalServerErrorException;
+import poliplanner.models.Career;
+import poliplanner.models.SheetVersion;
+import poliplanner.repositories.CareerRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

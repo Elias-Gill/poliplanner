@@ -1,6 +1,6 @@
-package com.elias_gill.poliplanner.repositories;
+package poliplanner.repositories;
 
-import com.elias_gill.poliplanner.models.SheetVersion;
+import poliplanner.models.SheetVersion;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

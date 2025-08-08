@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.exception;
+package poliplanner.exception;
 
 public class UserNotFoundException extends Exception {
     public UserNotFoundException(String message) {

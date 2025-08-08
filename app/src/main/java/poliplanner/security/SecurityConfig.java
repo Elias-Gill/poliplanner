@@ -1,6 +1,6 @@
-package com.elias_gill.poliplanner.security;
+package poliplanner.security;
 
-import com.elias_gill.poliplanner.services.SecurityUserDetailsService;
+import poliplanner.services.SecurityUserDetailsService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

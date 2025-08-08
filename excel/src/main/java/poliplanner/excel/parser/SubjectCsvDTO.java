@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.excel.parser;
+package poliplanner.excel.parser;
 
 public class SubjectCsvDTO {
     // Info general

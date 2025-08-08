@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.controller;
+package poliplanner.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

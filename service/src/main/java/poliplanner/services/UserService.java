@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.services;
+package poliplanner.services;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -6,11 +6,11 @@ import java.util.regex.Pattern;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.elias_gill.poliplanner.exception.BadArgumentsException;
-import com.elias_gill.poliplanner.exception.InternalServerErrorException;
-import com.elias_gill.poliplanner.exception.UserNameAlreadyExistsException;
-import com.elias_gill.poliplanner.models.User;
-import com.elias_gill.poliplanner.repositories.UserRepository;
+import poliplanner.exception.BadArgumentsException;
+import poliplanner.exception.InternalServerErrorException;
+import poliplanner.exception.UserNameAlreadyExistsException;
+import poliplanner.models.User;
+import poliplanner.repositories.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

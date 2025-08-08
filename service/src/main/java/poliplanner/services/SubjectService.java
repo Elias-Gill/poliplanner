@@ -1,7 +1,7 @@
-package com.elias_gill.poliplanner.services;
+package poliplanner.services;
 
-import com.elias_gill.poliplanner.models.Subject;
-import com.elias_gill.poliplanner.repositories.SubjectRepository;
+import poliplanner.models.Subject;
+import poliplanner.repositories.SubjectRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

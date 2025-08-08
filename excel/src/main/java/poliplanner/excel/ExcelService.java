@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.excel;
+package poliplanner.excel;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -11,19 +11,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.elias_gill.poliplanner.excel.parser.ExcelParser;
-import com.elias_gill.poliplanner.excel.parser.SubjectCsvDTO;
-import com.elias_gill.poliplanner.excel.parser.SubjectMapper;
-import com.elias_gill.poliplanner.excel.sources.ExcelDownloadSource;
-import com.elias_gill.poliplanner.excel.sources.WebScrapper;
-import com.elias_gill.poliplanner.exception.ExcelPersistenceException;
-import com.elias_gill.poliplanner.exception.ExcelSynchronizationException;
-import com.elias_gill.poliplanner.models.Career;
-import com.elias_gill.poliplanner.models.SheetVersion;
-import com.elias_gill.poliplanner.models.Subject;
-import com.elias_gill.poliplanner.services.CareerService;
-import com.elias_gill.poliplanner.services.SheetVersionService;
-import com.elias_gill.poliplanner.services.SubjectService;
+import poliplanner.excel.parser.ExcelParser;
+import poliplanner.excel.parser.SubjectCsvDTO;
+import poliplanner.excel.parser.SubjectMapper;
+import poliplanner.excel.sources.ExcelDownloadSource;
+import poliplanner.excel.sources.WebScrapper;
+import poliplanner.exception.ExcelPersistenceException;
+import poliplanner.exception.ExcelSynchronizationException;
+import poliplanner.models.Career;
+import poliplanner.models.SheetVersion;
+import poliplanner.models.Subject;
+import poliplanner.services.CareerService;
+import poliplanner.services.SheetVersionService;
+import poliplanner.services.SubjectService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

@@ -1,13 +1,13 @@
-package com.elias_gill.poliplanner.excel;
+package poliplanner.excel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.elias_gill.poliplanner.models.Career;
-import com.elias_gill.poliplanner.models.SheetVersion;
-import com.elias_gill.poliplanner.models.Subject;
-import com.elias_gill.poliplanner.repositories.CareerRepository;
-import com.elias_gill.poliplanner.repositories.SheetVersionRepository;
-import com.elias_gill.poliplanner.repositories.SubjectRepository;
+import poliplanner.models.Career;
+import poliplanner.models.SheetVersion;
+import poliplanner.models.Subject;
+import poliplanner.repositories.CareerRepository;
+import poliplanner.repositories.SheetVersionRepository;
+import poliplanner.repositories.SubjectRepository;
 
 import jakarta.transaction.Transactional;
 

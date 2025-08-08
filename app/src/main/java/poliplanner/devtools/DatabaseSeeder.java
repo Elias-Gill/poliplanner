@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.devtools;
+package poliplanner.devtools;
 
 import java.util.Arrays;
 

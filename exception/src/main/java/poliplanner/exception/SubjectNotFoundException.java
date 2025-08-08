@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.exception;
+package poliplanner.exception;
 
 public class SubjectNotFoundException extends Exception {
     public SubjectNotFoundException(String message) {

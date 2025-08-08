@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.security;
+package poliplanner.security;
 
 import org.springframework.stereotype.Component;
 

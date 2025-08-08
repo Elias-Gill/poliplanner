@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.excel.parser;
+package poliplanner.excel.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.elias_gill.poliplanner.excel.sources.ExcelDownloadSource;
+import poliplanner.excel.sources.ExcelDownloadSource;
 
 public class ExcelParserTest {
     private static final String SRC_TEST_RESOURCES_INPUT_CSV = "src/test/resources/input.csv";

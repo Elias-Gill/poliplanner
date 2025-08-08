@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.services;
+package poliplanner.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,17 +11,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.elias_gill.poliplanner.exception.BadArgumentsException;
-import com.elias_gill.poliplanner.models.Career;
-import com.elias_gill.poliplanner.models.Schedule;
-import com.elias_gill.poliplanner.models.SheetVersion;
-import com.elias_gill.poliplanner.models.Subject;
-import com.elias_gill.poliplanner.models.User;
-import com.elias_gill.poliplanner.repositories.CareerRepository;
-import com.elias_gill.poliplanner.repositories.ScheduleRepository;
-import com.elias_gill.poliplanner.repositories.SheetVersionRepository;
-import com.elias_gill.poliplanner.repositories.SubjectRepository;
-import com.elias_gill.poliplanner.repositories.UserRepository;
+import poliplanner.exception.BadArgumentsException;
+import poliplanner.models.Career;
+import poliplanner.models.Schedule;
+import poliplanner.models.SheetVersion;
+import poliplanner.models.Subject;
+import poliplanner.models.User;
+import poliplanner.repositories.CareerRepository;
+import poliplanner.repositories.ScheduleRepository;
+import poliplanner.repositories.SheetVersionRepository;
+import poliplanner.repositories.SubjectRepository;
+import poliplanner.repositories.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

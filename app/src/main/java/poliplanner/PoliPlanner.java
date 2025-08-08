@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner;
+package poliplanner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

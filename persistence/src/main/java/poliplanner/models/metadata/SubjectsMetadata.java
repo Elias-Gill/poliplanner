@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.models.metadata;
+package poliplanner.models.metadata;
 
 import java.util.ArrayList;
 import java.util.List;

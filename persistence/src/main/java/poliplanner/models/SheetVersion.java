@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.models;
+package poliplanner.models;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

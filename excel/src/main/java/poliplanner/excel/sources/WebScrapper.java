@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.excel.sources;
+package poliplanner.excel.sources;
 
 import java.io.IOException;
 import java.time.LocalDate;

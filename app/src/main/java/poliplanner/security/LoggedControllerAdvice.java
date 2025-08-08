@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.security;
+package poliplanner.security;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

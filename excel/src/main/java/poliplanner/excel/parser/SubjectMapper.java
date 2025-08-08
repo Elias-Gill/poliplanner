@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.excel.parser;
+package poliplanner.excel.parser;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
-import com.elias_gill.poliplanner.models.Subject;
+import poliplanner.models.Subject;
 
 @Component
 public class SubjectMapper {

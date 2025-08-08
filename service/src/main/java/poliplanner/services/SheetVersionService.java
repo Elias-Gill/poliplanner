@@ -1,9 +1,9 @@
-package com.elias_gill.poliplanner.services;
+package poliplanner.services;
 
 import org.springframework.stereotype.Service;
 
-import com.elias_gill.poliplanner.models.SheetVersion;
-import com.elias_gill.poliplanner.repositories.SheetVersionRepository;
+import poliplanner.models.SheetVersion;
+import poliplanner.repositories.SheetVersionRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

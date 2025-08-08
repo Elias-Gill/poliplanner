@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.controller;
+package poliplanner.controller;
 
 import java.util.List;
 
@@ -8,10 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.elias_gill.poliplanner.models.Schedule;
-import com.elias_gill.poliplanner.models.SheetVersion;
-import com.elias_gill.poliplanner.services.ScheduleService;
-import com.elias_gill.poliplanner.services.SheetVersionService;
+import poliplanner.models.Schedule;
+import poliplanner.models.SheetVersion;
+import poliplanner.services.ScheduleService;
+import poliplanner.services.SheetVersionService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;

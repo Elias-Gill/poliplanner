@@ -1,7 +1,7 @@
-package com.elias_gill.poliplanner.services;
+package poliplanner.services;
 
-import com.elias_gill.poliplanner.models.User;
-import com.elias_gill.poliplanner.repositories.UserRepository;
+import poliplanner.models.User;
+import poliplanner.repositories.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

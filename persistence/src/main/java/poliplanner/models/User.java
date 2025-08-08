@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.models;
+package poliplanner.models;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.excel.sources;
+package poliplanner.excel.sources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;

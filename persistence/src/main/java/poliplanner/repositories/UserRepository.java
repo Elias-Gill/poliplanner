@@ -1,6 +1,6 @@
-package com.elias_gill.poliplanner.repositories;
+package poliplanner.repositories;
 
-import com.elias_gill.poliplanner.models.User;
+import poliplanner.models.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

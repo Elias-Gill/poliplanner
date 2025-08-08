@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.devtools;
+package poliplanner.devtools;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -12,14 +12,14 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.elias_gill.poliplanner.excel.ExcelService;
-import com.elias_gill.poliplanner.models.SheetVersion;
-import com.elias_gill.poliplanner.models.Subject;
-import com.elias_gill.poliplanner.models.User;
-import com.elias_gill.poliplanner.repositories.SubjectRepository;
-import com.elias_gill.poliplanner.repositories.UserRepository;
-import com.elias_gill.poliplanner.services.ScheduleService;
-import com.elias_gill.poliplanner.services.SheetVersionService;
+import poliplanner.excel.ExcelService;
+import poliplanner.models.SheetVersion;
+import poliplanner.models.Subject;
+import poliplanner.models.User;
+import poliplanner.repositories.SubjectRepository;
+import poliplanner.repositories.UserRepository;
+import poliplanner.services.ScheduleService;
+import poliplanner.services.SheetVersionService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

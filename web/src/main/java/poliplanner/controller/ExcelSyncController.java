@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.controller;
+package poliplanner.controller;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.elias_gill.poliplanner.excel.ExcelService;
-import com.elias_gill.poliplanner.security.TokenValidator;
+import poliplanner.excel.ExcelService;
+import poliplanner.security.TokenValidator;
 
 import lombok.AllArgsConstructor;
 

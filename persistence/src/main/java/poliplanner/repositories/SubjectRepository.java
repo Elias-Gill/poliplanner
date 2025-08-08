@@ -1,6 +1,6 @@
-package com.elias_gill.poliplanner.repositories;
+package poliplanner.repositories;
 
-import com.elias_gill.poliplanner.models.Subject;
+import poliplanner.models.Subject;
 
 import java.util.List;
 import java.util.Optional;

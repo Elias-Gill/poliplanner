@@ -1,4 +1,4 @@
-package com.elias_gill.poliplanner.models;
+package poliplanner.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
