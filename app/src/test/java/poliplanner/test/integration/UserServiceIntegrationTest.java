@@ -1,12 +1,10 @@
-package poliplanner.services;
+package poliplanner.test.integration;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,11 +16,12 @@ import poliplanner.exception.BadArgumentsException;
 import poliplanner.exception.UserNameAlreadyExistsException;
 import poliplanner.models.User;
 import poliplanner.repositories.UserRepository;
+import poliplanner.services.UserService;
 
 @SpringBootTest
 @Transactional
 @Rollback
-public class UserServiceTest {
+public class UserServiceIntegrationTest {
     @Autowired
     private UserService userService;
 
@@ -33,36 +32,6 @@ public class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Test
-    @Tag("unit")
-    void testUserNameValidation() throws Exception {
-        // Casos inválidos para validateAndCleanUserName:
-        assertThrows(BadArgumentsException.class, () -> UserService.validateAndCleanUserName(""),
-                "Debe lanzar excepción si está vacío");
-        assertThrows(BadArgumentsException.class, () -> UserService.validateAndCleanUserName("   "),
-                "Debe lanzar excepción si solo espacios");
-        assertThrows(BadArgumentsException.class, () -> UserService.validateAndCleanUserName("user!name"),
-                "No debe permitir caracteres inválidos");
-        assertThrows(BadArgumentsException.class, () -> UserService.validateAndCleanUserName("user name"),
-                "No debe permitir espacios internos");
-        assertThrows(BadArgumentsException.class, () -> UserService.validateAndCleanUserName("USERname"),
-                "No debe permitir mayusculas");
-
-        // Casos validos para validateAndCleanUserName:
-        assertDoesNotThrow(() -> UserService.validateAndCleanUserName("username"));
-        assertDoesNotThrow(() -> UserService.validateAndCleanUserName("user-name_123"));
-    }
-
-    @Test
-    @Tag("unit")
-    void testPasswordValidation() throws Exception {
-        // Comprobando que password demasiado corto falla:
-        BadArgumentsException pwEx = assertThrows(BadArgumentsException.class,
-                () -> UserService.validateRawPassword("123"));
-        assertTrue(pwEx.getMessage().contains("contraseña"));
-    }
-
-    @Test
-    @Tag("integration")
     void testRegisterUser_success() throws Exception {
         String username = "test-user";
         String rawPassword = "password123";
@@ -85,7 +54,6 @@ public class UserServiceTest {
     }
 
     @Test
-    @Tag("integration")
     void testRegisterUser_existingUsername() throws Exception {
         String username = "existinguser";
         String rawPassword = "password123";
@@ -104,7 +72,6 @@ public class UserServiceTest {
     }
 
     @Test
-    @Tag("integration")
     void testRegisterUser_badArguments() {
         assertThrows(BadArgumentsException.class, () -> userService.registerUser(null, "password123"));
         assertThrows(BadArgumentsException.class, () -> userService.registerUser("validuser", null));

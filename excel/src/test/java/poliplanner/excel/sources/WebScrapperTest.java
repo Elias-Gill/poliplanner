@@ -9,7 +9,6 @@ import java.nio.file.Path;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class WebScrapperTest {
@@ -19,7 +18,6 @@ public class WebScrapperTest {
     private final WebScrapper scrapper = new WebScrapper(new GoogleDriveHelper());
 
     @Test
-    @Tag("unit")
     void testFindLatestExcelUrlFromLocalHtml() throws IOException {
         Path htmlPath = Path.of("src/test/resources/pagina_facultad_sin_drive_folders.html");
         String htmlContent = Files.readString(htmlPath);
@@ -31,7 +29,6 @@ public class WebScrapperTest {
     }
 
     @Test
-    @Tag("integration")
     void testFindLatestExcelUrlWithDriveFolders() throws IOException {
         assumeTrue(System.getenv("GOOGLE_API_KEY") != null, "Skipping test: GOOGLE_API_KEY not set");
 
