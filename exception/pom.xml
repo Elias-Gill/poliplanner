@@ -6,20 +6,11 @@
     <artifactId>poliplanner-parent</artifactId>
     <version>1.0.0</version>
   </parent>
-  <artifactId>excel</artifactId>
-  <name>poliplanner-excel</name>
-  <description>Excel parsing module for Poliplanner</description>
+  <artifactId>exception</artifactId>
+  <name>poliplanner-exception</name>
+  <description>Exception handling module for Poliplanner</description>
 
   <dependencies>
-    <dependency>
-      <groupId>org.dhatim</groupId>
-      <artifactId>fastexcel-reader</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.elias_gill.poliplanner</groupId>
-      <artifactId>exception</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
