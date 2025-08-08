@@ -13,16 +13,14 @@
   <dependencies>
     <!-- Excel/CSV -->
     <dependency>
-      <groupId>com.opencsv</groupId>
-      <artifactId>opencsv</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.dhatim</groupId>
-      <artifactId>fastexcel</artifactId>
+      <artifactId>fastexcel-reader</artifactId>
+      <version>${fastexcel.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
+      <version>${jsoup.version}</version>
     </dependency>
     
     <!-- Lombok -->
