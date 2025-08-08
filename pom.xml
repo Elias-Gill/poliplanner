@@ -1,155 +1,134 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.2.5</version>
     <relativePath/>
   </parent>
+  
   <groupId>com.elias_gill.poliplanner</groupId>
   <artifactId>poliplanner-parent</artifactId>
   <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>poliplanner-parent</name>
-  <description>Parent POM for Poliplanner project</description>
-
+  
   <properties>
     <java.version>17</java.version>
     <lombok.version>1.18.30</lombok.version>
-    <thymeleaf-layout-dialect.version>3.1.0</thymeleaf-layout-dialect.version>
-    <postgresql.version>42.7.3</postgresql.version>
-    <hibernate.version>6.6.8.Final</hibernate.version>
-    <hibernate-community-dialects.version>6.6.7.Final</hibernate-community-dialects.version>
-    <jakarta-persistence.version>3.1.0</jakarta-persistence.version>
-    <opencsv.version>5.8</opencsv.version>
-    <jsoup.version>1.16.1</jsoup.version>
-    <fastexcel-reader.version>0.18.4</fastexcel-reader.version>
-    <junit-jupiter.version>5.10.2</junit-jupiter.version>
-    <spotless.version>2.44.0</spotless.version>
+    <!-- Otras propiedades comunes pueden ir aquí -->
   </properties>
-
+  
   <modules>
-    <module>app</module>
-    <module>excel</module>
     <module>exception</module>
     <module>persistence</module>
     <module>service</module>
+    <module>excel</module>
     <module>web</module>
+    <module>app</module>
   </modules>
-
+  
   <dependencyManagement>
     <dependencies>
+      <!-- Spring Boot starters -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      
+      <!-- Lombok -->
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>${lombok.version}</version>
         <scope>provided</scope>
       </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-security</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-      </dependency>
+      
+      <!-- Thymeleaf -->
       <dependency>
         <groupId>nz.net.ultraq.thymeleaf</groupId>
         <artifactId>thymeleaf-layout-dialect</artifactId>
-        <version>${thymeleaf-layout-dialect.version}</version>
+        <version>3.1.0</version>
       </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-thymeleaf</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-data-jpa</artifactId>
-      </dependency>
+      
+      <!-- Database -->
       <dependency>
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
-        <version>${postgresql.version}</version>
+        <version>42.7.3</version>
       </dependency>
       <dependency>
         <groupId>org.hibernate.orm</groupId>
         <artifactId>hibernate-core</artifactId>
-        <version>${hibernate.version}</version>
+        <version>6.6.8.Final</version>
       </dependency>
       <dependency>
         <groupId>org.hibernate.orm</groupId>
         <artifactId>hibernate-community-dialects</artifactId>
-        <version>${hibernate-community-dialects.version}</version>
+        <version>6.6.7.Final</version>
       </dependency>
       <dependency>
         <groupId>jakarta.persistence</groupId>
         <artifactId>jakarta.persistence-api</artifactId>
-        <version>${jakarta-persistence.version}</version>
+        <version>3.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.flywaydb</groupId>
         <artifactId>flyway-core</artifactId>
+        <version>${flyway.version}</version>
       </dependency>
+      
+      <!-- CSV/Excel -->
       <dependency>
         <groupId>com.opencsv</groupId>
         <artifactId>opencsv</artifactId>
-        <version>${opencsv.version}</version>
+        <version>5.8</version>
+      </dependency>
+      <dependency>
+        <groupId>org.dhatim</groupId>
+        <artifactId>fastexcel</artifactId>
+        <version>0.19.0</version>
       </dependency>
       <dependency>
         <groupId>org.jsoup</groupId>
         <artifactId>jsoup</artifactId>
-        <version>${jsoup.version}</version>
+        <version>1.16.1</version>
       </dependency>
+      
+      <!-- Testing -->
       <dependency>
-        <groupId>org.dhatim</groupId>
-        <artifactId>fastexcel-reader</artifactId>
-        <version>${fastexcel-reader.version}</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
+        <version>${h2.version}</version>
         <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>${junit-jupiter.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.elias_gill.poliplanner</groupId>
-        <artifactId>excel</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.elias_gill.poliplanner</groupId>
-        <artifactId>exception</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.elias_gill.poliplanner</groupId>
-        <artifactId>persistence</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.elias_gill.poliplanner</groupId>
-        <artifactId>service</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.elias_gill.poliplanner</groupId>
-        <artifactId>web</artifactId>
-        <version>${project.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
-
+  
   <build>
     <pluginManagement>
       <plugins>
@@ -158,11 +137,7 @@
           <artifactId>spring-boot-maven-plugin</artifactId>
         </plugin>
         <plugin>
-          <groupId>org.junit.platform</groupId>
-          <artifactId>junit-platform-surefire-provider</artifactId>
-          <version>1.0.3</version>
-        </plugin>
-        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
             <source>${java.version}</source>
@@ -183,22 +158,7 @@
         <plugin>
           <groupId>com.diffplug.spotless</groupId>
           <artifactId>spotless-maven-plugin</artifactId>
-          <version>${spotless.version}</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>apply</goal>
-                <goal>check</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <java>
-              <eclipse>
-                <file>${basedir}/formatter-config.xml</file>
-              </eclipse>
-            </java>
-          </configuration>
+          <version>2.44.0</version>
         </plugin>
       </plugins>
     </pluginManagement>

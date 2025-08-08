@@ -1,29 +1,50 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.elias_gill.poliplanner</groupId>
     <artifactId>poliplanner-parent</artifactId>
     <version>1.0.0</version>
   </parent>
-  <artifactId>excel</artifactId>
+  
+  <artifactId>poliplanner-excel</artifactId>
   <name>poliplanner-excel</name>
-  <description>Excel parsing module for Poliplanner</description>
-
+  
   <dependencies>
+    <!-- Excel/CSV -->
+    <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.dhatim</groupId>
-      <artifactId>fastexcel-reader</artifactId>
+      <artifactId>fastexcel</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.elias_gill.poliplanner</groupId>
-      <artifactId>exception</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
     </dependency>
+    
+    <!-- Lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <scope>provided</scope>
     </dependency>
+    
+    <!-- Dependencias de otros módulos -->
+    <dependency>
+      <groupId>com.elias_gill.poliplanner</groupId>
+      <artifactId>poliplanner-service</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.elias_gill.poliplanner</groupId>
+      <artifactId>poliplanner-exception</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
+    <!-- Testing -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
