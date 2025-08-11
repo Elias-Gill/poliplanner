@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,13 +67,20 @@ public class ExcelParser {
                 // Este metodo es 1 based, asi que ahora esta apuntando a la fila inmediatamente
                 // debajo de los encabezados.
                 Integer startingRow = headerRow.getRowNum();
+                Integer startingCell = calculateStartingCell(headerRow);
 
                 Layout layout = findFittingLayout(headerRow);
 
                 List<SubjectCsvDTO> subjects = new ArrayList<>();
                 for (Integer i = startingRow; i < sheetRows.size(); i++) {
                     Row row = sheetRows.get(i);
-                    SubjectCsvDTO subject = parseRow(row, layout);
+                    SubjectCsvDTO subject = parseRow(row, layout, startingCell);
+
+                    // Legamos al final de las materias
+                    if (null == subject) {
+                        break;
+                    }
+
                     subjects.add(subject);
                 }
 
@@ -91,9 +97,144 @@ public class ExcelParser {
     // ======== Private methods ============
     // =====================================
 
-    private static SubjectCsvDTO parseRow(Row row, Layout layout) {
-        
-        return null;
+    public static SubjectCsvDTO parseRow(Row rowData, Layout layout, Integer startingCell) {
+        if (layout.headers.size() > rowData.getCellCount() || isEmptyRow(rowData)) {
+            return null;
+        }
+
+        SubjectCsvDTO dto = new SubjectCsvDTO();
+
+        Integer currentCell = startingCell - 1;
+        for (String layoutField : layout.headers) {
+            currentCell++;
+
+            Cell rowCell = rowData.getCell(currentCell);
+            if (rowCell == null) {
+                continue;
+            }
+            String cellValue = (String) rowCell.getText();
+
+            // Info general
+            if (layoutField.equals("departamento")) {
+                dto.departamento = cellValue;
+            } else if (layoutField.equals("asignatura")) {
+                dto.nombreAsignatura = cellValue;
+            } else if (layoutField.equals("nivel")) {
+                dto.nivel = cellValue;
+            } else if (layoutField.equals("semestre")) {
+                dto.semestre = cellValue;
+            } else if (layoutField.equals("seccion")) {
+                dto.seccion = cellValue;
+            }
+
+            // Info del docente
+            else if (layoutField.equals("titulo")) {
+                dto.tituloProfesor = cellValue;
+            } else if (layoutField.equals("apellido")) {
+                dto.apellidoProfesor = cellValue;
+            } else if (layoutField.equals("nombre")) {
+                dto.nombreProfesor = cellValue;
+            } else if (layoutField.equals("correo")) {
+                dto.emailProfesor = cellValue;
+            }
+
+            // Primer parcial
+            else if (layoutField.equals("diaParcial1")) {
+                dto.parcial1Fecha = cellValue;
+            } else if (layoutField.equals("horaParcial1")) {
+                dto.parcial1Hora = cellValue;
+            } else if (layoutField.equals("aulaParcial1")) {
+                dto.parcial1Aula = cellValue;
+            }
+
+            // Segundo parcial
+            else if (layoutField.equals("diaParcial2")) {
+                dto.parcial2Fecha = cellValue;
+            } else if (layoutField.equals("horaParcial2")) {
+                dto.parcial2Hora = cellValue;
+            } else if (layoutField.equals("aulaParcial2")) {
+                dto.parcial2Aula = cellValue;
+            }
+
+            // Primer Final
+            else if (layoutField.equals("diaFinal1")) {
+                dto.final1Fecha = cellValue;
+            } else if (layoutField.equals("horaFinal1")) {
+                dto.final1Hora = cellValue;
+            } else if (layoutField.equals("aulaFinal1")) {
+                dto.final1Aula = cellValue;
+            }
+
+            // Segundo Final
+            else if (layoutField.equals("diaFinal2")) {
+                dto.final2Fecha = cellValue;
+            } else if (layoutField.equals("horaFinal2")) {
+                dto.final2Hora = cellValue;
+            } else if (layoutField.equals("aulaFinal2")) {
+                dto.final2Aula = cellValue;
+            }
+
+            // Revisiones
+            else if (layoutField.equals("revisionDia")) {
+                dto.final1RevFecha = cellValue;
+                // Asumiendo que el mismo campo aplica para ambos finales
+                dto.final2RevFecha = cellValue;
+            } else if (layoutField.equals("revisionHora")) {
+                dto.final1RevHora = cellValue;
+                // Asumiendo que el mismo campo aplica para ambos finales
+                dto.final2RevHora = cellValue;
+            }
+
+            // Comité
+            else if (layoutField.equals("mesaPresidente")) {
+                dto.comitePresidente = cellValue;
+            } else if (layoutField.equals("mesaMiembro1")) {
+                dto.comiteMiembro1 = cellValue;
+            } else if (layoutField.equals("mesaMiembro2")) {
+                dto.comiteMiembro2 = cellValue;
+            }
+
+            // Horario semanal
+            else if (layoutField.equals("aulaLunes")) {
+                dto.aulaLunes = cellValue;
+            } else if (layoutField.equals("horaLunes")) {
+                dto.lunes = cellValue;
+            }
+
+            else if (layoutField.equals("aulaMartes")) {
+                dto.aulaMartes = cellValue;
+            } else if (layoutField.equals("horaMartes")) {
+                dto.martes = cellValue;
+            }
+
+            else if (layoutField.equals("aulaMiercoles")) {
+                dto.aulaMiercoles = cellValue;
+            } else if (layoutField.equals("horaMiercoles")) {
+                dto.miercoles = cellValue;
+            }
+
+            else if (layoutField.equals("aulaJueves")) {
+                dto.aulaJueves = cellValue;
+            } else if (layoutField.equals("horaJueves")) {
+                dto.jueves = cellValue;
+            }
+
+            else if (layoutField.equals("aulaViernes")) {
+                dto.aulaViernes = cellValue;
+            } else if (layoutField.equals("horaViernes")) {
+                dto.viernes = cellValue;
+            }
+
+            else if (layoutField.equals("aulaSabado")) {
+                dto.aulaSabado = cellValue;
+            } else if (layoutField.equals("horaSabado")) {
+                dto.sabado = cellValue;
+            } else if (layoutField.equals("fechasSabado")) {
+                dto.fechasSabadoNoche = cellValue;
+            }
+        }
+
+        return dto;
     }
 
     private static Row searchHeadersRow(List<Row> rows) throws FileNotFoundException, IOException {
@@ -171,5 +312,19 @@ public class ExcelParser {
     private static boolean isEmptyRow(Row r) {
         return r.stream().allMatch(
                 cell -> cell == null || cell.getValue() == null || cell.getValue().toString().trim().isEmpty());
+    }
+
+    private Integer calculateStartingCell(Row r) {
+        Integer index = 0;
+        for (Cell cell : r) {
+            if (cell == null || cell.getText().trim().isEmpty()) {
+                index++;
+                continue;
+            }
+            return index;
+        }
+
+        // NOTE: nunca se deberia de llegar aca
+        return index;
     }
 }
