@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import poliplanner.excel.parser.JsonLayoutLoader.Layout;
+import poliplanner.exception.ExcelParserException;
 
 @Component
 @RequiredArgsConstructor
@@ -89,14 +90,42 @@ public class ExcelParser {
 
             return result;
         } catch (Exception e) {
+            // FIX: dar un aviso de parsing error
+            throw new ExcelParserException("Error de parseo: ", e);
         }
-        return null;
     }
 
     // =====================================
     // ======== Private methods ============
     // =====================================
 
+    /**
+     * Parsea una fila de Excel y la convierte en un objeto SubjectCsvDTO según el
+     * layout especificado.
+     * 
+     * <p>
+     * La función recorre cada celda de la fila a partir de la posición startingCell
+     * y asigna los valores a las propiedades correspondientes del DTO basándose en
+     * los encabezados definidos en el layout.
+     * La función maneja todos los campos definidos en SubjectCsvDTO:
+     * </p>
+     * 
+     * @param rowData      La fila de Excel a parsear (objeto Row de la librería
+     *                     FastExcel)
+     * @param layout       Objeto Layout que define la estructura y mapeo de los
+     *                     encabezados
+     * @param startingCell Número de celda (basado en 1) donde comienzan los datos a
+     *                     parsear
+     * @return Objeto SubjectCsvDTO poblado con los datos de la fila, o null si:
+     *         - La fila está vacía (según isEmptyRow)
+     *         - El layout tiene más encabezados que celdas disponibles en la fila
+     * 
+     * @throws ClassCastException Si el contenido de alguna celda no puede
+     *                            convertirse a String
+     * @see Layout
+     * @see SubjectCsvDTO
+     * @see #isEmptyRow(Row)
+     */
     public static SubjectCsvDTO parseRow(Row rowData, Layout layout, Integer startingCell) {
         if (layout.headers.size() > rowData.getCellCount() || isEmptyRow(rowData)) {
             return null;

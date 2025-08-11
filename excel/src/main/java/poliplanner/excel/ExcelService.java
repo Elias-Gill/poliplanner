@@ -38,6 +38,7 @@ public class ExcelService {
     private final CareerService careerService;
     private final SheetVersionService versionService;
     private final WebScrapper scrapper;
+    private final ExcelParser parser;
 
     // Expuesto para el endpoint '/sync/ci'.
     public boolean autonomousExcelSync() {
@@ -76,7 +77,7 @@ public class ExcelService {
 
         SheetVersion version = versionService.create(excelFile.toString(), url);
 
-        Map<String, List<SubjectCsvDTO>> entries = ExcelParser.parseExcel(excelFile);
+        Map<String, List<SubjectCsvDTO>> entries = parser.parseExcel(excelFile);
 
         for (Entry<String, List<SubjectCsvDTO>> entry : entries.entrySet()) {
             String careerName = entry.getKey();
