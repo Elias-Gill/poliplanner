@@ -45,7 +45,7 @@ public class ExcelParser {
     // ======== Public API ============
     // ================================
 
-    public Map<String, List<SubjectCsvDTO>> parseExcel(Path file) {
+    public Map<String, List<SubjectCsvDTO>> parseExcel(Path file) throws ExcelParserException {
         try (InputStream is = new FileInputStream(new File(file.toUri()));
                 ReadableWorkbook wb = new ReadableWorkbook(is)) {
 
