@@ -54,7 +54,7 @@ public class ParserTest {
 
     private List<Layout> newLayout() {
         // Crear el layout con todos los campos en el orden correcto
-        Layout layout = new Layout(
+        Layout layout1 = new Layout(
                 "planificacion_layout", // fileName
                 Arrays.asList(
                         "item", "departamento", "asignatura", "nivel", "semestre", "carrera", "enfasis",
@@ -67,7 +67,20 @@ public class ParserTest {
                         "aulaJueves", "horaJueves", "aulaViernes", "horaViernes", "aulaSabado", "horaSabado",
                         "fechasSabado"),
                 createPatternsMap());
-        return Arrays.asList(layout);
+
+        Layout layout2 = new Layout(
+                "planificacion_layout", // fileName
+                Arrays.asList(
+                        "item", "departamento", "asignatura", "nivel", "semestre", "carrera", "enfasis",
+                        "plan", "turno", "seccion", "plataforma", "titulo", "apellido", "nombre", "correo",
+                        "diaParcial1", "horaParcial1", "diaParcial2", "horaParcial2",
+                        "diaFinal1", "horaFinal1", "revisionFinal1Dia", "revisionFinal1Hora", "diaFinal2",
+                        "horaFinal2", "revisionFinal2Dia", "revisionFinal2Hora", "mesaPresidente",
+                        "mesaMiembro1", "mesaMiembro2", "horaLunes", "horaMartes", "horaMiercoles", "horaJueves",
+                        "horaViernes", "horaSabado"),
+                createPatternsMap());
+
+        return Arrays.asList(layout1, layout2);
     }
 
     private static Map<String, List<String>> createPatternsMap() {
