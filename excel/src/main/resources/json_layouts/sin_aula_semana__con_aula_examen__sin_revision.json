@@ -34,7 +34,7 @@
 
         {"encabezado": "horaLunes", "patron": ["lunes"]},
         {"encabezado": "horaMartes", "patron": ["martes"]},
-        {"encabezado": "horaMiercoles", "patron": ["miercoles"]},
+        {"encabezado": "horaMiercoles", "patron": ["miercoles", "miércoles"]},
         {"encabezado": "horaJueves", "patron": ["jueves"]},
         {"encabezado": "horaViernes", "patron": ["viernes"]},
         {"encabezado": "horaSabado", "patron": ["sabado", "sábado"]},

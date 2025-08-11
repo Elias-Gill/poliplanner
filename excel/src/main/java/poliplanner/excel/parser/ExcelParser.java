@@ -70,6 +70,7 @@ public class ExcelParser {
                 Integer startingRow = headerRow.getRowNum();
                 Integer startingCell = calculateStartingCell(headerRow);
 
+                System.out.println(career);
                 Layout layout = findFittingLayout(headerRow);
 
                 List<SubjectCsvDTO> subjects = new ArrayList<>();
@@ -291,23 +292,38 @@ public class ExcelParser {
     public Layout findFittingLayout(Row r) {
         List<Cell> cells = r.stream().collect(Collectors.toList());
 
-        for (Layout l : layouts) {
+        for (Layout currentLayout : this.layouts) {
             boolean matches = true;
-            for (int i = 0; i < l.headers.size(); i++) {
-                String expected = l.headers.get(i).trim();
-                String actual = getStringCellValueSafe(cells, i).trim();
+            int currentCell = -1;
+            for (int i = 0; i < currentLayout.headers.size(); i++) {
+                currentCell++;
+                String actual = getStringCellValueSafe(cells, currentCell).trim();
+                System.out.println("Actual:" + actual + " - Expected:" + currentLayout.headers.get(i));
+                // Para simplemente saltear casillas que estan vacias (por si mueven la tabla
+                // de lugar).
                 if (actual.isEmpty()) {
+                    i--;
                     continue;
                 }
 
-                if (!expected.equalsIgnoreCase(actual)) {
-                    matches = false;
+                List<String> expectedPatterns = currentLayout.patterns.get(currentLayout.headers.get(i));
+                matches = false;
+                for (String pattern : expectedPatterns) {
+                    if (actual.contains(pattern)) {
+                        matches = true;
+                        continue;
+                    }
+                }
+
+                // El patron es invalido, pasamos a otro
+                if (!matches) {
                     break;
                 }
             }
 
+            // Earyly return el layout valido
             if (matches) {
-                return l;
+                return currentLayout;
             }
         }
 
@@ -322,7 +338,7 @@ public class ExcelParser {
         if (index >= cells.size() || cells.get(index) == null) {
             return "";
         }
-        return cells.get(index).getText();
+        return cells.get(index).getText().toLowerCase();
     }
 
     // Determina la fila del Excel de encabezados buscando la celda que

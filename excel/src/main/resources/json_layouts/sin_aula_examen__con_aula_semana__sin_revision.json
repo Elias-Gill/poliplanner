@@ -35,7 +35,7 @@
         {"encabezado": "horaMartes", "patron": ["martes"]},
 
         {"encabezado": "aulaMiercoles", "patron": ["aula"]},
-        {"encabezado": "horaMiercoles", "patron": ["miercoles"]},
+        {"encabezado": "horaMiercoles", "patron": ["miercoles", "miércoles"]},
 
         {"encabezado": "aulaJueves", "patron": ["aula"]},
         {"encabezado": "horaJueves", "patron": ["jueves"]},
