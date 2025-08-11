@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.CellType;
@@ -136,7 +137,7 @@ public class ExcelParser {
      * @see SubjectCsvDTO
      * @see #isEmptyRow(Row)
      */
-    public static SubjectCsvDTO parseRow(Row rowData, Layout layout, Integer startingCell) {
+    private static SubjectCsvDTO parseRow(Row rowData, Layout layout, Integer startingCell) {
         if (layout.headers.size() > rowData.getCellCount() || isEmptyRow(rowData)) {
             return null;
         }
@@ -181,45 +182,33 @@ public class ExcelParser {
      * @throws IllegalArgumentException Si no se encuentra ningún Layout que
      *                                  coincida.
      */
-    public Layout findFittingLayout(Row r) {
+    private Layout findFittingLayout(Row r) {
         List<Cell> cells = r.stream().collect(Collectors.toList());
 
-        for (Layout currentLayout : this.layouts) {
-            boolean matches = true;
-            int currentCell = -1;
-            for (int i = 0; i < currentLayout.headers.size(); i++) {
-                currentCell++;
-                String actual = getStringCellValueSafe(cells, currentCell).trim();
-                System.out.println("Actual:" + actual + " - Expected:" + currentLayout.headers.get(i));
-                // Para simplemente saltear casillas que estan vacias (por si mueven la tabla
-                // de lugar).
-                if (actual.isEmpty()) {
-                    i--;
-                    continue;
-                }
+        return layouts.stream()
+                .filter(layout -> layoutMatchesRow(layout, cells))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "No matching layout found for row: " + r));
+    }
 
-                List<String> expectedPatterns = currentLayout.patterns.get(currentLayout.headers.get(i));
-                matches = false;
-                for (String pattern : expectedPatterns) {
-                    if (actual.contains(pattern)) {
-                        matches = true;
-                        continue;
-                    }
-                }
+    private boolean layoutMatchesRow(Layout layout, List<Cell> cells) {
+        int currentCell = -1;
+        for (int i = 0; i < layout.headers.size(); i++) {
+            currentCell++;
+            String actual = getStringCellValueSafe(cells, currentCell).trim();
 
-                // El patron es invalido, pasamos a otro
-                if (!matches) {
-                    break;
-                }
+            if (actual.isEmpty()) {
+                i--;
+                continue;
             }
 
-            // Earyly return el layout valido
-            if (matches) {
-                return currentLayout;
+            List<String> expectedPatterns = layout.patterns.get(layout.headers.get(i));
+            if (expectedPatterns.stream().noneMatch(actual::contains)) {
+                return false;
             }
         }
-
-        throw new IllegalArgumentException("No matching layout found for row: " + r);
+        return true;
     }
 
     // =====================================
@@ -255,17 +244,13 @@ public class ExcelParser {
     }
 
     private Integer calculateStartingCell(Row r) {
-        Integer index = 0;
-        for (Cell cell : r) {
-            if (cell == null || cell.getText().trim().isEmpty()) {
-                index++;
-                continue;
-            }
-            return index;
-        }
-
-        // NOTE: nunca se deberia de llegar aca
-        return index;
+        return IntStream.range(0, r.getCellCount())
+                .filter(i -> {
+                    Cell cell = r.getCell(i);
+                    return cell != null && !cell.getText().trim().isEmpty();
+                })
+                .findFirst()
+                .orElse(0);
     }
 
     private static Map<String, BiConsumer<SubjectCsvDTO, String>> createFieldMappers() {
