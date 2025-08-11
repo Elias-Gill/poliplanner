@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import org.dhatim.fastexcel.reader.Cell;
@@ -28,6 +31,9 @@ import poliplanner.exception.ExcelParserException;
 public class ExcelParser {
     private List<Layout> layouts;
 
+    private static final Map<String, BiConsumer<SubjectCsvDTO, String>> fieldMapper = createFieldMappers();
+    private static final Set<String> HEADER_KEYWORDS = Set.of("ítem", "item");
+
     ExcelParser(JsonLayoutLoader loader) {
         try {
             this.layouts = loader.loadJsonLayouts();
@@ -45,6 +51,9 @@ public class ExcelParser {
     // ======== Public API ============
     // ================================
 
+    // TEST: exponer un metodo para hacer testing sobre sheets sueltas en vez de
+    // sobre el el archivo completo, asi para poder testear la correcta
+    // persistencia.
     public Map<String, List<SubjectCsvDTO>> parseExcel(Path file) throws ExcelParserException {
         try (InputStream is = new FileInputStream(new File(file.toUri()));
                 ReadableWorkbook wb = new ReadableWorkbook(is)) {
@@ -133,135 +142,18 @@ public class ExcelParser {
         }
 
         SubjectCsvDTO dto = new SubjectCsvDTO();
-
         Integer currentCell = startingCell - 1;
         for (String layoutField : layout.headers) {
             currentCell++;
-
             Cell rowCell = rowData.getCell(currentCell);
             if (rowCell == null) {
                 continue;
             }
+
             String cellValue = (String) rowCell.getText();
-
-            // Info general
-            if (layoutField.equals("departamento")) {
-                dto.departamento = cellValue;
-            } else if (layoutField.equals("asignatura")) {
-                dto.nombreAsignatura = cellValue;
-            } else if (layoutField.equals("nivel")) {
-                dto.nivel = cellValue;
-            } else if (layoutField.equals("semestre")) {
-                dto.semestre = cellValue;
-            } else if (layoutField.equals("seccion")) {
-                dto.seccion = cellValue;
-            }
-
-            // Info del docente
-            else if (layoutField.equals("titulo")) {
-                dto.tituloProfesor = cellValue;
-            } else if (layoutField.equals("apellido")) {
-                dto.apellidoProfesor = cellValue;
-            } else if (layoutField.equals("nombre")) {
-                dto.nombreProfesor = cellValue;
-            } else if (layoutField.equals("correo")) {
-                dto.emailProfesor = cellValue;
-            }
-
-            // Primer parcial
-            else if (layoutField.equals("diaParcial1")) {
-                dto.parcial1Fecha = cellValue;
-            } else if (layoutField.equals("horaParcial1")) {
-                dto.parcial1Hora = cellValue;
-            } else if (layoutField.equals("aulaParcial1")) {
-                dto.parcial1Aula = cellValue;
-            }
-
-            // Segundo parcial
-            else if (layoutField.equals("diaParcial2")) {
-                dto.parcial2Fecha = cellValue;
-            } else if (layoutField.equals("horaParcial2")) {
-                dto.parcial2Hora = cellValue;
-            } else if (layoutField.equals("aulaParcial2")) {
-                dto.parcial2Aula = cellValue;
-            }
-
-            // Primer Final
-            else if (layoutField.equals("diaFinal1")) {
-                dto.final1Fecha = cellValue;
-            } else if (layoutField.equals("horaFinal1")) {
-                dto.final1Hora = cellValue;
-            } else if (layoutField.equals("aulaFinal1")) {
-                dto.final1Aula = cellValue;
-            }
-
-            // Segundo Final
-            else if (layoutField.equals("diaFinal2")) {
-                dto.final2Fecha = cellValue;
-            } else if (layoutField.equals("horaFinal2")) {
-                dto.final2Hora = cellValue;
-            } else if (layoutField.equals("aulaFinal2")) {
-                dto.final2Aula = cellValue;
-            }
-
-            // Revisiones
-            else if (layoutField.equals("revisionDia")) {
-                dto.final1RevFecha = cellValue;
-                // Asumiendo que el mismo campo aplica para ambos finales
-                dto.final2RevFecha = cellValue;
-            } else if (layoutField.equals("revisionHora")) {
-                dto.final1RevHora = cellValue;
-                // Asumiendo que el mismo campo aplica para ambos finales
-                dto.final2RevHora = cellValue;
-            }
-
-            // Comité
-            else if (layoutField.equals("mesaPresidente")) {
-                dto.comitePresidente = cellValue;
-            } else if (layoutField.equals("mesaMiembro1")) {
-                dto.comiteMiembro1 = cellValue;
-            } else if (layoutField.equals("mesaMiembro2")) {
-                dto.comiteMiembro2 = cellValue;
-            }
-
-            // Horario semanal
-            else if (layoutField.equals("aulaLunes")) {
-                dto.aulaLunes = cellValue;
-            } else if (layoutField.equals("horaLunes")) {
-                dto.lunes = cellValue;
-            }
-
-            else if (layoutField.equals("aulaMartes")) {
-                dto.aulaMartes = cellValue;
-            } else if (layoutField.equals("horaMartes")) {
-                dto.martes = cellValue;
-            }
-
-            else if (layoutField.equals("aulaMiercoles")) {
-                dto.aulaMiercoles = cellValue;
-            } else if (layoutField.equals("horaMiercoles")) {
-                dto.miercoles = cellValue;
-            }
-
-            else if (layoutField.equals("aulaJueves")) {
-                dto.aulaJueves = cellValue;
-            } else if (layoutField.equals("horaJueves")) {
-                dto.jueves = cellValue;
-            }
-
-            else if (layoutField.equals("aulaViernes")) {
-                dto.aulaViernes = cellValue;
-            } else if (layoutField.equals("horaViernes")) {
-                dto.viernes = cellValue;
-            }
-
-            else if (layoutField.equals("aulaSabado")) {
-                dto.aulaSabado = cellValue;
-            } else if (layoutField.equals("horaSabado")) {
-                dto.sabado = cellValue;
-            } else if (layoutField.equals("fechasSabado")) {
-                dto.fechasSabadoNoche = cellValue;
-            }
+            // Mapear a su respectivo elemento del DTO
+            fieldMapper.getOrDefault(layoutField, (d, v) -> {
+            }).accept(dto, cellValue);
         }
 
         return dto;
@@ -349,14 +241,17 @@ public class ExcelParser {
         // 2. Normaliza el contenido (minúsculas y sin espacios)
         // 3. Early return al encontrar una coincidencia
         return r.stream()
-                .filter(cell -> (cell != null && cell.getType() == CellType.STRING))
+                .filter(Objects::nonNull)
+                .filter(cell -> cell.getType() == CellType.STRING)
                 .map(cell -> ((String) cell.getValue()).toLowerCase().trim())
-                .anyMatch(value -> value.contains("ítem") || value.contains("item"));
+                .anyMatch(HEADER_KEYWORDS::contains);
     }
 
     private static boolean isEmptyRow(Row r) {
-        return r.stream().allMatch(
-                cell -> cell == null || cell.getValue() == null || cell.getValue().toString().trim().isEmpty());
+        return r.stream()
+                .noneMatch(cell -> cell != null
+                        && cell.getValue() != null
+                        && !cell.getValue().toString().trim().isEmpty());
     }
 
     private Integer calculateStartingCell(Row r) {
@@ -371,5 +266,74 @@ public class ExcelParser {
 
         // NOTE: nunca se deberia de llegar aca
         return index;
+    }
+
+    private static Map<String, BiConsumer<SubjectCsvDTO, String>> createFieldMappers() {
+        Map<String, BiConsumer<SubjectCsvDTO, String>> mappers = new HashMap<>();
+
+        // Info general
+        mappers.put("departamento", (dto, val) -> dto.departamento = val);
+        mappers.put("asignatura", (dto, val) -> dto.nombreAsignatura = val);
+        mappers.put("nivel", (dto, val) -> dto.nivel = val);
+        mappers.put("semestre", (dto, val) -> dto.semestre = val);
+        mappers.put("seccion", (dto, val) -> dto.seccion = val);
+
+        // Info del docente
+        mappers.put("titulo", (dto, val) -> dto.tituloProfesor = val);
+        mappers.put("apellido", (dto, val) -> dto.apellidoProfesor = val);
+        mappers.put("nombre", (dto, val) -> dto.nombreProfesor = val);
+        mappers.put("correo", (dto, val) -> dto.emailProfesor = val);
+
+        // Primer parcial
+        mappers.put("diaParcial1", (dto, val) -> dto.parcial1Fecha = val);
+        mappers.put("horaParcial1", (dto, val) -> dto.parcial1Hora = val);
+        mappers.put("aulaParcial1", (dto, val) -> dto.parcial1Aula = val);
+
+        // Segundo parcial
+        mappers.put("diaParcial2", (dto, val) -> dto.parcial2Fecha = val);
+        mappers.put("horaParcial2", (dto, val) -> dto.parcial2Hora = val);
+        mappers.put("aulaParcial2", (dto, val) -> dto.parcial2Aula = val);
+
+        // Primer Final
+        mappers.put("diaFinal1", (dto, val) -> dto.final1Fecha = val);
+        mappers.put("horaFinal1", (dto, val) -> dto.final1Hora = val);
+        mappers.put("aulaFinal1", (dto, val) -> dto.final1Aula = val);
+
+        // Segundo Final
+        mappers.put("diaFinal2", (dto, val) -> dto.final2Fecha = val);
+        mappers.put("horaFinal2", (dto, val) -> dto.final2Hora = val);
+        mappers.put("aulaFinal2", (dto, val) -> dto.final2Aula = val);
+
+        // Revisiones
+        mappers.put("revisionDia", (dto, val) -> {
+            dto.final1RevFecha = val;
+            dto.final2RevFecha = val;
+        });
+        mappers.put("revisionHora", (dto, val) -> {
+            dto.final1RevHora = val;
+            dto.final2RevHora = val;
+        });
+
+        // Comité
+        mappers.put("mesaPresidente", (dto, val) -> dto.comitePresidente = val);
+        mappers.put("mesaMiembro1", (dto, val) -> dto.comiteMiembro1 = val);
+        mappers.put("mesaMiembro2", (dto, val) -> dto.comiteMiembro2 = val);
+
+        // Horario semanal
+        mappers.put("aulaLunes", (dto, val) -> dto.aulaLunes = val);
+        mappers.put("horaLunes", (dto, val) -> dto.lunes = val);
+        mappers.put("aulaMartes", (dto, val) -> dto.aulaMartes = val);
+        mappers.put("horaMartes", (dto, val) -> dto.martes = val);
+        mappers.put("aulaMiercoles", (dto, val) -> dto.aulaMiercoles = val);
+        mappers.put("horaMiercoles", (dto, val) -> dto.miercoles = val);
+        mappers.put("aulaJueves", (dto, val) -> dto.aulaJueves = val);
+        mappers.put("horaJueves", (dto, val) -> dto.jueves = val);
+        mappers.put("aulaViernes", (dto, val) -> dto.aulaViernes = val);
+        mappers.put("horaViernes", (dto, val) -> dto.viernes = val);
+        mappers.put("aulaSabado", (dto, val) -> dto.aulaSabado = val);
+        mappers.put("horaSabado", (dto, val) -> dto.sabado = val);
+        mappers.put("fechasSabado", (dto, val) -> dto.fechasSabadoNoche = val);
+
+        return mappers;
     }
 }
