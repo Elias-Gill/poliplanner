@@ -24,23 +24,30 @@ import org.dhatim.fastexcel.reader.Sheet;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import poliplanner.excel.exception.ExcelParserConfigurationException;
 import poliplanner.excel.parser.JsonLayoutLoader.Layout;
-import poliplanner.exception.ExcelParserException;
+import poliplanner.excel.exception.ExcelParserException;
+import poliplanner.excel.exception.ExcelParserInputException;
+import poliplanner.excel.exception.LayoutMatchException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 @RequiredArgsConstructor
 public class ExcelParser {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ExcelParser.class);
     private List<Layout> layouts;
 
     private static final Map<String, BiConsumer<SubjectCsvDTO, String>> fieldMapper = createFieldMappers();
     private static final Set<String> HEADER_KEYWORDS = Set.of("ítem", "item");
 
-    ExcelParser(JsonLayoutLoader loader) {
+    public ExcelParser(JsonLayoutLoader loader) {
         try {
             this.layouts = loader.loadJsonLayouts();
-        } catch (Exception e) {
-            // TODO: handle exception
-            // FIX: ver que hacer con esto la verdad
+        } catch (IOException e) {
+            throw new ExcelParserConfigurationException("Failed to load layouts: ", e);
         }
     }
 
@@ -59,6 +66,8 @@ public class ExcelParser {
         try (InputStream is = new FileInputStream(new File(file.toUri()));
                 ReadableWorkbook wb = new ReadableWorkbook(is)) {
 
+            LOG.info("Parsing file: {}", file.toString());
+
             Map<String, List<SubjectCsvDTO>> result = new HashMap<>();
             for (Sheet sheet : wb.getSheets().toList()) {
                 // Ignorar hojas "basura"
@@ -71,6 +80,8 @@ public class ExcelParser {
                         || career.equalsIgnoreCase("códigos")) {
                     continue;
                 }
+
+                LOG.info("Parsing sheet: {}", career);
 
                 List<Row> sheetRows = sheet.read();
 
@@ -100,9 +111,13 @@ public class ExcelParser {
             }
 
             return result;
-        } catch (Exception e) {
-            // FIX: dar un aviso de parsing error
-            throw new ExcelParserException("Error de parseo: ", e);
+        } catch (FileNotFoundException e) {
+            throw new ExcelParserConfigurationException("File not found: " + file, e);
+        } catch (IOException e) {
+            throw new ExcelParserInputException("Error reading file: " + file, e);
+        } catch (LayoutMatchException e) {
+            LOG.error("Layout mismatch in file {}", file.toString());
+            throw e;
         }
     }
 

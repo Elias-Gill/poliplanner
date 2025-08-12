@@ -12,13 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import poliplanner.excel.parser.ExcelParser;
-import poliplanner.excel.parser.JsonLayoutLoader;
 import poliplanner.excel.parser.SubjectCsvDTO;
 import poliplanner.excel.parser.SubjectMapper;
 import poliplanner.excel.sources.ExcelDownloadSource;
 import poliplanner.excel.sources.WebScrapper;
-import poliplanner.exception.ExcelPersistenceException;
-import poliplanner.exception.ExcelSynchronizationException;
+import poliplanner.excel.exception.ExcelPersistenceException;
+import poliplanner.excel.exception.ExcelSynchronizationException;
 import poliplanner.models.Career;
 import poliplanner.models.SheetVersion;
 import poliplanner.models.Subject;
