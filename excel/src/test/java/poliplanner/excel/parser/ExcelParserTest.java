@@ -4,78 +4,82 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
-import org.junit.jupiter.api.Tag;
+import org.dhatim.fastexcel.reader.ReadableWorkbook;
+import org.dhatim.fastexcel.reader.Sheet;
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.io.ClassPathResource;
 
 public class ExcelParserTest {
-    private static final String SRC_TEST_RESOURCES_LAYOUT = "/con_aulas__con_revision.json";
-
-    private static final ObjectMapper mapper = new ObjectMapper();
+    final private ClassPathResource CLASSPATH_TEST_EXCEL = new ClassPathResource("testExcel.xlsx");
 
     @Test
-    @Tag("unit")
     void testParseFromJsonResource() throws Exception {
-        Map<String, List<SubjectCsvDTO>> result = new ExcelParser(new JsonLayoutLoader()).parseSheet();
+        try (InputStream is = CLASSPATH_TEST_EXCEL.getInputStream();
+                ReadableWorkbook wb = new ReadableWorkbook(is)) {
+            List<Sheet> sheets = wb.getSheets().toList();
 
-        // Validaciones generales
-        assertNotNull(result, "El mapa de resultados no debería ser null");
-        assertFalse(result.isEmpty(), "El mapa de resultados no debería estar vacío");
+            Sheet sheet = null;
+            for (Sheet s : sheets) {
+                if (s.getName().equals("IIN")) {
+                    sheet = s;
+                    break;
+                }
+            }
 
-        // Unir todas las listas de subjects
-        List<SubjectCsvDTO> subjects = result.values().stream()
-                .flatMap(List::stream)
-                .toList();
+            if (sheet == null) {
+                throw new RuntimeException("Cannot find 'IIN' sheet inside testExcel.xlsx");
+            }
 
-        assertFalse(subjects.isEmpty(), "La lista total de subjects no debería estar vacía");
+            List<SubjectCsvDTO> subjects = new ExcelParser(new JsonLayoutLoader()).parseSheet(sheet);
 
-        // Primera entrada
-        SubjectCsvDTO first = subjects.get(0);
-        assertEquals("DCB", first.departamento);
-        assertEquals("Algebra Lineal", first.nombreAsignatura);
-        assertEquals("2", first.semestre);
-        assertEquals("MI", first.seccion);
-        assertEquals("Lic.", first.tituloProfesor);
-        assertEquals("Villasanti Flores", first.apellidoProfesor);
-        assertEquals("Richard Adrián", first.nombreProfesor);
-        assertEquals("", first.emailProfesor);
+            assertNotNull(subjects, "La lista de materias no debería estar vacía");
+            assertFalse(subjects.isEmpty(), "La lista de materias no debería estar vacía");
 
-        // Última entrada
-        SubjectCsvDTO last = subjects.get(subjects.size() - 1);
-        assertEquals("DG", last.departamento);
-        assertEquals("Técnicas de Organización y Métodos", last.nombreAsignatura);
-        assertEquals("5", last.semestre);
-        assertEquals("NA", last.seccion);
-        assertEquals("Ms.", last.tituloProfesor);
-        assertEquals("Ramírez Barboza", last.apellidoProfesor);
-        assertEquals("Estela Mary", last.nombreProfesor);
-        assertEquals("emramirez@pol.una.py", last.emailProfesor);
+            // Primera entrada
+            SubjectCsvDTO first = subjects.get(0);
+            assertEquals("DCB", first.departamento);
+            assertEquals("Algebra Lineal", first.nombreAsignatura);
+            assertEquals("2", first.semestre);
+            assertEquals("MI", first.seccion);
+            assertEquals("Lic.", first.tituloProfesor);
+            assertEquals("Villasanti Flores", first.apellidoProfesor);
+            assertEquals("Richard Adrián", first.nombreProfesor);
+            assertEquals("", first.emailProfesor);
 
-        assertEquals("Mar 17/09/24", last.parcial1Fecha);
+            // Última entrada
+            SubjectCsvDTO last = subjects.get(subjects.size() - 1);
+            assertEquals("DG", last.departamento);
+            assertEquals("Técnicas de Organización y Métodos", last.nombreAsignatura);
+            assertEquals("5", last.semestre);
+            assertEquals("NA", last.seccion);
+            assertEquals("Ms.", last.tituloProfesor);
+            assertEquals("Ramírez Barboza", last.apellidoProfesor);
+            assertEquals("Estela Mary", last.nombreProfesor);
+            assertEquals("emramirez@pol.una.py", last.emailProfesor);
 
-        assertEquals("Ms. Estela Mary Ramírez Barboza", last.comitePresidente);
-        assertEquals("Lic. Zulma Lucía Demattei Ortíz", last.comiteMiembro1);
-        assertEquals("Lic. Osvaldo David Sosa Cabrera", last.comiteMiembro2);
+            assertEquals("Mar 17/09/24", last.parcial1Fecha);
 
-        assertEquals("E01", last.aulaMartes);
-        assertEquals("20:45 - 22:15", last.martes);
+            assertEquals("Ms. Estela Mary Ramírez Barboza", last.comitePresidente);
+            assertEquals("Lic. Zulma Lucía Demattei Ortíz", last.comiteMiembro1);
+            assertEquals("Lic. Osvaldo David Sosa Cabrera", last.comiteMiembro2);
 
-        assertEquals("E01", last.aulaJueves);
-        assertEquals("19:00 - 20:30", last.jueves);
+            assertEquals("E01", last.aulaMartes);
+            assertEquals("20:45 - 22:15", last.martes);
 
-        assertEquals("E01", last.aulaSabado);
-        assertEquals("07:30 - 11:30", last.sabado);
+            assertEquals("E01", last.aulaJueves);
+            assertEquals("19:00 - 20:30", last.jueves);
 
-        assertEquals("05/10, 23/11", last.fechasSabadoNoche);
+            assertEquals("E01", last.aulaSabado);
+            assertEquals("07:30 - 11:30", last.sabado);
 
-        assertEquals("", last.aulaMiercoles);
+            assertEquals("05/10, 23/11", last.fechasSabadoNoche);
+
+            assertEquals("", last.aulaMiercoles);
+        }
     }
 
     /*

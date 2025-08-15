@@ -102,9 +102,8 @@ public class ExcelParser {
     List<SubjectCsvDTO> parseSheet(Sheet sheet) {
         try {
             List<Row> sheetRows = sheet.read();
-            List<SubjectCsvDTO> result = new ArrayList<>();
-
             Row headerRow = searchHeadersRow(sheetRows);
+
             // Este metodo es 1 based, asi que ahora esta apuntando a la fila inmediatamente
             // debajo de los encabezados.
             Integer startingRow = headerRow.getRowNum();
@@ -124,9 +123,9 @@ public class ExcelParser {
                 subjects.add(subject);
             }
 
-            return result;
+            return subjects;
         } catch (IOException e) {
-            throw new ExcelParserInputException("Cannot read sheet", e);
+            throw new ExcelParserInputException("Cannot read sheet: " + sheet.getName(), e);
         }
     }
 
