@@ -1,7 +1,7 @@
 package poliplanner.excel;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -11,22 +11,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import poliplanner.excel.exception.ExcelPersistenceException;
+import poliplanner.excel.exception.ExcelSynchronizationException;
 import poliplanner.excel.parser.ExcelParser;
 import poliplanner.excel.parser.SubjectCsvDTO;
 import poliplanner.excel.parser.SubjectMapper;
 import poliplanner.excel.sources.ExcelDownloadSource;
 import poliplanner.excel.sources.WebScrapper;
-import poliplanner.excel.exception.ExcelPersistenceException;
-import poliplanner.excel.exception.ExcelSynchronizationException;
 import poliplanner.models.Career;
 import poliplanner.models.SheetVersion;
 import poliplanner.models.Subject;
 import poliplanner.services.CareerService;
 import poliplanner.services.SheetVersionService;
 import poliplanner.services.SubjectService;
-
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +49,7 @@ public class ExcelService {
                 return false;
 
             logger.info("Descargando latest source: {}", source.toString());
-            Path excelFile = source.downloadThisSource();
+            File excelFile = source.downloadThisSource();
 
             logger.info("Descarga exitosa. Iniciando parseo y persistencia");
             parseAndPersistExcel(excelFile, source.url());
@@ -71,7 +70,7 @@ public class ExcelService {
 
     // Expuesto para actualizacion manual con el endpoint '/sync'.
     @Transactional
-    public void parseAndPersistExcel(Path excelFile, String url) throws ExcelPersistenceException {
+    public void parseAndPersistExcel(File excelFile, String url) throws ExcelPersistenceException {
         logger.info("Iniciando conversion y parseado del excel");
 
         SheetVersion version = versionService.create(excelFile.toString(), url);

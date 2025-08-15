@@ -5,8 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.File;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
@@ -44,11 +43,11 @@ class ExcelServiceIntegrationTest {
         // correctamente
         try {
             ExcelDownloadSource source = new ExcelDownloadSource(EXCEL_DOWNLOAD_URL, "test_file", LocalDate.now());
-            Path file = source.downloadThisSource();
+            File file = source.downloadThisSource();
 
             assertNotNull(file);
-            assertTrue(Files.exists(file));
-            assertTrue(Files.size(file) > 0);
+            assertTrue(file.exists());
+            assertTrue(file.length() > 0);
         } catch (Exception e) {
             System.out.println("Test ignorado. No se puede conectar con el url de descarga");
             assumeTrue(false);
@@ -74,7 +73,7 @@ class ExcelServiceIntegrationTest {
      */
     @Test
     void testExcelParsingPersistency() throws Exception {
-        Path testExcel = Paths.get("src/test/resources/testExcel.xlsx");
+        File testExcel = Paths.get("src/test/resources/testExcel.xlsx").toFile();
         String dummyUrl = "URL";
 
         excelService.parseAndPersistExcel(testExcel, dummyUrl);

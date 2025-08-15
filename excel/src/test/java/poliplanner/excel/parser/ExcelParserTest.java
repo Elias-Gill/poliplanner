@@ -17,7 +17,7 @@ public class ExcelParserTest {
     final private ClassPathResource CLASSPATH_TEST_EXCEL = new ClassPathResource("testExcel.xlsx");
 
     @Test
-    void testParseFromJsonResource() throws Exception {
+    void testParseSheet() throws Exception {
         try (InputStream is = CLASSPATH_TEST_EXCEL.getInputStream();
                 ReadableWorkbook wb = new ReadableWorkbook(is)) {
             List<Sheet> sheets = wb.getSheets().toList();
@@ -34,7 +34,7 @@ public class ExcelParserTest {
                 throw new RuntimeException("Cannot find 'IIN' sheet inside testExcel.xlsx");
             }
 
-            List<SubjectCsvDTO> subjects = new ExcelParser(new JsonLayoutLoader()).parseSheet(sheet);
+            List<SubjectCsvDTO> subjects = new ExcelParser().parseSheet(sheet);
 
             assertNotNull(subjects, "La lista de materias no debería estar vacía");
             assertFalse(subjects.isEmpty(), "La lista de materias no debería estar vacía");
@@ -81,85 +81,4 @@ public class ExcelParserTest {
             assertEquals("", last.aulaMiercoles);
         }
     }
-
-    /*
-     * @Test
-     * 
-     * @Tag("integration")
-     * void testExcelToCsvConversion() throws Exception {
-     * if (!ExcelParser.isSsconvertAvailable()) {
-     * System.out.println("Test ignorado. 'Gnumeric' no instalado");
-     * assumeTrue(false);
-     * }
-     * 
-     * // Cargar el archivo desde resources
-     * Path excelFile;
-     * try (InputStream in =
-     * getClass().getClassLoader().getResourceAsStream("testExcel.xlsx")) {
-     * assertNotNull(in, "No se encontró el archivo 'testExcel.xlsx' en resources");
-     * excelFile = Files.createTempFile("testExcel", ".xlsx");
-     * Files.copy(in, excelFile, StandardCopyOption.REPLACE_EXISTING);
-     * }
-     * 
-     * // Ejecutar la conversión
-     * List<Path> csvFiles = ExcelParser.convertExcelToCsv(excelFile);
-     * 
-     * // Esperados
-     * Set<String> nombresEsperados = Set.of(
-     * "Cnel. Oviedo.csv", // NOTE: en algunas versiones del horario es super
-     * inconsistente
-     * "Villarrica.csv", // tambien es inconsistente
-     * "IAE.csv",
-     * "ICM.csv",
-     * "IEK.csv",
-     * "IEL.csv",
-     * "IEN.csv",
-     * "IIN.csv",
-     * "IMK.csv",
-     * "ISP.csv",
-     * "LCA.csv",
-     * "LCI.csv",
-     * "LCIk.csv",
-     * "LEL.csv",
-     * "LGH.csv",
-     * "TSE.csv");
-     * 
-     * // Extraer nombres reales
-     * Set<String> nombresGenerados = csvFiles.stream().map(p ->
-     * p.getFileName().toString())
-     * .collect(Collectors.toSet());
-     * 
-     * assertEquals(
-     * nombresEsperados,
-     * nombresGenerados,
-     * "Los archivos generados no coinciden con los esperados");
-     * 
-     * // Cargar el archivo IIN.csv generado y el archivo input.csv de resources
-     * para
-     * // comparar
-     * Path iinCsvGenerated = csvFiles.stream()
-     * .filter(p -> p.getFileName().toString().equals("IIN.csv"))
-     * .findFirst()
-     * .orElseThrow(() -> new AssertionError("No se generó el archivo IIN.csv"));
-     * 
-     * Path inputCsvExpected = Path.of(SRC_TEST_RESOURCES_INPUT_CSV);
-     * 
-     * // Comparar el contenido de ambos archivos
-     * List<String> generatedLines = Files.readAllLines(iinCsvGenerated);
-     * List<String> expectedLines = Files.readAllLines(inputCsvExpected);
-     * 
-     * for (int i = 0; i < generatedLines.size(); i++) {
-     * assertEquals(
-     * expectedLines.get(i),
-     * generatedLines.get(i),
-     * "Las lineas '"
-     * + i
-     * + "' no son iguales: \n"
-     * + expectedLines.get(i)
-     * + "\n\n"
-     * + generatedLines.get(i)
-     * + "\n\n");
-     * }
-     * }
-     */
 }

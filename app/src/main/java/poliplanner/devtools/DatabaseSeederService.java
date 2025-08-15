@@ -1,5 +1,6 @@
 package poliplanner.devtools;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
@@ -12,28 +13,24 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import poliplanner.excel.ExcelService;
-import poliplanner.models.SheetVersion;
 import poliplanner.models.Subject;
 import poliplanner.models.User;
 import poliplanner.repositories.SubjectRepository;
 import poliplanner.repositories.UserRepository;
 import poliplanner.services.ScheduleService;
-import poliplanner.services.SheetVersionService;
-
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class DatabaseSeederService {
-    private static final Path excelFile = Path.of("src/test/resources/output.csv");
+    private static final File excelFile = Path.of("src/test/resources/testExcel.xlsx").toFile();
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseSeederService.class);
 
     private final ExcelService excelService;
     private final ScheduleService scheduleService;
-    private final SheetVersionService versionService;
 
     private final UserRepository userRepo;
     private final SubjectRepository subjectRepository;

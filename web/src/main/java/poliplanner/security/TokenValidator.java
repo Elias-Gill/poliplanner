@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TokenValidator {
-    // TODO: hacer mas robusto
+    // FIX: hacer mas robusto
     private final String expectedKey = System.getenv("UPDATE_KEY");
 
     public Boolean isValid(String authHeader) {

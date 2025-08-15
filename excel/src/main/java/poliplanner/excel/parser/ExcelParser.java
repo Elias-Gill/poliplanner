@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +22,6 @@ import org.dhatim.fastexcel.reader.Row;
 import org.dhatim.fastexcel.reader.Sheet;
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
 import poliplanner.excel.exception.ExcelParserConfigurationException;
 import poliplanner.excel.parser.JsonLayoutLoader.Layout;
 import poliplanner.excel.exception.ExcelParserException;
@@ -34,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component
-@RequiredArgsConstructor
 public class ExcelParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExcelParser.class);
@@ -43,24 +40,21 @@ public class ExcelParser {
     private static final Map<String, BiConsumer<SubjectCsvDTO, String>> fieldMapper = createFieldMappers();
     private static final Set<String> HEADER_KEYWORDS = Set.of("ítem", "item");
 
-    public ExcelParser(JsonLayoutLoader loader) {
+    public ExcelParser() {
         try {
+            JsonLayoutLoader loader = new JsonLayoutLoader();
             this.layouts = loader.loadJsonLayouts();
         } catch (IOException e) {
             throw new ExcelParserConfigurationException("Failed to load layouts: ", e);
         }
     }
 
-    ExcelParser(List<Layout> layouts) {
-        this.layouts = layouts;
-    }
-
     // ================================
     // ======== Public API ============
     // ================================
 
-    public Map<String, List<SubjectCsvDTO>> parseExcel(Path file) throws ExcelParserException {
-        try (InputStream is = new FileInputStream(new File(file.toUri()));
+    public Map<String, List<SubjectCsvDTO>> parseExcel(File file) throws ExcelParserException {
+        try (InputStream is = new FileInputStream(file);
                 ReadableWorkbook wb = new ReadableWorkbook(is)) {
 
             LOG.info("Parsing file: {}", file.toString());

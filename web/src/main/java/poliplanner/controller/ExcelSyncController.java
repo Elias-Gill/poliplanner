@@ -87,7 +87,7 @@ public class ExcelSyncController {
             logger.info("Archivo subido y guardado en {}", tempFile);
 
             // Procesar archivo como nuevo Excel
-            service.parseAndPersistExcel(tempFile, link);
+            service.parseAndPersistExcel(tempFile.toFile(), link);
             logger.warn("Excel correctamente parseado y actualizado");
 
             return ResponseEntity.ok("Archivo sincronizado correctamente.");
