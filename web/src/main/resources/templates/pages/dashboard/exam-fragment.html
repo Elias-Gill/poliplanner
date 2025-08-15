@@ -1,0 +1,12 @@
+<article th:fragment="exam-fragment(nombre, fecha, hora, aula)">
+  <span th:text="${nombre}"></span>
+  <span class='badge-container'>
+    <span class="date-badge" th:text="${#temporals.format(fecha, 'dd/MM/yyyy')}"></span>
+    <span class="date-badge bg-warning" 
+      th:text="${hora != null and !hora.isEmpty()} ? ${hora + 'hs'} : 'Hora no proporcionada'">
+    </span>
+  </span>
+  <div th:if="${aula != null}">
+    Aula: <span th:text="${aula}"></span>
+  </div>
+</article>

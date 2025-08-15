@@ -1,0 +1,17 @@
+package poliplanner.security;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class TokenValidator {
+    // FIX: hacer mas robusto
+    private final String expectedKey = System.getenv("UPDATE_KEY");
+
+    public Boolean isValid(String authHeader) {
+        if (authHeader == null || !authHeader.trim().equals("Bearer " + expectedKey)) {
+            return false;
+        }
+
+        return true;
+    }
+}

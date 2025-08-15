@@ -1,0 +1,62 @@
+package poliplanner.controller;
+
+import java.util.List;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import poliplanner.models.Schedule;
+import poliplanner.models.SheetVersion;
+import poliplanner.services.ScheduleService;
+import poliplanner.services.SheetVersionService;
+
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+
+@Controller
+@AllArgsConstructor
+public class DashboardController {
+    private final ScheduleService scheduleService;
+    private final SheetVersionService versionService;
+
+    private static String newVersionMessage = "📢 ¡Nueva versión del Excel disponible!. Actualiza tu horario usando nuestra "
+            + "<a href=\"#bottom\">herramienta de migración</a>.";
+
+    @GetMapping("/")
+    public String home(
+            @RequestParam(required = false) Long id,
+            HttpServletResponse response,
+            Authentication authentication,
+            Model model) {
+
+        SheetVersion latestSheetVersion = versionService.findLatest();
+
+        String userName = authentication.getName();
+        List<Schedule> schedules = scheduleService.findByUserName(userName);
+        model.addAttribute("schedules", schedules);
+
+        if (schedules.isEmpty()) {
+            return "pages/dashboard/home";
+        }
+
+        Schedule selectedSchedule = schedules.get(0);
+        if (id != null) {
+            for (Schedule s : schedules) {
+                if (s.getId().equals(id)) {
+                    selectedSchedule = s;
+                    break;
+                }
+            }
+        }
+
+        model.addAttribute("selectedSchedule", selectedSchedule);
+        if (selectedSchedule.getVersion().getParsedAt().isBefore(latestSheetVersion.getParsedAt())) {
+            model.addAttribute("hasNewExcel", newVersionMessage);
+        }
+
+        return "pages/dashboard/home";
+    }
+}
