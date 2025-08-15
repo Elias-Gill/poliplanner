@@ -1,169 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.2.5</version>
-    <relativePath></relativePath>
-    <!-- lookup parent from repository -->
+    <relativePath/> <!-- Busca en repositorios si no está localmente -->
   </parent>
+  
   <groupId>com.elias_gill.poliplanner</groupId>
-  <artifactId>poliplanner</artifactId>
+  <artifactId>poliplanner-parent</artifactId>
   <version>1.0.0</version>
-  <name>poliplanner</name>
+  <packaging>pom</packaging>
+  <name>poliplanner-parent</name>
+  
   <properties>
     <java.version>17</java.version>
+    <lombok.version>1.18.30</lombok.version>
+    <!-- Versiones para dependencias NO de Spring Boot -->
+    <thymeleaf-layout-dialect.version>3.1.0</thymeleaf-layout-dialect.version>
+    <postgresql.version>42.7.3</postgresql.version>
+    <hibernate-core.version>6.6.8.Final</hibernate-core.version>
+    <hibernate-dialects.version>6.6.7.Final</hibernate-dialects.version>
+    <jakarta-persistence.version>3.1.0</jakarta-persistence.version>
+    <fastexcel.version>0.18.4</fastexcel.version>
+    <jsoup.version>1.16.1</jsoup.version>
   </properties>
-  <dependencies>
-    <!-- lombok to make code cleaner -->
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <!-- Spring Boot starters -->
-    <!-- security -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
-    <!-- web starter -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <!-- Para soporte de layout dialect con thymeleaf -->
-    <dependency>
-      <groupId>nz.net.ultraq.thymeleaf</groupId>
-      <artifactId>thymeleaf-layout-dialect</artifactId>
-      <version>3.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-thymeleaf</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-    <!-- Hibernate -->
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>42.7.3</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate.orm</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>6.6.8.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate.orm</groupId>
-      <artifactId>hibernate-community-dialects</artifactId>
-      <version>6.6.7.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.persistence</groupId>
-      <artifactId>jakarta.persistence-api</artifactId>
-      <version>3.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
-    </dependency>
-    <!-- CSV -->
-    <dependency>
-      <groupId>com.opencsv</groupId>
-      <artifactId>opencsv</artifactId>
-      <version>5.8</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jsoup</groupId>
-      <artifactId>jsoup</artifactId>
-      <version>1.16.1</version>
-    </dependency>
-    <!-- Testing -->
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>5.10.2</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  
+  <modules>
+    <module>exception</module>
+    <module>persistence</module>
+    <module>service</module>
+    <module>excel</module>
+    <module>web</module>
+    <module>app</module>
+  </modules>
+  
+  <dependencyManagement>
+    <dependencies>
+      <!-- Solo gestiona versiones de dependencias que NO son de Spring Boot -->
+      
+      <!-- Lombok -->
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      
+      <!-- Thymeleaf (extensión) -->
+      <dependency>
+        <groupId>nz.net.ultraq.thymeleaf</groupId>
+        <artifactId>thymeleaf-layout-dialect</artifactId>
+        <version>${thymeleaf-layout-dialect.version}</version>
+      </dependency>
+      
+      <!-- Database -->
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${postgresql.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate.orm</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>${hibernate-core.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate.orm</groupId>
+        <artifactId>hibernate-community-dialects</artifactId>
+        <version>${hibernate-dialects.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.persistence</groupId>
+        <artifactId>jakarta.persistence-api</artifactId>
+        <version>${jakarta-persistence.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  
   <build>
-    <plugins>
-      <!-- Spring Boot plugin (versión ya gestionada por el parent) -->
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
-      <!-- para diferenciar integracion con unit testing -->
-      <plugin>
-        <groupId>org.junit.platform</groupId>
-        <artifactId>junit-platform-surefire-provider</artifactId>
-        <version>1.0.3</version>
-      </plugin>
-      <!-- Compilador -->
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-          <compilerArgs>
-            <arg>-Xlint:all</arg>
-            <!-- Desactiva warnings de procesamiento -->
-            <arg>-Xlint:-processing</arg>
-            <!-- Uncomment bellow to have a more pedantic compiler -->
-            <!-- <arg>-Werror</arg> -->
-          </compilerArgs>
-          <!-- lombok -->
-          <annotationProcessorPaths>
-            <path>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-              <version>${lombok.version}</version>
-            </path>
-          </annotationProcessorPaths>
-        </configuration>
-      </plugin>
-      <!-- eclipse code formatter -->
-      <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-        <version>2.44.0</version>
-        <!-- o la última -->
-        <executions>
-          <execution>
-            <goals>
-              <goal>apply</goal>
-              <!-- para ejecutar 'mvn spotless:apply' -->
-              <goal>check</goal>
-              <!-- para ejecutar 'mvn spotless:check' -->
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <java>
-            <eclipse>
-              <file>${basedir}/formatter-config.xml</file>
-            </eclipse>
-          </java>
-        </configuration>
-      </plugin>
-    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+            <compilerArgs>
+              <arg>-Xlint:all</arg>
+              <arg>-Xlint:-processing</arg>
+            </compilerArgs>
+            <annotationProcessorPaths>
+              <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+              </path>
+            </annotationProcessorPaths>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>2.44.0</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 </project>

@@ -1,61 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <profiles version="13">
-  <profile kind="CodeFormatterProfile" name="Eclipse [Actualizado]" version="13">
-    <!-- Configuración básica Java -->
+  <profile kind="CodeFormatterProfile" name="Eclipse [Ajustado a tu estilo]" version="13">
+    <!-- Configuración básica de Java -->
     <setting id="org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode" value="enabled"/>
     <setting id="org.eclipse.jdt.core.compiler.codegen.targetPlatform" value="17"/>
     <setting id="org.eclipse.jdt.core.compiler.compliance" value="17"/>
+    <setting id="org.eclipse.jdt.core.compiler.source" value="17"/>
     <setting id="org.eclipse.jdt.core.compiler.problem.assertIdentifier" value="error"/>
     <setting id="org.eclipse.jdt.core.compiler.problem.enumIdentifier" value="error"/>
-    <setting id="org.eclipse.jdt.core.compiler.source" value="17"/>
-    
-    <!-- Configuración de indentación -->
+
+    <!-- Indentación -->
     <setting id="org.eclipse.jdt.core.formatter.tabulation.char" value="space"/>
     <setting id="org.eclipse.jdt.core.formatter.tabulation.size" value="4"/>
     <setting id="org.eclipse.jdt.core.formatter.indentation.size" value="4"/>
     <setting id="org.eclipse.jdt.core.formatter.use_tabs_only_for_leading_indentations" value="false"/>
-    
-    <!-- Configuración de líneas y espacios -->
+
+    <!-- Líneas y espacios -->
     <setting id="org.eclipse.jdt.core.formatter.lineSplit" value="120"/>
-    <setting id="org.eclipse.jdt.core.formatter.join_wrapped_lines" value="false"/>
-    <setting id="org.eclipse.jdt.core.formatter.wrap_before_binary_operator" value="true"/>
-    
-    <!-- Configuración específica para records y clases -->
-    <setting id="org.eclipse.jdt.core.formatter.alignment_for_parameters_in_method_declaration" value="16"/>
+    <setting id="org.eclipse.jdt.core.formatter.join_wrapped_lines" value="true"/>
+    <setting id="org.eclipse.jdt.core.formatter.wrap_before_binary_operator" value="false"/>
+    <setting id="org.eclipse.jdt.core.formatter.insert_space_before_binary_operator" value="insert"/>
+    <setting id="org.eclipse.jdt.core.formatter.insert_space_after_binary_operator" value="insert"/>
+
+    <!-- Clases y métodos -->
+    <setting id="org.eclipse.jdt.core.formatter.brace_position_for_type_declaration" value="end_of_line"/>
+    <setting id="org.eclipse.jdt.core.formatter.brace_position_for_method_declaration" value="end_of_line"/>
     <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_opening_brace_in_type_declaration" value="insert"/>
     <setting id="org.eclipse.jdt.core.formatter.insert_new_line_before_closing_brace_in_type_declaration" value="insert"/>
-    <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_method" value="1"/>
-    <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_field" value="0"/>
-    <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_first_class_body_declaration" value="0"/>
-    
-    <!-- Configuración de métodos -->
     <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_opening_brace_in_method_declaration" value="insert"/>
     <setting id="org.eclipse.jdt.core.formatter.insert_new_line_before_closing_brace_in_method_declaration" value="insert"/>
     <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_method_declaration" value="insert"/>
-    <setting id="org.eclipse.jdt.core.formatter.brace_position_for_method_declaration" value="end_of_line"/>
-    
-    <!-- Configuración de parámetros -->
+    <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_method" value="0"/>
+    <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_field" value="0"/>
+    <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_first_class_body_declaration" value="0"/>
+
+    <!-- Parámetros -->
+    <setting id="org.eclipse.jdt.core.formatter.alignment_for_parameters_in_method_declaration" value="16"/>
     <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_declaration_parameters" value="insert"/>
     <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_allocation_expression" value="insert"/>
-    <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_enum_declarations" value="insert"/>
-    
-    <!-- Configuración de bloques de código -->
+
+    <!-- Bloques de código -->
+    <setting id="org.eclipse.jdt.core.formatter.brace_position_for_block" value="end_of_line"/>
     <setting id="org.eclipse.jdt.core.formatter.insert_new_line_in_empty_block" value="insert"/>
     <setting id="org.eclipse.jdt.core.formatter.insert_new_line_in_empty_method_body" value="insert"/>
-    <setting id="org.eclipse.jdt.core.formatter.compact_else_if" value="false"/>
+    <setting id="org.eclipse.jdt.core.formatter.compact_else_if" value="true"/>
     <setting id="org.eclipse.jdt.core.formatter.keep_else_statement_on_same_line" value="false"/>
-    
-    <!-- Configuración de llaves -->
-    <setting id="org.eclipse.jdt.core.formatter.brace_position_for_type_declaration" value="end_of_line"/>
-    <setting id="org.eclipse.jdt.core.formatter.brace_position_for_block" value="end_of_line"/>
-    <setting id="org.eclipse.jdt.core.formatter.brace_position_for_switch" value="end_of_line"/>
-    <setting id="org.eclipse.jdt.core.formatter.brace_position_for_array_initializer" value="end_of_line"/>
-    
-    <!-- Configuración de comentarios -->
+
+    <!-- Comentarios -->
     <setting id="org.eclipse.jdt.core.formatter.comment.line_length" value="80"/>
     <setting id="org.eclipse.jdt.core.formatter.comment.format_javadoc_comments" value="true"/>
-    <setting id="org.eclipse.jdt.core.formatter.comment.format_block_comments" value="true"/>
-    
+    <setting id="org.eclipse.jdt.core.formatter.comment.format_block_comments" value="false"/>
+
     <!-- Otras configuraciones -->
     <setting id="org.eclipse.jdt.core.formatter.put_empty_statement_on_new_line" value="true"/>
     <setting id="org.eclipse.jdt.core.formatter.use_on_off_tags" value="true"/>
