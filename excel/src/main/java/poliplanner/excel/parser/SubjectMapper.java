@@ -135,15 +135,37 @@ public class SubjectMapper {
         return null;
     }
 
-    private static String cleanTime(String h) {
-        h.replaceAll("hs", "");
-
-        // Clean 08:00[:00] <-
-        String[] segments = h.split(":");
-        if (segments.length > 2) {
-            h = segments[0].concat(":").concat(segments[1]);
+    private static String cleanTime(String timeStr) {
+        if (timeStr == null || timeStr.trim().isEmpty()) {
+            return "";
         }
 
-        return h;
+        // Eliminar cualquier texto no numérico (como "hs", "h", etc.)
+        String cleaned = timeStr.replaceAll("[^0-9:]", "").trim();
+
+        // Normalizar separadores (por si usan otro carácter en lugar de :)
+        cleaned = cleaned.replaceAll("[^0-9]+", ":");
+
+        // Eliminar : duplicados y : al inicio/final
+        cleaned = cleaned.replaceAll("^:|:$", "").replaceAll("::+", ":");
+
+        // Dividir en componentes
+        String[] segments = cleaned.split(":");
+
+        try {
+            // Obtener horas y minutos (ignorar segundos si existen)
+            int hours = segments.length > 0 ? Integer.parseInt(segments[0]) : 0;
+            int minutes = segments.length > 1 ? Integer.parseInt(segments[1]) : 0;
+
+            // Validar rangos
+            hours = Math.max(0, Math.min(hours, 23));
+            minutes = Math.max(0, Math.min(minutes, 59));
+
+            // Formatear a dos dígitos cada componente
+            return String.format("%02d:%02d", hours, minutes);
+        } catch (NumberFormatException e) {
+            // TODO: mostrar un log de warning
+            return "";
+        }
     }
 }

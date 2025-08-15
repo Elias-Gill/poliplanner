@@ -13,6 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.TestConstructor;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,9 @@ import poliplanner.repositories.CareerRepository;
 import poliplanner.repositories.SheetVersionRepository;
 import poliplanner.repositories.SubjectRepository;
 
-@SpringBootTest
 @Transactional
+@SpringBootTest
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @Rollback
 @RequiredArgsConstructor
 class ExcelServiceIntegrationTest {
@@ -90,5 +92,4 @@ class ExcelServiceIntegrationTest {
         List<Subject> subjects = subjectRepository.findAll();
         assert (!subjects.isEmpty());
     }
-
 }

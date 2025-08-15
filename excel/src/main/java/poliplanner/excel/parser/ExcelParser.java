@@ -84,7 +84,7 @@ public class ExcelParser {
         } catch (IOException e) {
             throw new ExcelParserInputException("Error reading file: " + file, e);
         } catch (LayoutMatchException e) {
-            LOG.error("Layout mismatch in file {}", file.toString());
+            LOG.error("Cannot find layout in file {}", file.toString());
             throw e;
         }
     }
@@ -93,6 +93,7 @@ public class ExcelParser {
     // ======== Private methods ============
     // =====================================
 
+    // NOTE: expuesto solo en el paquete para testing
     List<SubjectCsvDTO> parseSheet(Sheet sheet) {
         try {
             List<Row> sheetRows = sheet.read();

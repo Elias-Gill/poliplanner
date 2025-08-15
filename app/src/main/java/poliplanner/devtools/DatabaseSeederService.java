@@ -1,7 +1,6 @@
 package poliplanner.devtools;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,7 +24,7 @@ import poliplanner.services.ScheduleService;
 @Service
 @RequiredArgsConstructor
 public class DatabaseSeederService {
-    private static final File excelFile = Path.of("src/test/resources/testExcel.xlsx").toFile();
+    private static final File excelFile = new File("src/test/resources/testExcel.xlsx");
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseSeederService.class);
 
