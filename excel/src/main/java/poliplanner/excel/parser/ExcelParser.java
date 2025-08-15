@@ -59,9 +59,6 @@ public class ExcelParser {
     // ======== Public API ============
     // ================================
 
-    // TEST: exponer un metodo para hacer testing sobre sheets sueltas en vez de
-    // sobre el el archivo completo, asi para poder testear la correcta
-    // persistencia.
     public Map<String, List<SubjectCsvDTO>> parseExcel(Path file) throws ExcelParserException {
         try (InputStream is = new FileInputStream(new File(file.toUri()));
                 ReadableWorkbook wb = new ReadableWorkbook(is)) {
@@ -78,35 +75,12 @@ public class ExcelParser {
                         || career.contains("Homologadas")
                         || career.contains("Homólogas")
                         || career.equalsIgnoreCase("códigos")) {
+                    LOG.info("Ignoring sheet: {}", career);
                     continue;
                 }
-
                 LOG.info("Parsing sheet: {}", career);
 
-                List<Row> sheetRows = sheet.read();
-
-                Row headerRow = searchHeadersRow(sheetRows);
-                // Este metodo es 1 based, asi que ahora esta apuntando a la fila inmediatamente
-                // debajo de los encabezados.
-                Integer startingRow = headerRow.getRowNum();
-                Integer startingCell = calculateStartingCell(headerRow);
-
-                System.out.println(career);
-                Layout layout = findFittingLayout(headerRow);
-
-                List<SubjectCsvDTO> subjects = new ArrayList<>();
-                for (Integer i = startingRow; i < sheetRows.size(); i++) {
-                    Row row = sheetRows.get(i);
-                    SubjectCsvDTO subject = parseRow(row, layout, startingCell);
-
-                    // Legamos al final de las materias
-                    if (null == subject) {
-                        break;
-                    }
-
-                    subjects.add(subject);
-                }
-
+                List<SubjectCsvDTO> subjects = parseSheet(sheet);
                 result.put(career, subjects);
             }
 
@@ -124,6 +98,37 @@ public class ExcelParser {
     // =====================================
     // ======== Private methods ============
     // =====================================
+
+    List<SubjectCsvDTO> parseSheet(Sheet sheet) {
+        try {
+            List<Row> sheetRows = sheet.read();
+            List<SubjectCsvDTO> result = new ArrayList<>();
+
+            Row headerRow = searchHeadersRow(sheetRows);
+            // Este metodo es 1 based, asi que ahora esta apuntando a la fila inmediatamente
+            // debajo de los encabezados.
+            Integer startingRow = headerRow.getRowNum();
+            Integer startingCell = calculateStartingCell(headerRow);
+
+            Layout layout = findFittingLayout(headerRow);
+
+            List<SubjectCsvDTO> subjects = new ArrayList<>();
+            for (Integer i = startingRow; i < sheetRows.size(); i++) {
+                Row row = sheetRows.get(i);
+                SubjectCsvDTO subject = parseRow(row, layout, startingCell);
+
+                // Legamos al final de las materias
+                if (null == subject) {
+                    break;
+                }
+                subjects.add(subject);
+            }
+
+            return result;
+        } catch (IOException e) {
+            throw new ExcelParserInputException("Cannot read sheet", e);
+        }
+    }
 
     /**
      * Parsea una fila de Excel y la convierte en un objeto SubjectCsvDTO según el
@@ -175,7 +180,7 @@ public class ExcelParser {
         return dto;
     }
 
-    private static Row searchHeadersRow(List<Row> rows) throws FileNotFoundException, IOException {
+    private static Row searchHeadersRow(List<Row> rows) {
         for (Row r : rows) {
             if (r.getCellCount() < 0 || !isHeader(r)) {
                 continue;

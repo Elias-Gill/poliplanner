@@ -1,12 +1,15 @@
 package poliplanner.test.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +19,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import poliplanner.excel.ExcelService;
 import poliplanner.excel.sources.ExcelDownloadSource;
+import poliplanner.models.Career;
+import poliplanner.models.SheetVersion;
+import poliplanner.models.Subject;
 import poliplanner.repositories.CareerRepository;
 import poliplanner.repositories.SheetVersionRepository;
 import poliplanner.repositories.SubjectRepository;
@@ -49,8 +55,6 @@ class ExcelServiceIntegrationTest {
         }
     }
 
-    // @Test
-    // @Tag("integration")
     /**
      * Test de integración que verifica el proceso completo de parseo de un archivo
      * Excel y la
@@ -68,25 +72,24 @@ class ExcelServiceIntegrationTest {
      * estructurados
      * correctamente.
      */
-    /*
-     * void testExcelParsingPersistency() throws Exception {
-     * Path testExcel = Paths.get("src/test/resources/testExcel.xlsx");
-     * String dummyUrl = "URL";
-     * 
-     * excelService.persistSubjectsFromExcel(testExcel, dummyUrl);
-     * 
-     * // Verificamos que se haya creado la version
-     * SheetVersion version =
-     * sheetVersionRepository.findFirstByOrderByParsedAtDesc();
-     * assertEquals(dummyUrl, version.getUrl());
-     * 
-     * // Verificamos que se hayan creado carreras
-     * List<Career> careers = careerRepository.findAll();
-     * assert (!careers.isEmpty());
-     * 
-     * // Verificamos que se hayan creado materias
-     * List<Subject> subjects = subjectRepository.findAll();
-     * assert (!subjects.isEmpty());
-     * }
-     */
+    @Test
+    void testExcelParsingPersistency() throws Exception {
+        Path testExcel = Paths.get("src/test/resources/testExcel.xlsx");
+        String dummyUrl = "URL";
+
+        excelService.parseAndPersistExcel(testExcel, dummyUrl);
+
+        // Verificamos que se haya creado la version
+        SheetVersion version = sheetVersionRepository.findFirstByOrderByParsedAtDesc();
+        assertEquals(dummyUrl, version.getUrl());
+
+        // Verificamos que se hayan creado carreras
+        List<Career> careers = careerRepository.findAll();
+        assert (!careers.isEmpty());
+
+        // Verificamos que se hayan creado materias
+        List<Subject> subjects = subjectRepository.findAll();
+        assert (!subjects.isEmpty());
+    }
+
 }

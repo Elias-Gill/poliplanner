@@ -3,114 +3,80 @@ package poliplanner.excel.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import poliplanner.excel.sources.ExcelDownloadSource;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ExcelParserTest {
-    private static final String SRC_TEST_RESOURCES_INPUT_CSV = "src/test/resources/input.csv";
-    private static final String SRC_TEST_RESOURCES_OUTPUT_CSV = "src/test/resources/output.csv";
+    private static final String SRC_TEST_RESOURCES_LAYOUT = "/con_aulas__con_revision.json";
 
-    /*
-     * @Test
-     * 
-     * @Tag("unit")
-     * void testCleanCsv() throws Exception {
-     * Path tempFile = ExcelParser.cleanCsv(Path.of(SRC_TEST_RESOURCES_INPUT_CSV));
-     * 
-     * // Comparar con el output esperado
-     * Path expectedPath = Path.of(SRC_TEST_RESOURCES_OUTPUT_CSV);
-     * List<String> cleanedLines = Files.readAllLines(tempFile);
-     * List<String> expectedLines = Files.readAllLines(expectedPath);
-     * 
-     * assertEquals(expectedLines.size(), cleanedLines.size(),
-     * "El número de líneas no coincide");
-     * 
-     * for (int i = 0; i < expectedLines.size(); i++) {
-     * assertEquals(
-     * expectedLines.get(i), cleanedLines.get(i), "Línea " + (i + 1) +
-     * " no coincide");
-     * }
-     * 
-     * // Limpieza
-     * Files.deleteIfExists(tempFile);
-     * }
-     */
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-    /*
-     * @Test
-     * 
-     * @Tag("unit")
-     * void testExtractSubjects() throws Exception {
-     * // Archivo de prueba ya sanitizado
-     * File testFile = new File(SRC_TEST_RESOURCES_OUTPUT_CSV);
-     * 
-     * // Ejecutar el método
-     * List<SubjectCsvDTO> subjects =
-     * ExcelParser.extractSubjects(testFile.toPath());
-     * 
-     * // Verificar resultados
-     * assertNotNull(subjects, "La lista de subjects no debería ser null");
-     * assertFalse(subjects.isEmpty(),
-     * "La lista de subjects no debería estar vacía");
-     * 
-     * // Verificar primera entrada
-     * SubjectCsvDTO first = subjects.get(0);
-     * assertEquals("DCB", first.departamento);
-     * assertEquals("Algebra Lineal", first.nombreAsignatura);
-     * assertEquals("2", first.semestre);
-     * assertEquals("MI", first.seccion);
-     * assertEquals("Lic.", first.tituloProfesor);
-     * assertEquals("Villasanti Flores", first.apellidoProfesor);
-     * assertEquals("Richard Adrián", first.nombreProfesor);
-     * assertEquals("", first.emailProfesor);
-     * 
-     * // Verificar última entrada
-     * SubjectCsvDTO last = subjects.get(subjects.size() - 1);
-     * 
-     * assertEquals("DG", last.departamento);
-     * assertEquals("Técnicas de Organización y Métodos", last.nombreAsignatura);
-     * assertEquals("5", last.semestre);
-     * assertEquals("NA", last.seccion);
-     * assertEquals("Ms.", last.tituloProfesor);
-     * assertEquals("Ramírez Barboza", last.apellidoProfesor);
-     * assertEquals("Estela Mary", last.nombreProfesor);
-     * assertEquals("emramirez@pol.una.py", last.emailProfesor);
-     * 
-     * assertEquals("Mar 17/09/24", last.parcial1Fecha);
-     * 
-     * assertEquals("Ms. Estela Mary Ramírez Barboza", last.comitePresidente);
-     * assertEquals("Lic. Zulma Lucía Demattei Ortíz", last.comiteMiembro1);
-     * assertEquals("Lic. Osvaldo David Sosa Cabrera", last.comiteMiembro2);
-     * 
-     * assertEquals("E01", last.aulaMartes);
-     * assertEquals("20:45 - 22:15", last.martes);
-     * 
-     * assertEquals("E01", last.aulaJueves);
-     * assertEquals("19:00 - 20:30", last.jueves);
-     * 
-     * assertEquals("E01", last.aulaSabado);
-     * assertEquals("07:30 - 11:30", last.sabado);
-     * 
-     * assertEquals("05/10, 23/11", last.fechasSabadoNoche);
-     * 
-     * assertEquals("", last.aulaMiercoles);
-     * }
-     */
+    @Test
+    @Tag("unit")
+    void testParseFromJsonResource() throws Exception {
+        Map<String, List<SubjectCsvDTO>> result = new ExcelParser(new JsonLayoutLoader()).parseSheet();
+
+        // Validaciones generales
+        assertNotNull(result, "El mapa de resultados no debería ser null");
+        assertFalse(result.isEmpty(), "El mapa de resultados no debería estar vacío");
+
+        // Unir todas las listas de subjects
+        List<SubjectCsvDTO> subjects = result.values().stream()
+                .flatMap(List::stream)
+                .toList();
+
+        assertFalse(subjects.isEmpty(), "La lista total de subjects no debería estar vacía");
+
+        // Primera entrada
+        SubjectCsvDTO first = subjects.get(0);
+        assertEquals("DCB", first.departamento);
+        assertEquals("Algebra Lineal", first.nombreAsignatura);
+        assertEquals("2", first.semestre);
+        assertEquals("MI", first.seccion);
+        assertEquals("Lic.", first.tituloProfesor);
+        assertEquals("Villasanti Flores", first.apellidoProfesor);
+        assertEquals("Richard Adrián", first.nombreProfesor);
+        assertEquals("", first.emailProfesor);
+
+        // Última entrada
+        SubjectCsvDTO last = subjects.get(subjects.size() - 1);
+        assertEquals("DG", last.departamento);
+        assertEquals("Técnicas de Organización y Métodos", last.nombreAsignatura);
+        assertEquals("5", last.semestre);
+        assertEquals("NA", last.seccion);
+        assertEquals("Ms.", last.tituloProfesor);
+        assertEquals("Ramírez Barboza", last.apellidoProfesor);
+        assertEquals("Estela Mary", last.nombreProfesor);
+        assertEquals("emramirez@pol.una.py", last.emailProfesor);
+
+        assertEquals("Mar 17/09/24", last.parcial1Fecha);
+
+        assertEquals("Ms. Estela Mary Ramírez Barboza", last.comitePresidente);
+        assertEquals("Lic. Zulma Lucía Demattei Ortíz", last.comiteMiembro1);
+        assertEquals("Lic. Osvaldo David Sosa Cabrera", last.comiteMiembro2);
+
+        assertEquals("E01", last.aulaMartes);
+        assertEquals("20:45 - 22:15", last.martes);
+
+        assertEquals("E01", last.aulaJueves);
+        assertEquals("19:00 - 20:30", last.jueves);
+
+        assertEquals("E01", last.aulaSabado);
+        assertEquals("07:30 - 11:30", last.sabado);
+
+        assertEquals("05/10, 23/11", last.fechasSabadoNoche);
+
+        assertEquals("", last.aulaMiercoles);
+    }
 
     /*
      * @Test
