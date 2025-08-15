@@ -6,9 +6,9 @@
     <title>Registro de Usuario</title>
   </head>
   <main layout:fragment="content">
-    <article>
+    <h2>Formulario de registro</h2>
+    <section>
       <section>
-        <h2>Registro de Usuario</h2>
         <form th:action="@{/register}" th:object="${user}" method="post">
           <section>
             <label>
@@ -31,12 +31,12 @@
       <p>
         ¿Ya tenés cuenta? <a th:href="@{/login}">Iniciá sesión acá</a>
       </p>
-    </article>
+    </section>
     <section>
       <h2>Consideraciones</h2>
       <ul>
         <li>
-            Los nombres de usuario <strong>solo se permiten letras minúsculas, números, guion (-) y guion bajo (_)</strong>.
+          Los nombres de usuario <strong>solo se permiten letras minúsculas, números, guion (-) y guion bajo (_)</strong>.
         </li>
         <li>
           Las contraseñas deben tener al menos 6 caracteres.

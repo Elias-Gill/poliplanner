@@ -1,6 +1,5 @@
 <tr th:fragment="day(materia)">
-  <td>
-    <span th:text="${materia.nombreAsignatura}"></span>
+  <td th:text="${materia.nombreAsignatura}">
   </td>
   <!-- Lunes -->
   <td th:if="${materia.lunes != null and materia.lunes != ''}">

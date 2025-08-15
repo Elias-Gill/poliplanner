@@ -6,54 +6,54 @@
     <!-- Mensaje de error si no hay carreras -->
     <div th:replace="~{fragments/alerts/error :: alert(${error})}"></div>
     <!-- Formulario -->
+    <h2>Crear nuevo horario</h2>
     <section>
-      <article>
-        <h2>Crear nuevo horario</h2>
-        <form th:action="@{/schedule/new}" method="post">
+      <form th:action="@{/schedule/new}" method="post">
+        <section>
           <!-- Descripción -->
-          <article>
-            <label for="description">Descripción</label>
-            <input type="text" id="description" name="description" placeholder="Ej: Horario primer semestre 2025" required>
-          </article>
+          <label for="description">
+            <h3>Descripción</h3>
+          </label>
+          <input type="text" id="description" name="description" placeholder="Ej: Horario primer semestre 2025" required>
           <!-- Selección de carrera -->
-          <article>
-            <label for="careerId">Carrera</label>
-            <select id="careerId" name="careerId" required>
-              <option disabled selected value="">Selecciona una carrera</option>
-              <option th:each="career : ${careers}"
+          <label for="careerId">
+            <h3>Carrera</h3>
+          </label>
+          <select id="careerId" name="careerId" required>
+            <option disabled selected value="">Selecciona una carrera</option>
+            <option th:each="career : ${careers}"
                     th:value="${career.id}"
                     th:text="${career.name}">
-              </option>
-            </select>
-          </article>
-          <!-- Versión de hoja -->
-          <article>
-            <label>Versión de Excel</label>
-            <div>
-              <span>
-                <strong>Archivo:</strong>
-                <span th:text="${sheetVersion.fileName}"></span>
-              </span>
-              <br>
-              <span>
-                <strong>Procesado el:</strong>
-                <span th:if="${sheetVersion.parsedAt != null}"
+            </option>
+          </select>
+        </section>
+        <!-- Versión de hoja -->
+        <article>
+          <label>Versión de Excel</label>
+          <div>
+            <span>
+              <strong>Archivo:</strong>
+              <span th:text="${sheetVersion.fileName}"></span>
+            </span>
+            <br>
+            <span>
+              <strong>Procesado el:</strong>
+              <span th:if="${sheetVersion.parsedAt != null}"
                       th:text="${sheetVersion.getParsedAtFormatted}"></span>
-                <span th:if="${sheetVersion.parsedAt == null}">Fecha no disponible</span>
-              </span>
-              <br>
-              <span>
-                <strong>Descarga:</strong>
-                <a th:href="@{${sheetVersion.url}}" th:text="${sheetVersion.url}" target="_blank" rel="noopener"></a>
-              </span>
-            </div>
-          </article>
-          <!-- Botón de envío -->
-          <footer style="margin-top: var(--space-xl)">
-            <button type="submit">Continuar</button>
-          </footer>
-        </form>
-      </article>
+              <span th:if="${sheetVersion.parsedAt == null}">Fecha no disponible</span>
+            </span>
+            <br>
+            <span>
+              <strong>Descarga:</strong>
+              <a th:href="@{${sheetVersion.url}}" th:text="${sheetVersion.url}" target="_blank" rel="noopener"></a>
+            </span>
+          </div>
+        </article>
+        <!-- Botón de envío -->
+        <footer style="margin-top: var(--space-xl)">
+          <button type="submit">Continuar</button>
+        </footer>
+      </form>
     </section>
   </main>
 </html>

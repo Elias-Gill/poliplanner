@@ -27,7 +27,7 @@
     </div>
     <!-- Lista de exámenes -->
     <h1>Próximos exámenes</h1>
-    <article class="exam-list">
+    <div class="exam-list">
       <!-- Primer Parcial -->
       <div th:if="${not schedule.subjects.?[parcial1Fecha != null].empty}">
         <h2>Primer Parcial</h5>
@@ -77,7 +77,7 @@
             )}"></div>
         </div>
       </div>
-    </article>
+    </div>
     <!-- Información adicional de las subjects -->
     <section th:if="${not schedule.subjects?.empty}">
       <h1 class="section">Información adicional</h1>
