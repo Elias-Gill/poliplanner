@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import poliplanner.excel.sources.WebScrapper;
 import poliplanner.models.Career;
 import poliplanner.models.SheetVersion;
 import poliplanner.models.Subject;
+import poliplanner.models.metadata.SubjectsMetadata;
 import poliplanner.services.CareerService;
 import poliplanner.services.MetadataService;
 import poliplanner.services.SheetVersionService;
@@ -102,16 +104,21 @@ public class ExcelService {
 
         for (SubjectCsvDTO rawSubject : subjectsCsv) {
             Subject subject = SubjectMapper.mapToSubject(rawSubject);
+            subject.setCareer(carrera);
+
             // Desambiguar semestre de materia
             if (subject.getSemestre() == 0) {
-                System.out.println("Buscando para: " + subject.getNombreAsignatura());
-                metadataService.find(rawSubject)
-                        .ifPresent(meta -> {
-                            System.out.println("Encontrado");
-                            subject.setSemestre(meta.getSemester());
-                        });
+                Optional<SubjectsMetadata> maybeMeta = metadataService.findMetadata(subject);
+
+                if (maybeMeta.isPresent()) {
+                    SubjectsMetadata meta = maybeMeta.get();
+                    subject.setSemestre(meta.getSemester());
+                } else {
+                    System.out.println("No encontrado metadata para: " + subject.getNombreAsignatura() + "  -  "
+                            + subject.getCareer().getName());
+                }
             }
-            subject.setCareer(carrera);
+
             subjectService.create(subject);
         }
     }

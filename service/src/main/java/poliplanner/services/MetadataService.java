@@ -14,14 +14,18 @@ import poliplanner.repositories.MetadataRepository;
 public class MetadataService {
     private final MetadataRepository metadataRepository;
 
-    public Optional<SubjectsMetadata> find(Subject subject) {
+    // Funciona porque solo queremos desambiguar el semestre en la malla, no nos
+    // interesa que otro tipo de datos sobre la materia.
+    public Optional<SubjectsMetadata> findMetadata(Subject subject) {
         // Limpiar lo que no sean espacios, numeros, letras o guion
         String name = subject.getNombreAsignatura();
         String career = subject.getCareer().getName();
 
-        String cleanName = name.replaceAll("[^\\p{L}\\p{N} -]", "").trim();
-        String cleanCareerCode = name.replaceAll("[^\\p{L}\\p{N} -]", "").trim();
+        // Tomar solo la parte antes del guion y limpiar caracteres no alfanuméricos
+        String cleanName = name.split("-")[0] // tomar todo antes del guion
+                .replaceAll("[^\\p{L}\\p{N} ]", "") // conservar letras (incluye acentos y ñ), números y espacios
+                .trim(); // quitar espacios al inicio/final
 
-        return metadataRepository.findFirstByNameIgnoreCase(cleanName);
+        return metadataRepository.findFirstByNameIgnoreCaseAndCareer_Code(cleanName, career);
     }
 }
