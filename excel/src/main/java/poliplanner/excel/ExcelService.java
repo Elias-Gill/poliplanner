@@ -114,8 +114,8 @@ public class ExcelService {
                     SubjectsMetadata meta = maybeMeta.get();
                     subject.setSemestre(meta.getSemester());
                 } else {
-                    System.out.println("No encontrado metadata para: " + subject.getNombreAsignatura() + "  -  "
-                            + subject.getCareer().getName());
+                    logger.warn("No encontrado metadata para: {}  -  {}", subject.getNombreAsignatura(),
+                            subject.getCareer().getName());
                 }
             }
 
