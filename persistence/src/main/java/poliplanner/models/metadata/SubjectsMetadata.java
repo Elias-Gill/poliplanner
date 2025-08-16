@@ -17,13 +17,17 @@ import jakarta.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Table(name = "subjects_metadata")
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 public class SubjectsMetadata {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,4 +1,4 @@
-package poliplanner.test.integration;
+package poliplanner.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -21,7 +21,7 @@ import poliplanner.services.UserService;
 @SpringBootTest
 @Transactional
 @Rollback
-public class UserServiceIntegrationTest {
+public class UserServiceTest {
     @Autowired
     private UserService userService;
 

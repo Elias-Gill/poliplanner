@@ -24,6 +24,7 @@ import poliplanner.models.Career;
 import poliplanner.models.SheetVersion;
 import poliplanner.models.Subject;
 import poliplanner.services.CareerService;
+import poliplanner.services.MetadataService;
 import poliplanner.services.SheetVersionService;
 import poliplanner.services.SubjectService;
 
@@ -35,6 +36,8 @@ public class ExcelService {
     private final SubjectService subjectService;
     private final CareerService careerService;
     private final SheetVersionService versionService;
+    private final MetadataService metadataService;
+
     private final WebScrapper scrapper;
     private final ExcelParser parser;
 
@@ -99,6 +102,15 @@ public class ExcelService {
 
         for (SubjectCsvDTO rawSubject : subjectsCsv) {
             Subject subject = SubjectMapper.mapToSubject(rawSubject);
+            // Desambiguar semestre de materia
+            if (subject.getSemestre() == 0) {
+                System.out.println("Buscando para: " + subject.getNombreAsignatura());
+                metadataService.find(rawSubject)
+                        .ifPresent(meta -> {
+                            System.out.println("Encontrado");
+                            subject.setSemestre(meta.getSemester());
+                        });
+            }
             subject.setCareer(carrera);
             subjectService.create(subject);
         }

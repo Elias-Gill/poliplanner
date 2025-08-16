@@ -1,4 +1,4 @@
-package poliplanner.services;
+package poliplanner.test.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import poliplanner.exception.BadArgumentsException;
 import poliplanner.models.Career;
 import poliplanner.models.Schedule;
@@ -22,14 +23,13 @@ import poliplanner.repositories.ScheduleRepository;
 import poliplanner.repositories.SheetVersionRepository;
 import poliplanner.repositories.SubjectRepository;
 import poliplanner.repositories.UserRepository;
-
-import lombok.RequiredArgsConstructor;
+import poliplanner.services.ScheduleService;
 
 @SpringBootTest
 @Rollback
 @Transactional
 @RequiredArgsConstructor
-public class ScheduleServiceTest {
+public class ScheduleServiceIntegrationTest {
     final private ScheduleService scheduleService;
     final private ScheduleRepository scheduleRepository;
     final private SubjectRepository subjectRepository;

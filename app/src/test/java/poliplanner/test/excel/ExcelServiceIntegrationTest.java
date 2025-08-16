@@ -1,6 +1,7 @@
-package poliplanner.test.integration;
+package poliplanner.test.excel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -91,5 +93,11 @@ class ExcelServiceIntegrationTest {
         // Verificamos que se hayan creado materias
         List<Subject> subjects = subjectRepository.findAll();
         assert (!subjects.isEmpty());
+
+        // Buscar si es que se pudieron desambiguar materias que se sabe que tienen
+        // semestre desconocido en el excel
+        assertFalse(subjects.stream().filter(
+                entry -> entry.getNombreAsignatura().equals("Electiva I - Planificación Estratégica"))
+                .collect(Collectors.toSet()).isEmpty());
     }
 }
