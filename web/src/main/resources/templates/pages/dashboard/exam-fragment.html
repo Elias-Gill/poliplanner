@@ -3,7 +3,7 @@
   <span class='badge-container'>
     <span class="date-badge" th:text="${#temporals.format(fecha, 'dd/MM/yyyy')}"></span>
     <span class="date-badge bg-warning" 
-      th:text="${hora != null and !hora.isEmpty()} ? ${hora + 'hs'} : 'Hora no proporcionada'">
+      th:text="${hora != null and !hora.isEmpty()} ? ${hora + 'hs'} : 'Hora: pendiente'">
     </span>
   </span>
   <div th:if="${aula != null}">

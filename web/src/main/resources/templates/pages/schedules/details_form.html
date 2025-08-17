@@ -19,7 +19,7 @@
         <div th:each="semesterEntry : ${subjects}">
           <details>
             <summary th:if="${semesterEntry.key} != 0" th:text="'Semestre ' + ${semesterEntry.key}"></summary>
-            <summary th:if="${semesterEntry.key} == 0" th:text="'Materias sin semestre (Excel inconsistente)'"></summary>
+            <summary th:if="${semesterEntry.key} == 0" th:text="'Materias sin semestre'"></summary>
             <section th:each="subjectEntry : ${semesterEntry.value}">
               <h4 th:text="${subjectEntry.key}"></h4>
               <ul>

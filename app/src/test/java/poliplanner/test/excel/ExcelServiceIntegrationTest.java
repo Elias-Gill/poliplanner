@@ -100,8 +100,7 @@ class ExcelServiceIntegrationTest {
                 .collect(Collectors.toSet());
 
         if (!problematicSubjects.isEmpty()) {
-            System.err.println("⚠️ Advertencia: algunas materias no cuentan con semestre definido correctamente:");
-            problematicSubjects.forEach(s -> System.err.println(" - " + s.getNombreAsignatura()));
+            System.err.println("Algunas materias no cuentan con semestre definido correctamente");
         }
     }
 }
