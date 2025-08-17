@@ -43,4 +43,4 @@ ENV JAVA_OPTS="\
 EXPOSE 8080
 
 # ENTRYPOINT seguro usando array (para que JAVA_OPTS funcione se puede usar CMD)
-ENTRYPOINT ["java", "-jar", "/poliplanner/app.jar", "--spring.profiles.active=prod"]
+ENTRYPOINT ["java", "-jar", "-noverify", "/poliplanner/app.jar", "--spring.profiles.active=prod"]
