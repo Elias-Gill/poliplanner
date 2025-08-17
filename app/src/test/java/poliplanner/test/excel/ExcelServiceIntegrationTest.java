@@ -1,7 +1,6 @@
 package poliplanner.test.excel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -95,8 +94,6 @@ class ExcelServiceIntegrationTest {
         List<Subject> subjects = subjectRepository.findAll();
         assert (!subjects.isEmpty());
 
-        // Buscar si es que se pudieron desambiguar materias que se sabe que tienen
-        // semestre desconocido en el excel
         // Buscar si quedaron materias con semestre desconocido
         Set<Subject> problematicSubjects = subjects.stream()
                 .filter(entry -> entry.getSemestre() == 0)

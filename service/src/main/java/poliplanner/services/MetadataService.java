@@ -2,6 +2,8 @@ package poliplanner.services;
 
 import java.util.Optional;
 
+import java.text.Normalizer;
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,44 @@ public class MetadataService {
         String name = subject.getNombreAsignatura();
         String career = subject.getCareer().getName();
 
-        // Tomar solo la parte antes del guion y limpiar caracteres no alfanuméricos
-        String cleanName = name.split("-")[0] // tomar todo antes del guion
-                .replaceAll("[^\\p{L}\\p{N} ]", "") // conservar letras (incluye acentos y ñ), números y espacios
-                .trim(); // quitar espacios al inicio/final
+        String[] splitedName = name.split("-");
+        String cleanedName = normalizeSubjectName(splitedName[0]); // tomar todo ANTES del guion
 
-        return metadataRepository.findFirstByNameIgnoreCaseAndCareer_Code(cleanName, career);
+        Optional<SubjectsMetadata> result = metadataRepository.findFirstByNameIgnoreCaseAndCareer_Code(cleanedName,
+                career);
+        if (!result.isPresent() && splitedName.length > 1) {
+            cleanedName = normalizeSubjectName(splitedName[1]); // tomar todo DESPUES del guion
+            result = metadataRepository.findFirstByNameIgnoreCaseAndCareer_Code(cleanedName, career);
+        }
+
+        return result;
+    }
+
+    /**
+     * Normaliza completamente un nombre de materia:
+     * 1. Elimina (*), (**)
+     * 2. Convierte a minúsculas
+     * 3. Elimina acentos y caracteres diacríticos
+     * 4. Normaliza espacios
+     ***/
+    private static String normalizeSubjectName(String rawName) {
+        if (rawName == null) {
+            return null;
+        }
+
+        return rawName
+                .replaceAll("\\(\\*+\\)", "") // Elimina (*), (**)
+                .trim() // Elimina espacios al inicio/final
+                .toLowerCase() // Convierte a minúsculas
+                .transform(MetadataService::removeDiacritics) // Elimina acentos
+                .replaceAll("\\s+", " "); // Normaliza espacios múltiples
+    }
+
+    /**
+     * Elimina diacríticos y convierte caracteres acentuados a su forma básica
+     */
+    private static String removeDiacritics(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
     }
 }
