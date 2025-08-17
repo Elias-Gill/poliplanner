@@ -3,11 +3,6 @@
 Esta guía explica cómo preparar el entorno de desarrollo, levantar el proyecto, ejecutar los
 tests y mantener el código formateado de manera consistente.
 
-**Nota**:
-En este documento se hace referencia a comandos definidos en el archivo `Makefile`.
-Estos y otros comandos pueden consultarse en dicho archivo, así como ejecutarse manualmente
-desde la terminal.
-
 La filosofía del proyecto es que todo comando, utilidad o procedimiento debe poder ejecutarse
 fácilmente de forma manual desde una terminal `UNIX` (Linux o MacOs).
 El soporte para entornos Windows y la ejecución mediante IDE son considerados secundarios (se
@@ -17,9 +12,8 @@ aceptan PRs para mejorar dicha experiencia).
 
 - Java 17
 - Maven
-- PostgreSQL con una base de datos creada
+- PostgreSQL 17 con una base de datos creada
 - Configurar las variables de entorno especificadas en el archivo `example.env`
-- (Recomendado) GNU Make
 
 No se utiliza Docker ni servicios externos.
 Toda la ejecución es local.
@@ -36,21 +30,26 @@ Este comando crea un usuario por defecto (user=`pruebas`, password=`123`) y carg
 materias.
 
 ```bash
-make seed
+mvn spring-boot:run -Dspring-boot.run.arguments=--seed
 ```
 
-Para limpiar completamente la base de datos y recargar los datos:
+Para limpiar completamente la base de datos:
 
 ```bash
-make clean-seed
+mvn spring-boot:run -Dspring-boot.run.arguments=--clean
+```
+
+Combinando ambos:
+```bash
+mvn spring-boot:run -Dspring-boot.run.arguments=--clean,--seed
 ```
 
 ## Levantar el Proyecto
 
-Para iniciar la aplicación:
+Para iniciar la aplicación ejecutar desde el directorio `app/`:
 
 ```bash
-make run
+mvn spring-boot:run
 ```
 
 **Nota**:
@@ -63,29 +62,25 @@ para no bloquear el trabajo local.
 ## Testing
 
 El proyecto utiliza JUnit junto con Spring Boot Test Starter.
-Hay tres categorías de pruebas agrupadas:
+Cada modulo del proyecto cuenta con su propia suit de tests unitarios.
+Los tests de integracion, es decir, todos los tests dependientes de levantar una instancia del
+server de spring boot se encuentran en el modulo `app/`.
 
+Los tests individuales de cada modulo pueden ejecutarse desde la carpeta del modulo con:
 ```bash
-make test               # Pruebas unitarias
-make test-integration   # Pruebas de integracion (VER REQUISITOS)
-make test-full          # Unitarias + de integración
+mvn test
 ```
-
-Los tests se ejecutan sobre una base de datos "in-memmory" (H2).
+Puede correrse toda la suit de tests corriendo el mismo comando desde la raiz del proyecto.
 
 ### Requerimientos para los Tests de Integración
 
-Para la correcta ejecución de los tests de integración se deben proporcionar las siguientes
-dependencias:
-
-* El comando `ssconvert`, parte de la aplicación
-  [Gnumeric](https://es.wikipedia.org/wiki/Gnumeric).
-* API key para Google Drive.
-  Para más información, consultar esta [guía](google_drive.md).
+Para la correcta ejecución de los tests de integración se debe proporcionar una API key para
+Google Drive.
+Para más información, consultar esta [guía](google_drive.md).
 
 **Nota**:
-Si estos requerimientos no se cumplen, los tests simplemente deben ser salteados, dejando un
-aviso (`warning`) indicando que no se pudieron ejecutar correctamente y que faltan ciertas
+Si este requerimiento no se cumple, los tests simplemente deben ser salteados, dejando un aviso
+(`warning`) indicando que no se pudieron ejecutar correctamente y que faltan ciertas
 dependencias.
 
 ## Formato y estilo de código
@@ -95,13 +90,13 @@ Se utiliza Spotless como herramienta de formateo.
 Aplicar formato:
 
 ```bash
-make format
+mvn spotless:apply
 ```
 
 Verificar formato:
 
 ```bash
-make lint
+mvn spotless:check
 ```
 
 ## Flujo de Trabajo y Ética de Desarrollo
@@ -140,11 +135,3 @@ No está permitido realizar *commits* directos a `master`.
   Si crees que algo debe cambiar, propónlo con argumentos y consenso.
 * **Respeto al Tiempo de los demás:** Escribe código claro, deja comentarios donde sea
   necesario y evita crear deuda técnica por prisa o descuido.
-
-## Despliegue
-
-El despliegue se realiza en la plataforma de `fly.io`.
-De momento no existe convencion de tags, versionado o procesos de deploy automatico.
-
-El proyecto se piensa para no depender de ningun proveedor especifico, y asegurando que la
-migracion sea lo mas rapida y facil posible.

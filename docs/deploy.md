@@ -5,19 +5,7 @@
 - Maven
 - Java 17
 - Postgresql 17
-- Gnumeric (comando ssconvert)
 - [API KEY](google_drive.md) de Google Console
-
-NOTA:
-de momento solo funciona en servers Linux, dado que se depende de Gnumeric, solo disponible
-para distribuciones Linux.
-
-La descarga de las dependencias de Gnumeric no son necesarias, dado que para el funcionamiento
-del comando `ssconvert` solo se requiere del paquete principal, por lo que basta con:
-
-```bash
-apt install --no-install-recommends gnumeric
-```
 
 ## Configuracion del entorno
 
@@ -44,5 +32,23 @@ Los binarios exportados por el comando `mvn package` son autocontenidos y distri
 Para iniciar el server en el perfil de produccion:
 
 ```bash
-java -jar <compiled_file>.jar --spring.profiles.active=prod
+java -jar <compiled_file>.jar -noverify --spring.profiles.active=prod
 ```
+
+Tambien se cuenta con un Dockerfile que puede ser ejecutado.
+
+## Despliegue
+
+El despliegue se realiza en la plataforma de `fly.io` y la base de datos se encuentra
+actualmente alojada en `neon.com`.
+
+El deploy automatico se realiza mediante github actions, activadas cuando se hace un push de
+tags.
+Las tags tienen formato de version estandar `vX.X.X-patch`
+
+El proyecto se piensa para no depender de ningun proveedor especifico, y asegurando que la
+migracion sea lo mas rapida y facil posible.
+
+--- 
+
+Informacion sobre la arquitectura del proyecto [aqui](arquitectura.md).

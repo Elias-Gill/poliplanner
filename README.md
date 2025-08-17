@@ -22,7 +22,7 @@ descargar los excel y subirlos a la app de manera manual).
 
 ## Cómo Colaborar
 
-Consulte la guia [detallada de desarrollo](docs/workflow.md).
+Consulte la guia [detallada de desarrollo](docs/desarrollo.md).
 
 ---
 

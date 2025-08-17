@@ -46,11 +46,10 @@ Este modulo se divide en:
 ## Infraestructura
 
 - **Backend + Frontend** están contenidos en una única aplicación Spring Boot
-- Se despliega en **Fly.io** como un solo contenedor
-- La base de datos usada es **PostgreSQL** (remota)
+- La base de datos usada es **PostgreSQL**
 - Los archivos Excel se descargan y se **parsean inmediatamente**, almacenando su contenido en
-  la base
-- El archivo original **no se conserva**
+  la base de datos
+- El archivo original excel **no se conserva**
 
 ## Consideraciones
 
