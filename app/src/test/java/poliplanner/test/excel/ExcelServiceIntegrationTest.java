@@ -1,4 +1,4 @@
-package poliplanner.test.integration;
+package poliplanner.test.excel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,6 +9,8 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -91,5 +93,14 @@ class ExcelServiceIntegrationTest {
         // Verificamos que se hayan creado materias
         List<Subject> subjects = subjectRepository.findAll();
         assert (!subjects.isEmpty());
+
+        // Buscar si quedaron materias con semestre desconocido
+        Set<Subject> problematicSubjects = subjects.stream()
+                .filter(entry -> entry.getSemestre() == 0)
+                .collect(Collectors.toSet());
+
+        if (!problematicSubjects.isEmpty()) {
+            System.err.println("Algunas materias no cuentan con semestre definido correctamente");
+        }
     }
 }

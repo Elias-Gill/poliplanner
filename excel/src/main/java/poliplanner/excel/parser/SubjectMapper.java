@@ -23,16 +23,10 @@ public class SubjectMapper {
         subject.setNombreAsignatura(subjectCsv.nombreAsignatura);
 
         // NOTE: en algunas materias y algunas carreras, no se tiene la informacion del
-        // semestre, sino que solo del "nivel". No se que significa esa nomenclatura en
-        // los horarios de la facultad, pero si es que no se provee semestre, entonces
-        // se usa el nivel como valor por defecto. Si ninguno de los dos es posible
-        // parsear, entonces directamente se pone como "0".
-        Integer semestre = convertStringToNumber(subjectCsv.semestre);
-        if (semestre != 0) {
-            subject.setSemestre(semestre);
-        } else {
-            subject.setSemestre(convertStringToNumber(subjectCsv.nivel));
-        }
+        // semestre. Si este resulta el caso, entonces se pone como "0". El ExcelService
+        // luego se encargara de hacer la desambiguacion de semestres usando la malla
+        // cargada dentro de las migraciones.
+        subject.setSemestre(convertStringToNumber(subjectCsv.semestre));
 
         // informacion del profesor
         subject.setSeccion(subjectCsv.seccion);
