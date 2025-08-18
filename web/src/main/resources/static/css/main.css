@@ -1,32 +1,34 @@
 /* === Variables CSS y paleta de colores === */
 :root {
-    --color-bg: oklch(0.96 0.01 240); /* Fondo claro principal */
-    --color-secondary-bg: oklch(0.92 0.01 240); /* Fondo secundario más oscuro */
-    --color-text: oklch(0.15 0.02 240); /* Texto principal oscuro */
-    --color-border: oklch(0.6 0.02 240); /* Bordes con tono medio */
-    --color-primary: oklch(0.4 0.1 240); /* Azul principal para acciones destacadas */
-    --color-secondary: oklch(0.4 0.1 60); /* Tono secundario cálido */
-    --color-muted: oklch(0.4 0.02 240); /* Texto secundario más claro */
-    --color-success: oklch(0.5 0.05 160); /* Verde para mensajes de éxito */
-    --color-error: oklch(0.5 0.05 30); /* Rojo para errores */
-    --color-warning: oklch(0.5 0.05 100); /* Ámbar para advertencias */
+    --color-bg: oklch(0.96 0.01 240);
+    --color-secondary-bg: oklch(0.92 0.01 240);
+    --color-text: oklch(0.15 0.02 240);
+    --color-border: oklch(0.6 0.02 240);
+
+    --color-primary: oklch(0.4 0.1 240);
+    --color-muted: oklch(0.4 0.02 240);
+    --color-success: oklch(0.55 0.12 160);
+    --color-error: oklch(0.5 0.14 20);
+    --color-warning: oklch(0.75 0.12 90);
+
     /* Espaciado (basado en rem) */
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
     --space-md: 1rem;
     --space-lg: 1.5rem;
     --space-xl: 2rem;
+
     /* Tipografía */
     --font-base: 'Urbanist', sans-serif;
 
-    --font-size-base: 1rem;      /* Texto estándar (16px) */
-    --font-size-h1: 1.25rem;     /* Títulos principales (20px) */
-    --font-size-h2: 1.125rem;    /* Títulos secundarios (18px) */
-    --font-size-h3: 1.0625rem;   /* Títulos terciarios (17px, ligeramente más grande que base) */
-    --font-size-h4: 0.9375rem;   /* Títulos menores (15px) */
-    --font-size-h5: 0.875rem;    /* Títulos pequeños (14px) */
-    --font-size-h6: 0.8125rem;   /* Títulos más pequeños (13px) */
-    --font-size-small: 0.75rem;  /* Texto secundario, como notas (12px) */
+    --font-size-base: 1rem;
+    --font-size-h1: 1.25rem;
+    --font-size-h2: 1.125rem;
+    --font-size-h3: 1.0625rem;
+    --font-size-h4: 0.9375rem;
+    --font-size-h5: 0.875rem;
+    --font-size-h6: 0.8125rem;
+    --font-size-small: 0.75rem;
 
     --font-weight-light: 300;
     --font-weight-normal: 400;
@@ -39,16 +41,16 @@
 
 /* Modo Oscuro */
 .dark-mode {
-    --color-bg: oklch(0.15 0.02 240); /* Fondo oscuro principal */
-    --color-secondary-bg: oklch(0.4 0.02 240); /* Fondo secundario más claro */
-    --color-text: oklch(1 0.01 240); /* Texto claro para legibilidad */
-    --color-muted: oklch(0.7 0.02 240); /* Texto secundario más suave */
-    --color-border: oklch(0.6 0.02 240); /* Bordes en tono medio */
-    --color-primary: oklch(0.4 0.1 240); /* Azul principal, mantenido para consistencia */
-    --color-secondary: oklch(0.4 0.1 60); /* Tono secundario cálido */
-    --color-success: oklch(0.5 0.05 160); /* Verde que resalta en oscuro */
-    --color-error: oklch(0.5 0.05 30); /* Rojo claro para errores */
-    --color-warning: oklch(0.5 0.05 100); /* Ámbar para advertencias */
+    --color-bg: oklch(0.15 0.02 240);
+    --color-secondary-bg: oklch(0.4 0.02 240);
+    --color-text: oklch(1 0.01 240);
+    --color-muted: oklch(0.7 0.02 240);
+    --color-border: oklch(0.6 0.02 240);
+
+    --color-primary: oklch(0.4 0.1 240);
+    --color-success: oklch(0.65 0.14 160);
+    --color-error: oklch(0.6 0.16 20);
+    --color-warning: oklch(0.8 0.14 90);
 }
 
 /* === Reset básico === */
@@ -80,18 +82,23 @@ html {
 }
 
 /* === Contenedor principal === */
-header, nav, main, footer {
+header,
+nav,
+main,
+footer {
     width: 100%;
     padding: var(--space-md);
 }
 
 header {
-    padding: var(--space-sm); /* Más compacto en móvil */
+    padding: var(--space-sm);
+    /* Más compacto en móvil */
 }
 
 @media (max-width: 768px) {
     header {
-        padding: var(--space-xs); /* Aún más compacto en móvil */
+        padding: var(--space-xs);
+        /* Aún más compacto en móvil */
     }
 }
 
@@ -100,7 +107,12 @@ main {
 }
 
 /* === Tipografía === */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: var(--font-base);
     font-weight: var(--font-weight-bold);
     line-height: 1.2;
@@ -159,7 +171,7 @@ span {
 
 /* === Enlaces === */
 a {
-    color: var(--color-primary);
+    color: color-mix(in srgb, var(--color-primary), var(--color-text) 25%);
     text-decoration: none;
     transition: color 0.2s ease;
 }
@@ -170,7 +182,8 @@ a:hover {
 }
 
 /* === Botones === */
-button, [role="button"] {
+button,
+[role="button"] {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -186,18 +199,19 @@ button, [role="button"] {
     transition: background-color 0.2s ease;
 }
 
-button:hover, [role="button"]:hover {
+button:hover,
+[role="button"]:hover {
     background-color: color-mix(in srgb, var(--color-primary), black 15%);
 }
 
 button.secondary {
     background-color: transparent;
-    border: 1px solid var(--color-secondary);
-    color: var(--color-secondary);
+    border: 1px solid var(--color-muted);
+    color: var(--color-muted);
 }
 
 button.secondary:hover {
-    background-color: color-mix(in srgb, var(--color-secondary), transparent 90%);
+    background-color: var(--color-muted);
 }
 
 button.success {
@@ -225,7 +239,9 @@ button.warning:hover {
 }
 
 /* === Formularios === */
-input, select, textarea {
+input,
+select,
+textarea {
     width: 100%;
     padding: var(--space-sm);
     border: 1px solid var(--color-border);
@@ -238,7 +254,9 @@ input, select, textarea {
     transition: border-color 0.2s ease, outline 0.2s ease;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
     outline: 2px solid var(--color-primary);
     outline-offset: 1px;
     border-color: var(--color-primary);
@@ -284,7 +302,6 @@ section {
 }
 
 .table-container::-webkit-scrollbar-thumb {
-    background: var(--color-secondary);
     border-radius: 4px;
 }
 
@@ -294,7 +311,8 @@ table {
     white-space: wrap;
 }
 
-th, td {
+th,
+td {
     padding: var(--space-sm);
     border: 1px solid var(--color-border);
     text-align: left;
@@ -305,7 +323,7 @@ th {
     font-weight: var(--font-weight-semibold);
 }
 
-td > span {
+td>span {
     white-space: nowrap;
 }
 
@@ -402,7 +420,8 @@ footer {
 }
 
 /* === Alertas === */
-aside, [role="alert"] {
+aside,
+[role="alert"] {
     padding: var(--space-md);
     border-radius: 0.5rem;
     margin: var(--space-md) 0;
@@ -444,21 +463,27 @@ input[type="checkbox"] {
 }
 
 /* === Listas === */
-section ul, section ol, article ul, article ol {
+section ul,
+section ol,
+article ul,
+article ol {
     padding-left: 1.5rem;
     margin: var(--space-md) 0;
     line-height: 1.6;
 }
 
-section li, article li {
+section li,
+article li {
     margin-bottom: var(--space-sm);
 }
 
-section ul, article ul {
+section ul,
+article ul {
     list-style: square;
 }
 
-section ol li::before, article ol li::before {
+section ol li::before,
+article ol li::before {
     content: counter(list-counter) '.';
     position: absolute;
     left: 0;
@@ -466,11 +491,13 @@ section ol li::before, article ol li::before {
     font-weight: var(--font-weight-semibold);
 }
 
-section ol, article ol {
+section ol,
+article ol {
     counter-reset: list-counter;
 }
 
-section ol li, article ol li {
+section ol li,
+article ol li {
     counter-increment: list-counter;
     position: relative;
     padding-left: 1.5rem;

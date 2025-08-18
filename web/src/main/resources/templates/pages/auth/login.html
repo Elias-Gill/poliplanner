@@ -25,10 +25,10 @@
           </div>
         </div>
         <button type="submit" class="primary">Entrar</button>
-        <div th:if="${param.error}" role="alert" class="error">
+        <div th:if="${param.error}">
           <div th:replace="~{fragments/alerts/error :: alert('Usuario o contraseña inválidos')}"></div>
         </div>
-        <div th:if="${param.logout}" role="alert" class="success">
+        <div th:if="${param.logout}">
           <div th:replace="~{fragments/alerts/success :: alert('Sesión cerrada exitosamente')}"></div>
         </div>
       </form>
@@ -95,7 +95,6 @@
       .input-with-icon i {
           position: absolute;
           left: var(--space-sm);
-          color: var(--color-secondary);
           font-size: var(--font-size-base);
       }
 
@@ -116,23 +115,6 @@
           border-color: var(--color-primary);
       }
 
-      button.primary {
-          width: 100%;
-          padding: var(--space-sm) var(--space-md);
-          background-color: var(--color-primary);
-          color: white;
-          border: none;
-          border-radius: 0.25rem;
-          font-size: var(--font-size-base);
-          font-weight: var(--font-weight-medium);
-          cursor: pointer;
-          transition: background-color 0.2s ease;
-      }
-
-      button.primary:hover {
-          background-color: color-mix(in srgb, var(--color-primary), black 15%);
-      }
-
       .login-footer {
           margin-top: var(--space-lg);
           font-size: var(--font-size-small);
@@ -140,13 +122,11 @@
       }
 
       .login-footer a {
-          color: var(--color-primary);
           text-decoration: none;
           font-weight: var(--font-weight-medium);
       }
 
       .login-footer a:hover {
-          color: color-mix(in srgb, var(--color-primary), black 15%);
           text-decoration: underline;
       }
 
@@ -157,14 +137,12 @@
       }
 
       .login-links a {
-          color: var(--color-primary);
           text-decoration: none;
           font-weight: var(--font-weight-medium);
           margin: 0 var(--space-xs);
       }
 
       .login-links a:hover {
-          color: color-mix(in srgb, var(--color-primary), black 15%);
           text-decoration: underline;
       }
     </style>
