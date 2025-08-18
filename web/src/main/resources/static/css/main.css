@@ -172,13 +172,12 @@ span {
 /* === Enlaces === */
 a {
     color: color-mix(in srgb, var(--color-primary), var(--color-text) 25%);
-    text-decoration: none;
+    text-decoration: underline;
     transition: color 0.2s ease;
 }
 
 a:hover {
     color: color-mix(in srgb, var(--color-primary), black 15%);
-    text-decoration: underline;
 }
 
 /* === Botones === */
@@ -348,6 +347,7 @@ nav a {
     position: relative;
     transition: color 0.2s ease;
     font-weight: var(--font-weight-medium);
+    text-decoration: none;
 }
 
 nav a:hover {
