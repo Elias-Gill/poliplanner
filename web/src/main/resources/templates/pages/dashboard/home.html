@@ -11,8 +11,8 @@
       <h1>Mis horarios</h1>
       <div th:if="${not schedules?.empty}" class="form-container">
         <!-- Form para seleccionar horario -->
-        <form id="scheduleForm" th:action="@{/}" method="get" style="margin: 0;">
-          <select id="scheduleSelector" name="id" onchange="this.form.submit()" style="width: 250px;">
+        <form id="scheduleForm" th:action="@{/}" method="get">
+          <select id="scheduleSelector" name="id" onchange="this.form.submit()" aria-label="Seleccionar horario">
             <option value="" selected disabled>Selecciona un horario</option>
             <option th:each="schedule : ${schedules}"
                     th:value="${schedule.id}"
@@ -24,23 +24,26 @@
         <!-- Form para eliminar horario -->
         <form id="deleteScheduleForm" th:action="@{/schedule/{id}/delete(id=${selectedSchedule.id})}" method="post"
               th:if="${selectedSchedule != null}" onsubmit="return confirm('¿Estás seguro que quieres eliminar este horario?');">
-          <button type="submit" class="error">
-              <i class="bi bi-trash"></i>
+          <button type="submit" class="error" aria-label="Eliminar horario">
+            <i class="bi bi-trash"></i>
           </button>
         </form>
       </div>
     </div>
     <!-- Mensajes -->
-    <div th:replace="~{fragments/alerts/error :: alert(${error})}"></div>
-    <div th:replace="~{fragments/alerts/success :: alert(${success})}"></div>
-    <!-- Notificacion de nuevo excel disponible (+cookie) -->
+    <div th:if="${error}">
+      <div th:replace="~{fragments/alerts/error :: alert(${error})}"></div>
+    </div>
+    <div th:if="${success}">
+      <div th:replace="~{fragments/alerts/success :: alert(${success})}"></div>
+    </div>
     <div th:if="${hasNewExcel}">
       <div th:replace="~{fragments/alerts/warning :: alert(${hasNewExcel})}"></div>
     </div>
     <div th:if="${warning}">
       <div th:replace="~{fragments/alerts/warning :: alert(${warning})}"></div>
     </div>
-    <div th:if="${schedules?.empty}" role="alert">
+    <div th:if="${schedules?.empty}">
       No tienes horarios registrados.
     </div>
     <section>
@@ -51,46 +54,14 @@
       <div id="bottom"></div>
     </section>
     <style>
-      :root {
-          --color-bg: #f8f8f8; /* Blanco cálido para fondo (modo claro) */
-          --color-secondary-bg: #e5e5e5; /* Gris claro para secciones secundarias */
-          --color-text: #2d2a26;
-          --color-border: #d1cbc2;
-          --color-primary: #1d4ed8;
-          --color-secondary: #64748b;
-          --color-muted: #78716c;
-          --color-success: #059669;
-          --color-error: #dc2626;
-          --color-warning: #d97706;
-          --space-xs: 0.25rem;
-          --space-sm: 0.5rem;
-          --space-md: 1rem;
-          --space-lg: 1.5rem;
-          --space-xl: 2rem;
-          --font-base: 'Urbanist', sans-serif;
-          --font-size-base: 1rem;
-          --line-height: 1.5;
-      }
-
-      /* Modo Oscuro */
-      .dark-mode {
-          --color-bg: #232323; /* Fondo oscuro cálido */
-          --color-secondary-bg: #323232; /* Fondo secundario oscuro */
-          --color-text: #f5f5f4;
-          --color-muted: #a8a29e;
-          --color-border: #4b4743;
-          --color-primary: #3b82f6;
-          --color-secondary: #94a3b8;
-          --color-success: #10b981;
-          --color-error: #f87171;
-          --color-warning: #f59e0b;
-      }
-
+      /* Estilos para página de dashboard */
       .header-selector {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: var(--space-lg);
+          margin-bottom: var(--space-xl);
+          padding: var(--space-md);
+          background-color: color-mix(in srgb, var(--color-bg), var(--color-secondary-bg) 20%);
           flex-wrap: wrap;
       }
 
@@ -100,21 +71,38 @@
           gap: var(--space-md);
       }
 
+      #scheduleSelector {
+          width: 250px;
+          padding: var(--space-sm);
+          font-size: var(--font-size-base);
+          font-weight: var(--font-weight-normal);
+          border: 1px solid var(--color-border);
+          border-radius: 0.25rem;
+          background-color: color-mix(in srgb, var(--color-bg), var(--color-secondary-bg) 10%);
+          color: var(--color-text);
+          transition: border-color 0.2s ease, outline 0.2s ease;
+      }
+
+      #scheduleSelector:focus {
+          outline: 2px solid var(--color-primary);
+          outline-offset: 1px;
+          border-color: var(--color-primary);
+      }
+
       @media (max-width: 768px) {
           .header-selector {
               flex-direction: column;
-              align-items: flex-start; /* Título alineado a la izquierda */
+              align-items: flex-start;
               gap: var(--space-md);
           }
 
           .form-container {
               width: 100%;
-              flex-wrap: nowrap; /* Evita que los elementos se pasen a otra línea */
-              gap: var(--space-sm); /* Reduce el espacio entre elementos */
+              gap: var(--space-sm);
           }
 
           #scheduleSelector {
-              width: 100%; /* Mantiene el ancho completo dentro del formulario */
+              width: 100%;
           }
       }
     </style>

@@ -1,15 +1,15 @@
 /* === Variables CSS y paleta de colores === */
 :root {
-    --color-bg: #fdfaf5; /* Blanco cálido para fondo */
-    --color-secondary-bg: #d0d0d0; /* Gris cálido claro para secciones */
-    --color-text: #2d2a26; /* Gris oscuro cálido para texto principal */
-    --color-border: #d1cbc2; /* Gris medio suave para bordes */
-    --color-primary: #1d4ed8; /* Azul vibrante pero profesional */
-    --color-secondary: #64748b; /* Gris azulado para elementos secundarios */
-    --color-muted: #78716c; /* Gris cálido para texto secundario */
-    --color-success: #059669; /* Verde vibrante y profesional */
-    --color-error: #dc2626; /* Rojo cálido para errores */
-    --color-warning: #d97706; /* Ámbar cálido para advertencias */
+    --color-bg: oklch(0.96 0.01 240); /* Fondo claro principal */
+    --color-secondary-bg: oklch(0.92 0.01 240); /* Fondo secundario más oscuro */
+    --color-text: oklch(0.15 0.02 240); /* Texto principal oscuro */
+    --color-border: oklch(0.6 0.02 240); /* Bordes con tono medio */
+    --color-primary: oklch(0.4 0.1 240); /* Azul principal para acciones destacadas */
+    --color-secondary: oklch(0.4 0.1 60); /* Tono secundario cálido */
+    --color-muted: oklch(0.4 0.02 240); /* Texto secundario más claro */
+    --color-success: oklch(0.5 0.05 160); /* Verde para mensajes de éxito */
+    --color-error: oklch(0.5 0.05 30); /* Rojo para errores */
+    --color-warning: oklch(0.5 0.05 100); /* Ámbar para advertencias */
     /* Espaciado (basado en rem) */
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
@@ -18,22 +18,37 @@
     --space-xl: 2rem;
     /* Tipografía */
     --font-base: 'Urbanist', sans-serif;
-    --font-size-base: 1rem;
-    --line-height: 1.5;
+
+    --font-size-base: 1rem;      /* Texto estándar (16px) */
+    --font-size-h1: 1.25rem;     /* Títulos principales (20px) */
+    --font-size-h2: 1.125rem;    /* Títulos secundarios (18px) */
+    --font-size-h3: 1.0625rem;   /* Títulos terciarios (17px, ligeramente más grande que base) */
+    --font-size-h4: 0.9375rem;   /* Títulos menores (15px) */
+    --font-size-h5: 0.875rem;    /* Títulos pequeños (14px) */
+    --font-size-h6: 0.8125rem;   /* Títulos más pequeños (13px) */
+    --font-size-small: 0.75rem;  /* Texto secundario, como notas (12px) */
+
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    --line-height: 1.4;
 }
 
 /* Modo Oscuro */
 .dark-mode {
-    --color-bg: #232323; /* Fondo oscuro cálido */
-    --color-secondary-bg: #3f3f3f; /* Fondo secundario oscuro */
-    --color-text: #f5f5f4; /* Texto claro para legibilidad */
-    --color-muted: #a8a29e; /* Gris claro para texto secundario */
-    --color-border: #4b4743; /* Bordes oscuros suaves */
-    --color-primary: #3b82f6; /* Azul más claro para modo oscuro */
-    --color-secondary: #94a3b8; /* Gris azulado claro */
-    --color-success: #10b981; /* Verde que resalta en oscuro */
-    --color-error: #f87171; /* Rojo claro para errores */
-    --color-warning: #f59e0b; /* Ámbar que resalta en oscuro */
+    --color-bg: oklch(0.15 0.02 240); /* Fondo oscuro principal */
+    --color-secondary-bg: oklch(0.4 0.02 240); /* Fondo secundario más claro */
+    --color-text: oklch(1 0.01 240); /* Texto claro para legibilidad */
+    --color-muted: oklch(0.7 0.02 240); /* Texto secundario más suave */
+    --color-border: oklch(0.6 0.02 240); /* Bordes en tono medio */
+    --color-primary: oklch(0.4 0.1 240); /* Azul principal, mantenido para consistencia */
+    --color-secondary: oklch(0.4 0.1 60); /* Tono secundario cálido */
+    --color-success: oklch(0.5 0.05 160); /* Verde que resalta en oscuro */
+    --color-error: oklch(0.5 0.05 30); /* Rojo claro para errores */
+    --color-warning: oklch(0.5 0.05 100); /* Ámbar para advertencias */
 }
 
 /* === Reset básico === */
@@ -47,6 +62,7 @@
 body {
     font-family: var(--font-base);
     font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
     line-height: var(--line-height);
     color: var(--color-text);
     background-color: var(--color-bg);
@@ -86,7 +102,7 @@ main {
 /* === Tipografía === */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-base);
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     line-height: 1.2;
     color: var(--color-text);
     margin-bottom: var(--space-sm);
@@ -94,7 +110,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size: 2rem;
+    font-size: var(--font-size-h1);
     border-bottom: 2px solid var(--color-primary);
     padding-bottom: var(--space-xs);
     margin: var(--space-xl) 0 var(--space-md);
@@ -103,31 +119,31 @@ h1 {
 }
 
 h2 {
-    font-size: 1.5rem;
+    font-size: var(--font-size-h2);
     margin: var(--space-md) 0 var(--space-sm);
 }
 
 h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-semibold);
     margin-top: var(--space-md);
 }
 
 h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: var(--font-size-h4);
+    font-weight: var(--font-weight-semibold);
     margin-top: var(--space-md);
 }
 
 h5 {
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: var(--font-size-h5);
+    font-weight: var(--font-weight-medium);
     margin-top: var(--space-md);
 }
 
 h6 {
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: var(--font-size-h6);
+    font-weight: var(--font-weight-medium);
     text-transform: uppercase;
     color: var(--color-muted);
     margin-top: var(--space-sm);
@@ -166,6 +182,7 @@ button, [role="button"] {
     cursor: pointer;
     font-family: var(--font-base);
     font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
     transition: background-color 0.2s ease;
 }
 
@@ -215,6 +232,7 @@ input, select, textarea {
     border-radius: 0.25rem;
     font-family: var(--font-base);
     font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
     color: var(--color-text);
     background-color: color-mix(in srgb, var(--color-bg), var(--color-secondary-bg) 10%);
     transition: border-color 0.2s ease, outline 0.2s ease;
@@ -284,9 +302,10 @@ th, td {
 
 th {
     background-color: color-mix(in srgb, var(--color-secondary-bg), var(--color-bg) 45%);
+    font-weight: var(--font-weight-semibold);
 }
 
-td>span {
+td > span {
     white-space: nowrap;
 }
 
@@ -310,6 +329,7 @@ nav a {
     padding: var(--space-xs) 0;
     position: relative;
     transition: color 0.2s ease;
+    font-weight: var(--font-weight-medium);
 }
 
 nav a:hover {
@@ -377,6 +397,8 @@ footer {
     border-top: 1px solid var(--color-border);
     text-align: center;
     padding: var(--space-lg);
+    font-size: var(--font-size-small);
+    color: var(--color-muted);
 }
 
 /* === Alertas === */
@@ -441,7 +463,7 @@ section ol li::before, article ol li::before {
     position: absolute;
     left: 0;
     color: var(--color-primary);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
 }
 
 section ol, article ol {
@@ -490,14 +512,16 @@ section ol li, article ol li {
 
 pre {
     padding: var(--space-sm);
-    font-size: 0.875rem;
+    font-size: var(--font-size-small);
     line-height: 1.4;
+    font-weight: var(--font-weight-normal);
 }
 
 /* === Utilidades === */
 [hidden] {
     display: none !important;
 }
+
 /* Corrección para inputs de autocompletado en Firefox */
 input:-moz-autofill,
 input:-moz-autofill-preview {

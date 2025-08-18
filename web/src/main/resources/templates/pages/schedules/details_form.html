@@ -7,68 +7,108 @@
     <div th:replace="~{fragments/alerts/error :: alert(${error})}"></div>
     <!-- Título -->
     <h2>Selecciona las materias</h2>
-    <!-- Buscador -->
-    <div class="buscador">
-      <label for="subjectSearch">Buscar por materia, profesor y/o sección:</label>
-      <input type="text" id="subjectSearch" placeholder="Ej. Física, 2, Juan ..." style="width: 100%;">
-    </div>
-    <!-- Formulario con materias -->
-    <form th:action="@{/schedule/new/details}" method="post">
-      <input type="hidden" name="description" th:value="${description}" />
-      <div class="form-list">
-        <div th:each="semesterEntry : ${subjects}">
-          <details>
-            <summary th:if="${semesterEntry.key} != 0" th:text="'Semestre ' + ${semesterEntry.key}"></summary>
-            <summary th:if="${semesterEntry.key} == 0" th:text="'Materias sin semestre'"></summary>
-            <section th:each="subjectEntry : ${semesterEntry.value}">
-              <h4 th:text="${subjectEntry.key}"></h4>
-              <ul>
-                <li th:each="subject : ${subjectEntry.value}">
-                  <label>
-                    <input type="checkbox"
-                             th:id="'subject-' + ${subject.id}"
-                             th:name="subjectIds"
-                             th:value="${subject.id}" />
-                    <span th:text="'Sección ' + ${subject.seccion}"></span> –
-                    <small th:text="${subject.tituloProfesor + ' ' + subject.nombreProfesor + ' ' + subject.apellidoProfesor}"></small>
-                    <!-- NOTE: necesario para el buscador -->
-                    <div hidden th:text="${subject.nombreAsignatura}"></div>
-                  </label>
-                </li>
-              </ul>
-            </section>
-          </details>
+    <!-- Contenedor principal con layout side-by-side -->
+    <div class="schedule-container">
+      <!-- Columna izquierda: Buscador y lista de materias -->
+      <div class="subjects-list-column">
+        <!-- Buscador -->
+        <div class="buscador">
+          <label for="subjectSearch">Buscar por materia, profesor y/o sección:</label>
+          <input type="text" id="subjectSearch" placeholder="Ej. Física, 2, Juan ..." aria-label="Buscar materias">
         </div>
+        <!-- Formulario con materias -->
+        <form th:action="@{/schedule/new/details}" method="post">
+          <input type="hidden" name="description" th:value="${description}" />
+          <div class="form-list">
+            <div th:each="semesterEntry : ${subjects}">
+              <details>
+                <summary th:if="${semesterEntry.key} != 0" th:text="'Semestre ' + ${semesterEntry.key}"></summary>
+                <summary th:if="${semesterEntry.key} == 0" th:text="'Materias sin semestre'"></summary>
+                <section th:each="subjectEntry : ${semesterEntry.value}">
+                  <h3 th:text="${subjectEntry.key}"></h3>
+                  <ul>
+                    <li th:each="subject : ${subjectEntry.value}">
+                      <label>
+                        <input type="checkbox"
+                               th:id="'subject-' + ${subject.id}"
+                               th:name="subjectIds"
+                               th:value="${subject.id}" />
+                        <span th:text="${'Sección ' + subject.seccion}"></span> –
+                        <small th:text="${subject.tituloProfesor + ' ' + subject.nombreProfesor + ' ' + subject.apellidoProfesor}"></small>
+                        <!-- NOTE: necesario para el buscador -->
+                        <div hidden th:text="${subject.nombreAsignatura}"></div>
+                      </label>
+                    </li>
+                  </ul>
+                </section>
+              </details>
+            </div>
+          </div>
+          <!-- Botón de envío -->
+          <div class="submit-button">
+            <button type="submit">Crear horario</button>
+          </div>
+        </form>
       </div>
-      <!-- Botón de envío -->
-      <div style="margin-top: var(--space-xl);">
-        <button type="submit">Crear horario</button>
-      </div>
-    </form>
-    <!-- Vista previa de materias seleccionadas -->
-    <section id="selectedSubjectsPreview" style="display: none; margin-top: var(--space-xl);">
-      <h3>Materias seleccionadas</h3>
-      <article>
-        <ul id="selectedSubjectsList"></ul>
-      </article>
-    </section>
+      <!-- Columna derecha: Vista previa de materias seleccionadas -->
+      <section id="selectedSubjectsPreview">
+        <h3>Materias seleccionadas</h3>
+        <section>
+          <ul id="selectedSubjectsList"></ul>
+        </section>
+      </section>
+    </div>
     <style>
-      .buscador {
-          margin: var(--space-lg) 0;
+      /* Estilos para página de selección de materias */
+      .schedule-container {
+          display: flex;
+          gap: var(--space-lg);
+          margin-top: var(--space-lg);
+      }
+
+      .subjects-list-column {
+          flex: 1;
           display: flex;
           flex-direction: column;
-          gap: var(--space-sm);
+      }
+
+      .buscador {
+          margin-bottom: var(--space-md);
       }
 
       .buscador label {
-          font-weight: 500;
+          display: block;
+          font-size: var(--font-size-base);
+          font-weight: var(--font-weight-medium);
+          color: var(--color-text);
+          margin-bottom: var(--space-xs);
+      }
+
+      #subjectSearch {
+          width: 100%;
+          padding: var(--space-sm);
+          font-size: var(--font-size-base);
+          font-weight: var(--font-weight-normal);
+          border: 1px solid var(--color-border);
+          border-radius: 0.25rem;
+          background-color: color-mix(in srgb, var(--color-bg), var(--color-secondary-bg) 10%);
+          transition: border-color 0.2s ease, outline 0.2s ease;
+      }
+
+      #subjectSearch:focus {
+          outline: 2px solid var(--color-primary);
+          outline-offset: 1px;
+          border-color: var(--color-primary);
       }
 
       .form-list {
-          max-height: 58vh;
+          max-height: 60vh;
           overflow-y: auto;
-          scroll-behavior: smooth;
-          scrollbar-width: auto;
+          border: 1px solid var(--color-border);
+          border-radius: 0.5rem;
+          background-color: color-mix(in srgb, var(--color-bg), var(--color-secondary-bg) 20%);
+          padding: var(--space-md);
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       }
 
       .form-list::-webkit-scrollbar {
@@ -76,67 +116,118 @@
       }
 
       .form-list::-webkit-scrollbar-thumb {
-          background-color: var(--color-muted);
+          background-color: var(--color-secondary);
           border-radius: 4px;
       }
 
       details {
-          margin: var(--space-md) 0;
-          background-color: color-mix(in srgb, var(--color-bg), var(--color-secondary-bg) 10%);
-          border-radius: 0.25rem;
-          padding: var(--space-sm);
+          margin-bottom: var(--space-md);
       }
 
       details summary {
-          padding: var(--space-sm) var(--space-md);
-          font-weight: 600;
-          font-size: 1.1rem;
+          padding: var(--space-sm);
+          font-size: var(--font-size-h4);
+          font-weight: var(--font-weight-semibold);
           cursor: pointer;
+          border-radius: 0.25rem;
           transition: background-color 0.2s ease;
       }
 
-      details ul {
+      details summary:hover {
+          background-color: color-mix(in srgb, var(--color-secondary-bg), var(--color-bg) 50%);
+      }
+
+      details section h4 {
+          font-size: var(--font-size-h5);
+          font-weight: var(--font-weight-medium);
           margin: var(--space-sm) 0;
-          padding: 0;
+      }
+
+      details ul {
           list-style: none;
+          padding: 0;
       }
 
       details ul li {
-          padding: var(--space-sm) var(--space-md);
-          margin-bottom: var(--space-sm);
+          padding: var(--space-sm);
           transition: background-color 0.2s ease;
       }
 
       details ul li:hover {
-          background-color: color-mix(in srgb, var(--color-primary), transparent 90%);
+          background-color: color-mix(in srgb, var(--color-primary), transparent 95%);
       }
 
       details ul li label {
+          display: flex;
+          align-items: center;
           gap: var(--space-sm);
           cursor: pointer;
-          flex-wrap: wrap;
       }
 
       details ul li span {
-          font-weight: 500;
+          font-weight: var(--font-weight-medium);
       }
 
       details ul li small {
-          font-size: 0.875rem;
-          line-height: 1.4;
+          font-size: var(--font-size-small);
+          color: var(--color-muted);
       }
 
-      details section {
-          margin-left: var(--space-lg);
+      .submit-button {
+          margin-top: var(--space-lg);
+          text-align: right;
       }
 
-      #selectedSubjectsPreview article {
+      .submit-button button {
+          padding: var(--space-sm) var(--space-md);
+          background-color: var(--color-primary);
+          color: white;
+          border: none;
+          border-radius: 0.25rem;
+          font-size: var(--font-size-base);
+          font-weight: var(--font-weight-medium);
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+      }
+
+      .submit-button button:hover {
+          background-color: color-mix(in srgb, var(--color-primary), black 15%);
+      }
+
+      #selectedSubjectsPreview {
+          flex: 1;
           padding: var(--space-md);
+          background-color: color-mix(in srgb, var(--color-bg), var(--color-secondary-bg) 20%);
+          border: 1px solid var(--color-border);
+          border-radius: 0.5rem;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+          min-height: 200px;
+      }
+
+      #selectedSubjectsPreview h3 {
+          font-size: var(--font-size-h3);
+          font-weight: var(--font-weight-semibold);
+          margin-bottom: var(--space-md);
+      }
+
+      #selectedSubjectsList {
+          list-style: none;
+          padding: 0;
       }
 
       #selectedSubjectsList li {
-          gap: var(--space-md);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
           padding: var(--space-sm);
+          margin-bottom: var(--space-sm);
+          background-color: color-mix(in srgb, var(--color-bg), var(--color-secondary-bg) 10%);
+          border-radius: 0.25rem;
+          gap: var(--space-sm);
+      }
+
+      #selectedSubjectsList li div {
+          flex: 1;
       }
 
       #selectedSubjectsList button {
@@ -144,7 +235,11 @@
           color: white;
           border: none;
           padding: var(--space-xs) var(--space-sm);
-          font-size: 0.875rem;
+          font-size: var(--font-size-small);
+          font-weight: var(--font-weight-medium);
+          border-radius: 0.25rem;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
       }
 
       #selectedSubjectsList button:hover {
@@ -152,31 +247,20 @@
       }
 
       @media (max-width: 768px) {
-          details {
-              margin: var(--space-sm) 0;
+          .schedule-container {
+              flex-direction: column;
           }
 
-          details summary {
-              font-size: 0.95rem;
-              padding: var(--space-xs) var(--space-sm);
+          .form-list {
+              max-height: 55vh;
           }
 
-          details ul li {
-              padding: var(--space-xs) var(--space-sm);
-              font-size: 0.95rem;
+          #selectedSubjectsPreview {
+              margin-top: var(--space-lg);
           }
 
-          details ul li small {
-              font-size: 0.85rem;
-          }
-
-          #selectedSubjectsList li {
-              font-size: 0.95rem;
-              padding: var(--space-xs);
-          }
-
-          #selectedSubjectsList button {
-              font-size: 0.85rem;
+          .submit-button {
+              text-align: center;
           }
       }
     </style>
@@ -197,7 +281,7 @@
             const label = cb.closest('label');
             const seccion = label.querySelector('span')?.textContent || '';
             const profesor = label.querySelector('small')?.textContent || '';
-            const materia = label.closest('section').querySelector('h4')?.textContent || '';
+            const materia = label.closest('section').querySelector('h3')?.textContent || '';
             const li = document.createElement('li');
             const infoDiv = document.createElement('div');
             infoDiv.innerHTML = `<strong>${materia}</strong> – ${seccion}<br><small>${profesor}</small>`;
