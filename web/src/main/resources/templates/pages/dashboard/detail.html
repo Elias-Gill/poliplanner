@@ -87,15 +87,15 @@
             <h3 th:text="${materia.nombreAsignatura}"></h3>
             <p>
               <span th:if="${materia.nombreProfesor}">
-                <strong>Profesor:</strong>
+                <span style="font-weight: var(--font-weight-semibold);">Profesor:</span>
                 <span th:text="${materia.tituloProfesor} + ' ' + ${materia.apellidoProfesor} + ', ' + ${materia.nombreProfesor}"></span>
               </span><br th:if="${materia.nombreProfesor}">
               <span th:if="${materia.emailProfesor}">
-                <strong>Email:</strong>
+                <span style="font-weight: var(--font-weight-semibold);">Email:</span>
                 <span th:text="${materia.emailProfesor}"></span>
               </span><br th:if="${materia.emailProfesor}">
               <span th:if="${materia.seccion}">
-                <strong>Sección:</strong>
+                <span style="font-weight: var(--font-weight-semibold);">Sección:</span>
                 <span th:text="${materia.seccion}"></span>
               </span>
             </p>
