@@ -198,3 +198,17 @@ Para ver el modelo completo de la base de datos, se puede consultar:
 |           es exitoso             |
 +----------------------------------+
 ```
+
+# API
+
+El parser cuenta con una sola funcion publica expuesta:
+
+```java
+public Map<String, List<SubjectsDTO>> parseExcel(Path file) { }
+```
+
+El servicio excel cuenta con las siguiente funciones publicas:
+```java
+public void parseAndPersistExcel(Path excel) {} // pensado par uso manual y testing
+public boolean autonomousExcelSync() {}         // para el endpoint de update automatico del excel
+```
