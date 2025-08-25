@@ -93,15 +93,19 @@ public class ScheduleServiceIntegrationTest {
                 .save(new Schedule(user, "Mi Horario", List.of(mathV1, physicsV1), oldVersion));
         scheduleRepository.flush();
 
-        scheduleService.migrateSubjects(user.getUsername(), schedule.getId());
+        List<Subject> notMigrated = scheduleService.migrateSubjects(user.getUsername(), schedule.getId());
         scheduleRepository.flush();
+
+        assertEquals(notMigrated.size(), 1, "La lista de no migrados debe de ser igual a 1");
 
         Schedule updatedSchedule = scheduleRepository.findById(schedule.getId())
                 .orElseThrow(() -> new AssertionError("No se encontró el horario actualizado"));
         assertEquals(2, updatedSchedule.getSubjects().size(), "El horario debe contener exactamente 2 asignaturas");
+
         boolean migratedMath = updatedSchedule.getSubjects().stream()
                 .anyMatch(s -> s.getId().equals(mathV2.getId()));
         assertTrue(migratedMath, "La asignatura Math debe haberse migrado a la versión más reciente");
+
         boolean hasPhysics = updatedSchedule.getSubjects().stream()
                 .anyMatch(s -> s.getNombreAsignatura().equals("Physics") && s.getSeccion().equals("B"));
         assertTrue(hasPhysics, "La asignatura Physics debe mantenerse en su versión original");

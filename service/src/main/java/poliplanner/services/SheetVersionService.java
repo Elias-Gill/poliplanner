@@ -19,6 +19,6 @@ public class SheetVersionService {
     }
 
     public SheetVersion findLatest() {
-        return repository.findFirstByOrderByParsedAtDesc();
+        return repository.findFirstByOrderByParsedAtDescIdDesc();
     }
 }

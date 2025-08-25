@@ -83,7 +83,7 @@ class ExcelServiceIntegrationTest {
         excelService.parseAndPersistExcel(testExcel, dummyUrl);
 
         // Verificamos que se haya creado la version
-        SheetVersion version = sheetVersionRepository.findFirstByOrderByParsedAtDesc();
+        SheetVersion version = sheetVersionRepository.findFirstByOrderByParsedAtDescIdDesc();
         assertEquals(dummyUrl, version.getUrl());
 
         // Verificamos que se hayan creado carreras

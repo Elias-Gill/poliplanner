@@ -1,5 +1,6 @@
 package poliplanner.services;
 
+import poliplanner.models.SheetVersion;
 import poliplanner.models.Subject;
 import poliplanner.repositories.SubjectRepository;
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SubjectService {
     private final SubjectRepository subjectRepository;
+    private final SheetVersionService versionService;
 
     @Transactional
     public Subject create(Subject subject) {
@@ -63,5 +65,15 @@ public class SubjectService {
 
     public Optional<Subject> findById(Long id) {
         return subjectRepository.findById(id);
+    }
+
+    public List<Subject> findAllById(List<Long> ids) {
+        return subjectRepository.findAllById(ids);
+    }
+
+    public Optional<Subject> getLatestByNameAndSection(String name, String section) {
+        SheetVersion latestVersion = versionService.findLatest();
+        return subjectRepository
+                .findFirstByNombreAsignaturaAndSeccionAndCareer_Version(name, section, latestVersion);
     }
 }

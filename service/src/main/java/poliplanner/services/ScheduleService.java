@@ -1,6 +1,5 @@
 package poliplanner.services;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +12,10 @@ import poliplanner.exception.InvalidScheduleException;
 import poliplanner.exception.SubjectNotFoundException;
 import poliplanner.exception.UserNotFoundException;
 import poliplanner.models.Schedule;
+import poliplanner.models.SheetVersion;
 import poliplanner.models.Subject;
 import poliplanner.models.User;
 import poliplanner.repositories.ScheduleRepository;
-import poliplanner.repositories.SubjectRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserService userService;
-    private final SubjectRepository subjectRepository;
+    private final SubjectService subjectService;
     private final SheetVersionService sheetVersionService;
 
     public List<Schedule> findByUserName(String user) {
@@ -40,7 +39,7 @@ public class ScheduleService {
     @Transactional
     public Schedule updateList(Long id, List<Long> subjectIds) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow();
-        List<Subject> subjects = subjectRepository.findAllById(subjectIds);
+        List<Subject> subjects = subjectService.findAllById(subjectIds);
         schedule.setSubjects(subjects);
 
         return scheduleRepository.save(schedule);
@@ -71,7 +70,7 @@ public class ScheduleService {
             throw new InvalidScheduleException("Debe seleccionar al menos una materia");
         }
 
-        List<Subject> subjects = subjectRepository.findAllById(subjectIds);
+        List<Subject> subjects = subjectService.findAllById(subjectIds);
         if (subjects.size() != subjectIds.size()) {
             throw new SubjectNotFoundException("Una o más materias no existen");
         }
@@ -115,6 +114,8 @@ public class ScheduleService {
 
     @Transactional
     public List<Subject> migrateSubjects(String username, Long scheduleId) {
+        SheetVersion latestVersion = sheetVersionService.findLatest();
+
         // Verificar que el usuario sea dueño del horario
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new BadArgumentsException("Horario con id='" + scheduleId + "' no existe"));
@@ -132,12 +133,10 @@ public class ScheduleService {
             String subjectName = oldSubject.getNombreAsignatura();
             String section = oldSubject.getSeccion();
 
-            Subject newSubject = subjectRepository
-                    .findFirstByNombreAsignaturaAndSeccionOrderByCareer_Version_ParsedAtDesc(subjectName, section)
-                    .orElse(null);
+            Subject newSubject = subjectService.getLatestByNameAndSection(subjectName, section).orElse(null);
 
             if (newSubject != null) {
-                if (isNewerVersion(newSubject, oldSubject)) {
+                if (newSubject.getCareer().getVersion().equals(latestVersion)) {
                     updatedSubjects.add(newSubject);
                 } else {
                     updatedSubjects.add(oldSubject);
@@ -155,12 +154,5 @@ public class ScheduleService {
         scheduleRepository.save(schedule);
 
         return notMigratedSubjects;
-    }
-
-    private boolean isNewerVersion(Subject newSubject, Subject oldSubject) {
-        LocalDateTime oldDate = oldSubject.getCareer().getVersion().getParsedAt();
-        LocalDateTime newDate = oldSubject.getCareer().getVersion().getParsedAt();
-
-        return newDate.isAfter(oldDate);
     }
 }
