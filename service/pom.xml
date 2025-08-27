@@ -6,10 +6,8 @@
     <artifactId>poliplanner-parent</artifactId>
     <version>1.0.0</version>
   </parent>
-  
   <artifactId>poliplanner-service</artifactId>
   <name>poliplanner-service</name>
-  
   <dependencies>
     <!-- Spring -->
     <dependency>
@@ -21,26 +19,18 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
-    
     <!-- Lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
     </dependency>
-    
     <!-- Dependencias de otros módulos -->
     <dependency>
       <groupId>com.elias_gill.poliplanner</groupId>
       <artifactId>poliplanner-persistence</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.elias_gill.poliplanner</groupId>
-      <artifactId>poliplanner-exception</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    
     <!-- Testing -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

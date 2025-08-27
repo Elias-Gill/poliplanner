@@ -36,11 +36,6 @@
       <artifactId>poliplanner-service</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.elias_gill.poliplanner</groupId>
-      <artifactId>poliplanner-exception</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     
     <!-- Testing -->
     <dependency>

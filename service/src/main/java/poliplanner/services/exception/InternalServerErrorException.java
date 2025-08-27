@@ -1,4 +1,4 @@
-package poliplanner.exception;
+package poliplanner.services.exception;
 
 public class InternalServerErrorException extends RuntimeException {
     public InternalServerErrorException(String message, Throwable cause) {

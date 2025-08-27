@@ -13,7 +13,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import poliplanner.exception.BadArgumentsException;
+import poliplanner.services.exception.ServiceBadArgumentsException;
 import poliplanner.models.Career;
 import poliplanner.models.Schedule;
 import poliplanner.models.SheetVersion;
@@ -121,7 +121,7 @@ public class ScheduleServiceIntegrationTest {
         scheduleRepository.flush();
 
         // Act & Assert
-        Exception exception = assertThrows(BadArgumentsException.class,
+        Exception exception = assertThrows(ServiceBadArgumentsException.class,
                 () -> scheduleService.migrateSubjects(otherUser.getUsername(), schedule.getId()),
                 "Debe lanzarse BadArgumentsException para usuario no autorizado");
         assertTrue(exception.getMessage().contains("No tienes autorizacion para modificar este horario"),
@@ -135,7 +135,7 @@ public class ScheduleServiceIntegrationTest {
         userRepository.flush();
 
         // Act & Assert
-        Exception exception = assertThrows(BadArgumentsException.class,
+        Exception exception = assertThrows(ServiceBadArgumentsException.class,
                 () -> scheduleService.migrateSubjects(user.getUsername(), 999L),
                 "Debe lanzarse BadArgumentsException para un horario inexistente");
         assertTrue(exception.getMessage().contains("Horario con id='999' no existe"),

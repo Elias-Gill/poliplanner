@@ -1,7 +1,7 @@
 package poliplanner.services;
 
-import poliplanner.exception.BadArgumentsException;
-import poliplanner.exception.InternalServerErrorException;
+import poliplanner.services.exception.ServiceBadArgumentsException;
+import poliplanner.services.exception.InternalServerErrorException;
 import poliplanner.models.Career;
 import poliplanner.models.SheetVersion;
 import poliplanner.repositories.CareerRepository;
@@ -32,13 +32,14 @@ public class CareerService {
     }
 
     @Transactional
-    public Career create(String name, SheetVersion version) throws InternalServerErrorException, BadArgumentsException {
+    public Career create(String name, SheetVersion version)
+            throws InternalServerErrorException, ServiceBadArgumentsException {
         if (name == null || name.isEmpty() || name.isBlank()) {
-            throw new BadArgumentsException("No se proporciono nombre de carrera");
+            throw new ServiceBadArgumentsException("No se proporciono nombre de carrera");
         }
 
         if (version == null) {
-            throw new BadArgumentsException("No se proporciono la version de plantilla excel");
+            throw new ServiceBadArgumentsException("No se proporciono la version de plantilla excel");
         }
 
         Career aux = new Career(name);

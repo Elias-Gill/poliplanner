@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import poliplanner.exception.BadArgumentsException;
-import poliplanner.exception.InternalServerErrorException;
-import poliplanner.exception.UserNameAlreadyExistsException;
+import poliplanner.services.exception.ServiceBadArgumentsException;
+import poliplanner.services.exception.InternalServerErrorException;
+import poliplanner.services.exception.UserNameAlreadyExistsException;
 import poliplanner.models.User;
 import poliplanner.services.UserService;
 
@@ -45,7 +45,7 @@ public class UserController {
 
         try {
             userService.registerUser(user.getUsername(), user.getPassword());
-        } catch (BadArgumentsException e) {
+        } catch (ServiceBadArgumentsException e) {
             model.addAttribute("error", e.getMessage());
             return "pages/auth/register";
         } catch (UserNameAlreadyExistsException e) {

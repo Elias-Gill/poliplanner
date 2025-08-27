@@ -44,11 +44,6 @@
     </dependency>
     <dependency>
       <groupId>com.elias_gill.poliplanner</groupId>
-      <artifactId>poliplanner-exception</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.elias_gill.poliplanner</groupId>
       <artifactId>poliplanner-excel</artifactId>
       <version>${project.version}</version>
     </dependency>

@@ -10,7 +10,6 @@ COPY service/pom.xml service/
 COPY persistence/pom.xml persistence/
 COPY excel/pom.xml excel/
 COPY web/pom.xml web/
-COPY exception/pom.xml exception/
 
 # Descargar dependencias offline
 RUN mvn dependency:go-offline -B

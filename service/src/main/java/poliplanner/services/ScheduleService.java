@@ -6,11 +6,11 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import poliplanner.exception.BadArgumentsException;
-import poliplanner.exception.InternalServerErrorException;
-import poliplanner.exception.InvalidScheduleException;
-import poliplanner.exception.SubjectNotFoundException;
-import poliplanner.exception.UserNotFoundException;
+import poliplanner.services.exception.ServiceBadArgumentsException;
+import poliplanner.services.exception.InternalServerErrorException;
+import poliplanner.services.exception.InvalidScheduleException;
+import poliplanner.services.exception.SubjectNotFoundException;
+import poliplanner.services.exception.UserNotFoundException;
 import poliplanner.models.Schedule;
 import poliplanner.models.SheetVersion;
 import poliplanner.models.Subject;
@@ -90,19 +90,19 @@ public class ScheduleService {
 
     @Transactional
     public void deleteSchedule(Long scheduleId, String username)
-            throws InternalServerErrorException, BadArgumentsException {
+            throws InternalServerErrorException, ServiceBadArgumentsException {
 
         Optional<Schedule> optSchedule = scheduleRepository.findById(scheduleId);
 
         if (optSchedule.isEmpty()) {
-            throw new BadArgumentsException("Horario con id='" + scheduleId + "' no existe");
+            throw new ServiceBadArgumentsException("Horario con id='" + scheduleId + "' no existe");
         }
 
         Schedule schedule = optSchedule.get();
 
         // Ver que el usuario sea el dueno del horario
         if (!schedule.getUser().getUsername().equals(username)) {
-            throw new BadArgumentsException("No tienes autorizacion para eliminar este horario");
+            throw new ServiceBadArgumentsException("No tienes autorizacion para eliminar este horario");
         }
 
         try {
@@ -118,10 +118,10 @@ public class ScheduleService {
 
         // Verificar que el usuario sea dueño del horario
         Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new BadArgumentsException("Horario con id='" + scheduleId + "' no existe"));
+                .orElseThrow(() -> new ServiceBadArgumentsException("Horario con id='" + scheduleId + "' no existe"));
 
         if (!schedule.getUser().getUsername().equals(username)) {
-            throw new BadArgumentsException("No tienes autorizacion para modificar este horario");
+            throw new ServiceBadArgumentsException("No tienes autorizacion para modificar este horario");
         }
 
         // Crear una nueva lista mutable para los subjects actualizados

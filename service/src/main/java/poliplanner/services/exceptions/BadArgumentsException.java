@@ -1,4 +1,4 @@
-package poliplanner.exception;
+package poliplanner.services.exceptions;
 
 public class BadArgumentsException extends RuntimeException {
     public BadArgumentsException(String message) {

@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriUtils;
 
-import poliplanner.exception.BadArgumentsException;
-import poliplanner.exception.InternalServerErrorException;
-import poliplanner.exception.InvalidScheduleException;
-import poliplanner.exception.SubjectNotFoundException;
-import poliplanner.exception.UserNotFoundException;
+import poliplanner.services.exception.ServiceBadArgumentsException;
+import poliplanner.services.exception.InternalServerErrorException;
+import poliplanner.services.exception.InvalidScheduleException;
+import poliplanner.services.exception.SubjectNotFoundException;
+import poliplanner.services.exception.UserNotFoundException;
 import poliplanner.models.Career;
 import poliplanner.models.Subject;
 import poliplanner.services.CareerService;
@@ -166,7 +166,7 @@ public class SchedulesController {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             scheduleService.deleteSchedule(id, username);
             redirectAttributes.addFlashAttribute("success", "Horario eliminado satisfactoriamente");
-        } catch (BadArgumentsException e) {
+        } catch (ServiceBadArgumentsException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (InternalServerErrorException e) {
             redirectAttributes.addFlashAttribute("error",
@@ -194,7 +194,7 @@ public class SchedulesController {
 
                 redirectAttributes.addFlashAttribute("warning", warningMessage.toString());
             }
-        } catch (BadArgumentsException e) {
+        } catch (ServiceBadArgumentsException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (InternalServerErrorException e) {
             redirectAttributes.addFlashAttribute("error",
