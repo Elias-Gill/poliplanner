@@ -18,22 +18,27 @@ todos los usuarios tienen las mismas capacidades.
 El frontend está compuesto por HTML y CSS con plantillas de Thymeleaf.
 Para mas informacion sobre los estilos, consultar la guia de [estilos](estilos_css.md).
 
-## Componentes
+## Componentes y modulos
 
-La aplicacion se divide en componentes siguiendo las practicas de desarrollo de Spring Boot:
+La aplicacion se divide en modulos siguiendo las practicas de desarrollo de Spring Boot y java
+con modularizacion mediante Maven:
 
-- Services
-- Controllers
-- Models
-
-El parser de excel es considerado un modulo de servicio independiente.
-Este modulo se divide en:
-- Web Scrapper:
-  busca los links de descarga de nuevas versiones de excel.
-- Parser:
-  Convierte un excel a csv, luego parsea dicho csv para generar el un DTO.
-  Este DTO luego se mapea a los modelos de la base de datos, realizandose la limpieza y
-  desambiguacion de los campos.
+- service
+    - Servicios sobre los modelos
+- web
+    - Controllers
+    - Plantillas thymeleaf
+- excel
+    - Parser
+    - Web scrapper
+- persistence
+    - Modelos 
+    - Repositorios
+    - Migraciones
+- app
+    - Punto de entrada de la aplicacion
+    - Devtools
+    - Test de integracion
 
 ## Flujo principal de uso
 

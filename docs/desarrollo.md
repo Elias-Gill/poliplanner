@@ -46,11 +46,21 @@ mvn spring-boot:run -Dspring-boot.run.arguments=--clean,--seed
 
 ## Levantar el Proyecto
 
-Para iniciar la aplicación ejecutar desde el directorio `app/`:
+Para iniciar la aplicación primero compilar el proyecto desde la raiz con `mvn install`, luego
+ejecutar el siguiente comando desde el directorio `app/`:
 
 ```bash
 mvn spring-boot:run
 ```
+
+Luego de los cambios a cada modulo, se pued realizar la compilacion especifica del modulo en
+cuestion sin necesidad de recompilar todo el proyecto ejecutando desde la raiz:
+
+```bash
+mvn -pl "modulo_cambiado,modulo_cambiado2" install
+```
+
+Para ver los modulos disponibles consultar [Guia de arquitectura](arquitectura.md).
 
 **Nota**:
 Otra filosofía del proyecto es que el entorno de desarrollo debe poder ejecutarse sin depender

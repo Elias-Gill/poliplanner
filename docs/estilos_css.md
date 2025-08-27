@@ -1,51 +1,53 @@
-# Documentación del Framework CSS Minimalista
+# Documentación del Framework CSS Minimalista - Versión Simplificada
 
 ## Visión general
 
 Un sistema de estilos minimalista basado en HTML semántico que proporciona estilos consistentes
 y responsivos sin necesidad de clases CSS adicionales en la mayoría de casos.
 
-El framework está diseñado para:
+## Variables CSS globales
 
-- Funcionar con HTML estándar sin requerir clases CSS
-- Ser completamente responsive (mobile-first)
-- Incluir soporte para modo claro/oscuro
-- Mantener consistencia visual en todos los componentes
-- Requerir muy poco JavaScript para su funcionamiento básico (ej:
-  burguer.js)
-
-De requerirse codigo css o javascript custom para ciertos componentes de una pagina especifica,
-entonces se escribe directamente dentro de la plantilla.
-Se debe evitar lo mas posible el uso de css custom dentro de las paginas.
-
-La filosofia es de utilidad y facilidad de mantenimientos por sobre frontend complejo y
-saturado.
-Valoramos la utilidad, el performance y facilidad de uso por sobre estilos visuales
-extravagantes y librerias de frontend pesadas.
-
-## Estructura básica
-
-### Variables CSS
-El sistema utiliza variables CSS para una fácil personalización:
+El sistema utiliza estas variables CSS para una fácil personalización:
 
 ```css
 :root {
-    /* Colores base */
-    --color-bg: #f8f8f8;
-    --color-text: #333333;
-    --color-border: #e0e0e0;
+    --color-bg: oklch(0.96 0.01 240);
+    --color-secondary-bg: oklch(0.92 0.01 240);
+    --color-text: oklch(0.15 0.02 240);
+    --color-border: oklch(0.79 0.02 240);
 
-    /* Colores de componentes */
-    --color-primary: #2563eb;
-    --color-secondary: #6b7280;
+    --color-primary: oklch(0.4 0.1 240);
+    --color-muted: oklch(0.4 0.02 240);
+    --color-success: oklch(0.55 0.12 160);
+    --color-error: oklch(0.5 0.14 20);
+    --color-warning: oklch(0.75 0.12 90);
 
-    /* Espaciado */
+    /* Espaciado (basado en rem) */
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
     --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
 
     /* Tipografía */
-    --font-base: 'Inter', sans-serif;
+    --font-base: 'Urbanist', sans-serif;
+
+    --font-size-base: 1rem;
+    --font-size-h1: 1.25rem;
+    --font-size-h2: 1.125rem;
+    --font-size-h3: 1.0625rem;
+    --font-size-h4: 0.9375rem;
+    --font-size-h5: 0.875rem;
+    --font-size-h6: 0.8125rem;
+    --font-size-small: 0.75rem;
+
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    --line-height: 1.4;
 }
 ```
 
@@ -57,15 +59,10 @@ El sistema utiliza variables CSS para una fácil personalización:
 ```html
 <header>, <main>, <footer>
 ```
-- Ancho máximo de 1200px
-- Padding consistente
-- Centrado automático
 
 ```html
 <section>
 ```
-- Margin arriba y abajo
-- Ampliamente utilizado para generar espacios de separacion en la vista
 
 #### Sistema de navegación
 ```html
@@ -76,9 +73,6 @@ El sistema utiliza variables CSS para una fácil personalización:
     </ul>
 </nav>
 ```
-- Horizontal en desktop
-- Colapsa a menú hamburguesa en móvil
-- Estilo minimalista con borde inferior
 
 ### 2. Componentes básicos
 
@@ -90,12 +84,6 @@ El sistema utiliza variables CSS para una fácil personalización:
 <button class="error">error</button>
 <button class="warning">warning</button>
 ```
-
-Características:
-- Estilo consistente con variables CSS
-- Estados hover y focus incluidos
-- Tipos:
-  primary, secondary, success, error, warning
 
 #### Formularios
 ```html
@@ -109,11 +97,6 @@ Características:
 </form>
 ```
 
-Estilos:
-- Bordes sutiles
-- Focus state visible
-- Diseño responsive
-
 ### 3. Componentes de contenido
 
 #### Tarjetas
@@ -124,14 +107,8 @@ Estilos:
 </article>
 ```
 
-Características:
-- Borde sutil
-- Padding consistente
-- Fondo que cambia en modo oscuro
-
 #### Tablas
 ```html
-<!-- ojo, necesario el contenedor para soporte de scroll horizontal -->
 <div class="table-container">
     <table>
         <tr>
@@ -142,11 +119,6 @@ Características:
 </div>
 ```
 
-Comportamiento:
-- Scroll horizontal en móvil
-- Bordes limpios
-- Encabezados destacados
-
 ## Modo oscuro
 El framework incluye soporte para modo oscuro mediante la clase `.dark-mode` en el elemento
 `<body>`:
@@ -154,17 +126,6 @@ El framework incluye soporte para modo oscuro mediante la clase `.dark-mode` en 
 ```javascript
 document.body.classList.toggle('dark-mode');
 ```
-
-Los componentes automáticamente ajustan sus colores basados en las variables CSS para modo
-oscuro.
-
-## Personalización
-Para modificar el diseño:
-
-1. Ajustar variables CSS en `:root`
-2. Sobreescribir estilos específicos cuando sea necesario
-3. Para componentes especiales, usar el atributo `style` directamente en el HTML
-4. Usar siempre variables definidas dentro del `main.css`
 
 ## Ejemplo completo
 
@@ -176,12 +137,11 @@ Para modificar el diseño:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prueba Framework CSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap">
-    <link rel="stylesheet" th:href="@{/css/framework.css}">
+    <link rel="stylesheet" href="/css/framework.css">
   </head>
   <body>
 
     <nav>
-      <!-- Botón hamburguesa (solo móvil) -->
       <button class="burguer" aria-label="Menú" hidden>
         ☰
       </button>
@@ -192,9 +152,7 @@ Para modificar el diseño:
       </ul>
     </nav>
 
-    <!-- Contenedor principal -->
     <main>
-      <!-- Tarjetas -->
       <article>
         <h2>Tarjeta estándar</h2>
         <p>Contenido de ejemplo con un <a href="#">enlace</a>.</p>
@@ -202,7 +160,6 @@ Para modificar el diseño:
         <button type="secondary">Secundario</button>
       </article>
 
-      <!-- Tabla -->
       <section>
         <h2>Tabla</h2>
         <div class="table-container">
@@ -230,7 +187,6 @@ Para modificar el diseño:
         </div>
       </section>
 
-      <!-- Formulario -->
       <section>
         <h2>Formulario</h2>
         <form>
@@ -240,27 +196,24 @@ Para modificar el diseño:
           <input type="email" id="email">
           <label for="rol">Rol:</label>
 
-          <!-- SELECT  -->
           <select id="rol">
             <option>Usuario</option>
             <option>Admin</option>
           </select>
 
-          <!-- checkbox -->
           <label>
             <input type="checkbox"> Acepto los términos
           </label>
 
-          <!-- tipos de botones -->
           <button type="submit">Enviar</button>
           <button type="secondary">Cancelar</button>
         </form>
       </section>
-      <!-- Alertas/Burbujas -->
+      
       <aside role="alert">
         <p>Esta es una alerta importante</p>
       </aside>
-      <!-- Botones extra -->
+      
       <section>
         <h2>Botones adicionales</h2>
         <button type="success">Éxito</button>
@@ -268,17 +221,15 @@ Para modificar el diseño:
         <button disabled>Deshabilitado</button>
       </section>
 
-      <!-- Imagen responsive -->
       <section>
         <h2>Imagen</h2>
-        <img src="https://i.pinimg.com/originals/38/aa/79/38aa797cc03e83b0006270ae45485df7.jpg" alt="Placeholder">
+        <img src="imagen.jpg" alt="Placeholder">
         <h2>Con image container</h2>
         <div class="image-container">
-          <img src="https://i.pinimg.com/originals/38/aa/79/38aa797cc03e83b0006270ae45485df7.jpg" alt="Placeholder">
+          <img src="imagen.jpg" alt="Placeholder">
         </div>
       </section>
 
-      <!-- dropdown menu -->
       <div class="dropdown">
           <button class="dropdown-toggle">Menú de acciones</button>
           <ul class="dropdown-menu" hidden>
@@ -288,17 +239,15 @@ Para modificar el diseño:
           </ul>
       </div>
 
-      <!-- Botón para toggle modo oscuro (ejemplo) -->
       <button onclick="document.body.classList.toggle('dark-mode')">Toggle Dark Mode</button>
     </main>
 
-    <!-- Footer -->
     <footer>
       <p>© 2023 Mi App Minimalista</p>
     </footer>
-  </body>
 
-  <script th:src="@{/js/burguer.js}"></script>
-  <script th:src="@{/js/dropdown.js}"></script>
+    <script src="/js/burguer.js"></script>
+    <script src="/js/dropdown.js"></script>
+  </body>
 </html>
 ```
