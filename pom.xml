@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.2.5</version>
-    <relativePath/> <!-- Busca en repositorios si no está localmente -->
+    <relativePath></relativePath>
+    <!-- Busca en repositorios si no está localmente -->
   </parent>
-  
   <groupId>com.elias_gill.poliplanner</groupId>
   <artifactId>poliplanner-parent</artifactId>
   <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>poliplanner-parent</name>
-  
   <properties>
     <java.version>17</java.version>
     <lombok.version>1.18.30</lombok.version>
@@ -27,7 +25,6 @@
     <fastexcel.version>0.18.4</fastexcel.version>
     <jsoup.version>1.16.1</jsoup.version>
   </properties>
-  
   <modules>
     <module>persistence</module>
     <module>service</module>
@@ -35,11 +32,9 @@
     <module>web</module>
     <module>app</module>
   </modules>
-  
   <dependencyManagement>
     <dependencies>
       <!-- Solo gestiona versiones de dependencias que NO son de Spring Boot -->
-      
       <!-- Lombok -->
       <dependency>
         <groupId>org.projectlombok</groupId>
@@ -47,14 +42,12 @@
         <version>${lombok.version}</version>
         <scope>provided</scope>
       </dependency>
-      
       <!-- Thymeleaf (extensión) -->
       <dependency>
         <groupId>nz.net.ultraq.thymeleaf</groupId>
         <artifactId>thymeleaf-layout-dialect</artifactId>
         <version>${thymeleaf-layout-dialect.version}</version>
       </dependency>
-      
       <!-- Database -->
       <dependency>
         <groupId>org.postgresql</groupId>
@@ -78,7 +71,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-  
   <build>
     <pluginManagement>
       <plugins>
@@ -109,6 +101,13 @@
           <groupId>com.diffplug.spotless</groupId>
           <artifactId>spotless-maven-plugin</artifactId>
           <version>2.44.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+            <excludeDevtools>true</excludeDevtools>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
