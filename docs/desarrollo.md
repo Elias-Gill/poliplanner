@@ -8,6 +8,12 @@ fácilmente de forma manual desde una terminal `UNIX` (Linux o MacOs).
 El soporte para entornos Windows y la ejecución mediante IDE son considerados secundarios (se
 aceptan PRs para mejorar dicha experiencia).
 
+NOTA:
+la aplicacion utiliza spring-boot
+[developer tools](https://docs.spring.io/spring-boot/reference/using/devtools.html) para
+recargar automaticamente el modulo "web" a modo de facilitar el proceso de desarrollo del
+frontend.
+
 ## Requisitos para el desarrollo
 
 - Java 17
