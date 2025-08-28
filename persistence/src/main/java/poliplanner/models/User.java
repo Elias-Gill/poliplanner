@@ -35,6 +35,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "email")
+    private String email;
+
     public User(String name, String password) {
         this.username = name;
         this.password = password;
@@ -44,6 +47,7 @@ public class User {
     @Transient
     private String confirmedPassword;
 
+    // NOTE: requerido para que spring-security no se queje
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
