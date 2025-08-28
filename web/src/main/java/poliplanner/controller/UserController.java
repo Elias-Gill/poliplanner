@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -13,6 +14,7 @@ import poliplanner.services.exception.ServiceBadArgumentsException;
 import poliplanner.services.exception.InternalServerErrorException;
 import poliplanner.services.exception.UserNameAlreadyExistsException;
 import poliplanner.models.User;
+import poliplanner.services.EmailService;
 import poliplanner.services.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class UserController {
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
+    private final EmailService emailService;
 
     // Muestra el formulario de registro
     @GetMapping("/register")
@@ -61,5 +64,17 @@ public class UserController {
         redirectAttributes.addFlashAttribute(
                 "successMessage", "¡Registro exitoso! Por favor, inicia sesión.");
         return "redirect:/login";
+    }
+
+    // TODO: completar
+    // Ejemplo: GET /test-email/correo@ejemplo.com
+    @GetMapping("/test-email/{email}")
+    public String sendTestEmail(@PathVariable("email") String email) {
+        try {
+            emailService.sendTestEmail(email);
+        } catch (Exception e) {
+        }
+
+        return "redirect:/dashboard";
     }
 }
