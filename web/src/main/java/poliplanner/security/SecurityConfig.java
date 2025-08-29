@@ -36,6 +36,8 @@ public class SecurityConfig {
                                 "/login",
                                 "/logout",
                                 "/register",
+                                "/user/recovery",
+                                "/user/recovery/*",
                                 "/css/**",
                                 "/js/**",
                                 "/img/**",
