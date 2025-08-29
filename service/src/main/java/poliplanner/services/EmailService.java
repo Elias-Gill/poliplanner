@@ -14,14 +14,16 @@ public class EmailService {
     private final JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
-    private String fromEmail;
+    private String PoliplannerEmail;
 
-    public void sendTestEmail(String to) {
+    public void sendSimpleMessage(String recipient, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromEmail);
-        message.setTo(to);
-        message.setSubject("Prueba de correo Spring Boot");
-        message.setText("¡Hola! Este es un correo de prueba enviado desde Spring Boot.");
+
+        message.setFrom(PoliplannerEmail);
+        message.setTo(recipient);
+        message.setSubject(subject);
+        message.setText(text);
+
         mailSender.send(message);
     }
 }

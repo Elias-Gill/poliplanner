@@ -23,6 +23,9 @@
             <i class="bi bi-lock"></i>
             <input type="password" id="password" name="password" required aria-describedby="password-error">
           </div>
+          <small>
+              ¿<a th:href="@{/user/recovery}">Olvidaste tu contraseña</a>?
+          </small>
         </div>
         <button type="submit" class="primary">Entrar</button>
         <div th:if="${param.error}">

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/base}">
+    <head>
+        <title>Recuperación de contraseña</title>
+    </head>
+    <main layout:fragment="content">
+        <h2>Recuperación de contraseña</h2>
+
+        <section>
+            <form th:action="@{/user/recovery}" method="post">
+                <section>
+                    <label>
+                        Correo electrónico:
+                        <input type="email" name="email" required>
+                    </label>
+                </section>
+                <button type="submit">Enviar enlace de recuperación</button>
+            </form>
+
+            <section>
+                <div th:replace="~{fragments/alerts/success :: alert(${success})}"></div>
+                <div th:replace="~{fragments/alerts/error :: alert(${error})}"></div>
+            </section>
+
+            <p>
+            ¿Recordaste tu contraseña? <a th:href="@{/login}">Iniciá sesión acá</a>
+            </p>
+        </section>
+
+        <section>
+            <h2>Consideraciones</h2>
+            <ul>
+                <li>
+                    Asegurate de ingresar el correo con el que te registraste.
+                </li>
+                <li>
+                    Te enviaremos un enlace temporal que expirará en 1 hora.
+                </li>
+                <li>
+                    No compartas el enlace de recuperación con nadie.
+                </li>
+            </ul>
+        </section>
+    </main>
+</html>

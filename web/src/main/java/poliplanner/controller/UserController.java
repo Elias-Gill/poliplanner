@@ -69,16 +69,4 @@ public class UserController {
                 "successMessage", "¡Registro exitoso! Por favor, inicia sesión.");
         return "redirect:/login";
     }
-
-    // TODO: completar
-    // Ejemplo: GET /test-email/correo@ejemplo.com
-    @GetMapping("/user/{username}/recovery")
-    public String sendTestEmail(@PathVariable("username") String email) {
-        try {
-            emailService.sendTestEmail(email);
-        } catch (Exception e) {
-        }
-
-        return "redirect:/dashboard";
-    }
 }
