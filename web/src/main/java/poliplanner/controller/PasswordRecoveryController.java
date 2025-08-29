@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import poliplanner.services.PasswordRecoveryService;
 
 @Controller
@@ -52,7 +54,8 @@ public class PasswordRecoveryController {
             @PathVariable String token,
             @RequestParam String newPassword,
             @RequestParam String confirmPassword,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
         if (!newPassword.equals(confirmPassword)) {
             model.addAttribute("error", "Las contraseñas no coinciden.");
@@ -64,13 +67,12 @@ public class PasswordRecoveryController {
         boolean success = recoveryService.resetPassword(username, token, newPassword);
 
         if (success) {
-            model.addAttribute("success", "Contraseña cambiada correctamente. Ahora podés iniciar sesión.");
-            return "pages/auth/login";
+            redirectAttributes.addFlashAttribute("success",
+                    "Contraseña cambiada correctamente. Ahora podés iniciar sesión.");
         } else {
-            model.addAttribute("error", "Token inválido o expirado.");
-            model.addAttribute("token", token);
-            model.addAttribute("username", username);
-            return "pages/auth/reset_password_form";
+            redirectAttributes.addFlashAttribute("error", "Token inválido o expirado.");
         }
+
+        return "redirect:pages/auth/login";
     }
 }

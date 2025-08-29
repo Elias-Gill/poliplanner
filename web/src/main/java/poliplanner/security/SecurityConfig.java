@@ -53,7 +53,7 @@ public class SecurityConfig {
                         .permitAll())
 
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/user/recovery/**", "/sync", "/sync/ci"));
+                        .ignoringRequestMatchers("/sync", "/sync/ci"));
 
         return http.build();
     }
