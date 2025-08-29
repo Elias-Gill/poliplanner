@@ -48,7 +48,6 @@ Para descargar un archivo público a partir de su `id`, se utiliza el siguiente 
 ```javascript
 var file = `https://drive.google.com/uc?export=download&id=${fileId}`
 ```
-
 ### ¿Qué sucede si el ID no es válido?
 
 Si el identificador proporcionado no corresponde a una carpeta (o es inválido), la respuesta
@@ -75,6 +74,10 @@ export GOOGLE_API_KEY=tu_api_key_aqui
 ```
 
 Esta clave sólo permite **listar archivos públicos** y no da acceso a archivos privados.
+
+NOTA:
+para poder sacar el **PASSWORD** de 16 caracteres, ir a esta pagina:
+[https://myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
 
 ### Fuente
 

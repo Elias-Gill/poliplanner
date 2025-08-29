@@ -26,7 +26,7 @@ public class UserService {
         return userRepository.findByUsername(name);
     }
 
-    public User registerUser(String username, String rawPassword)
+    public User registerUser(String username, String rawPassword, String email)
             throws UserNameAlreadyExistsException,
             ServiceBadArgumentsException,
             InternalServerErrorException {
@@ -47,8 +47,13 @@ public class UserService {
             throw new UserNameAlreadyExistsException("El nombre de usuario '" + username + "' ya está en uso.");
         }
 
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new UserNameAlreadyExistsException("El email '" + email + "' ya está en uso.");
+        }
+
         User newUser = new User();
         newUser.setUsername(username);
+        newUser.setEmail(email);
         newUser.setPassword(passwordEncoder.encode(rawPassword));
 
         try {
