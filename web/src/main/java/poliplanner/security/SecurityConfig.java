@@ -24,45 +24,36 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                // Permisos por ruta y método
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/sync").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/sync").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/sync/ci").permitAll()
-                        .requestMatchers(
-                                "/calculator",
-                                "/guides/**",
-                                "/login",
-                                "/logout",
-                                "/register",
-                                "/user/recovery",
-                                "/user/recovery/*",
-                                "/css/**",
-                                "/js/**",
-                                "/img/**",
-                                "/favicon.ico",
-                                "/favicon.png",
-                                "/robots.txt",
-                                "/sitemap.xml")
-                        .permitAll()
-                        .anyRequest().authenticated())
+        http.authorizeHttpRequests(auth -> auth
+                // Sync
+                .requestMatchers(HttpMethod.GET, "/sync").permitAll()
+                .requestMatchers(HttpMethod.POST, "/sync").permitAll()
+                .requestMatchers(HttpMethod.POST, "/sync/ci").permitAll()
 
-                // Login por formulario
+                // Páginas públicas
+                .requestMatchers(HttpMethod.GET, "/calculator", "/guides/**", "/login", "/register").permitAll()
+                .requestMatchers(HttpMethod.GET, "/user/recovery/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/user/recovery/**").permitAll()
+
+                // Recursos estáticos
+                .requestMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico", "/favicon.png",
+                        "/robots.txt", "/sitemap.xml")
+                .permitAll()
+
+                // El resto de rutas requiere login
+                .anyRequest().authenticated())
+
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/")
                         .permitAll())
 
-                // Logout
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll())
 
-                // CSRF deshabilitado para "/sync"
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/sync")
-                        .ignoringRequestMatchers("/sync/ci"));
+                        .ignoringRequestMatchers("/user/recovery/**", "/sync", "/sync/ci"));
 
         return http.build();
     }
