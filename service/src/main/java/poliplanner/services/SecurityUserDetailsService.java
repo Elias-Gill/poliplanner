@@ -18,10 +18,11 @@ public class SecurityUserDetailsService implements UserDetailsService {
 
     // Metodo requerido por UserDetailsService (para Spring Security)
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String usernameOrEmail) {
         User user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+                .findByUsername(usernameOrEmail)
+                .or(() -> userRepository.findByEmail(usernameOrEmail)) // intenta con email si no encontró por username
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario o email no encontrado"));
 
         return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
                 .password(user.getPassword())
