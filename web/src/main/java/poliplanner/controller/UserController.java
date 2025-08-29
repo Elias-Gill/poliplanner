@@ -26,7 +26,6 @@ public class UserController {
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
-    private final EmailService emailService;
 
     // Muestra el formulario de registro
     @GetMapping("/register")

@@ -27,13 +27,15 @@ class PasswordRecoveryServiceTest {
     @InjectMocks
     private PasswordRecoveryService recoveryService;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private BCryptPasswordEncoder encoder;
 
     private User testUser;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        encoder = new BCryptPasswordEncoder();
+
         testUser = new User();
         testUser.setUsername("elias");
         testUser.setRecoveryTokenHash(encoder.encode("token123"));
