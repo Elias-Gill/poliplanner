@@ -38,6 +38,7 @@ public class DashboardController {
         List<Schedule> schedules = scheduleService.findByUserName(userName);
         model.addAttribute("schedules", schedules);
 
+        // TODO: poner una cookie para mostrar el ultimo seleccionado
         if (schedules.isEmpty()) {
             return "pages/dashboard/home";
         }
