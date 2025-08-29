@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import poliplanner.services.exception.ServiceBadArgumentsException;
+import poliplanner.services.exception.EmailAlreadyInUseException;
 import poliplanner.services.exception.InternalServerErrorException;
 import poliplanner.services.exception.UserNameAlreadyExistsException;
 import poliplanner.models.User;
@@ -47,12 +48,15 @@ public class UserController {
         }
 
         try {
-            userService.registerUser(user.getUsername(), user.getPassword());
+            userService.registerUser(user.getUsername(), user.getPassword(), user.getEmail());
         } catch (ServiceBadArgumentsException e) {
             model.addAttribute("error", e.getMessage());
             return "pages/auth/register";
         } catch (UserNameAlreadyExistsException e) {
             model.addAttribute("error", "El nombre de usuario ya está en uso.");
+            return "pages/auth/register";
+        } catch (EmailAlreadyInUseException e) {
+            model.addAttribute("error", "El email ya está en uso.");
             return "pages/auth/register";
         } catch (InternalServerErrorException e) {
             logger.error("Error interno en registro de usuario: " + e.getMessage(), e);
@@ -68,8 +72,8 @@ public class UserController {
 
     // TODO: completar
     // Ejemplo: GET /test-email/correo@ejemplo.com
-    @GetMapping("/test-email/{email}")
-    public String sendTestEmail(@PathVariable("email") String email) {
+    @GetMapping("/user/{username}/recovery")
+    public String sendTestEmail(@PathVariable("username") String email) {
         try {
             emailService.sendTestEmail(email);
         } catch (Exception e) {
