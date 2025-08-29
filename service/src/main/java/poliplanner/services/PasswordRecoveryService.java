@@ -18,6 +18,7 @@ public class PasswordRecoveryService {
     final private EmailService emailService;
     final private BCryptPasswordEncoder pwdEncoder = new BCryptPasswordEncoder();
 
+    // FIX: que no explote si es que no se configuro
     @Value("${app.domain.url}")
     private String domainUrl;
 
@@ -33,7 +34,7 @@ public class PasswordRecoveryService {
             user.setRecoveryTokenUsed(false);
             userRepository.save(user);
 
-            String recoveryLink = domainUrl + "/user/recovery/" + token;
+            String recoveryLink = domainUrl + "/user/recovery/" + user.getUsername() + "/" + token;
             emailService.sendSimpleMessage(
                     email,
                     "Recuperación de contraseña",
@@ -41,5 +42,32 @@ public class PasswordRecoveryService {
 
             return true;
         }).orElse(false);
+    }
+
+    @Transactional
+    public boolean resetPassword(String username, String token, String newPassword) {
+        return userRepository.findByUsername(username)
+                .map(user -> {
+                    // Verificar si el token ya fue usado
+                    if (user.isRecoveryTokenUsed()) {
+                        return false;
+                    }
+
+                    // Verificar expiración
+                    if (user.getRecoveryTokenExpiration().isBefore(LocalDateTime.now())) {
+                        return false;
+                    }
+
+                    // Comparar token con hash
+                    if (!pwdEncoder.matches(token, user.getRecoveryTokenHash())) {
+                        return false;
+                    }
+
+                    // Actualizar contraseña y marcar token como usado
+                    user.setPassword(pwdEncoder.encode(newPassword));
+                    user.setRecoveryTokenUsed(true);
+                    userRepository.save(user);
+                    return true;
+                }).orElse(false);
     }
 }

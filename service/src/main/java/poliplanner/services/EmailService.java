@@ -13,6 +13,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
+    // FIX: que no explote si es que no se configuro
     @Value("${spring.mail.username}")
     private String PoliplannerEmail;
 
