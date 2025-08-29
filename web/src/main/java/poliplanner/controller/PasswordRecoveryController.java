@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import poliplanner.services.PasswordRecoveryService;
+import poliplanner.services.exception.InvalidTokenException;
+import poliplanner.services.exception.UserNotFoundException;
 
 @Controller
 public class PasswordRecoveryController {
@@ -24,16 +26,21 @@ public class PasswordRecoveryController {
     }
 
     @PostMapping("/user/recovery")
-    public String processRecoveryRequest(@RequestParam("email") String email, Model model) {
-        boolean success = recoveryService.startRecoveryProcess(email);
-
-        if (success) {
-            model.addAttribute("success", "Se ha enviado un correo con instrucciones para recuperar tu contraseña.");
-        } else {
-            model.addAttribute("error", "No se encontró ninguna cuenta con ese correo.");
+    public String processRecoveryRequest(@RequestParam("email") String email,
+            RedirectAttributes redirectAttributes) {
+        try {
+            recoveryService.startRecoveryProcess(email);
+            redirectAttributes.addFlashAttribute("success",
+                    "Se ha enviado un correo con instrucciones para recuperar tu contraseña.");
+        } catch (UserNotFoundException e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "No se encontró ninguna cuenta con ese correo.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Ocurrió un error inesperado. Por favor, intente nuevamente.");
         }
 
-        return "pages/auth/recovery";
+        return "redirect:/user/recovery";
     }
 
     // Formulario de reseteo de password
@@ -41,11 +48,20 @@ public class PasswordRecoveryController {
     public String showResetForm(
             @PathVariable String username,
             @PathVariable String token,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
-        model.addAttribute("token", token);
-        model.addAttribute("username", username);
-        return "pages/auth/reset_password_form";
+        try {
+            recoveryService.validateToken(username, token);
+            model.addAttribute("token", token);
+            model.addAttribute("username", username);
+            return "pages/auth/reset_password_form";
+
+        } catch (InvalidTokenException e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Token inválido o expirado. Por favor, solicite un nuevo enlace de recuperación.");
+            return "redirect:/user/recovery";
+        }
     }
 
     @PostMapping("/user/recovery/{username}/{token}")
@@ -54,25 +70,28 @@ public class PasswordRecoveryController {
             @PathVariable String token,
             @RequestParam String newPassword,
             @RequestParam String confirmPassword,
-            Model model,
             RedirectAttributes redirectAttributes) {
 
-        if (!newPassword.equals(confirmPassword)) {
-            model.addAttribute("error", "Las contraseñas no coinciden.");
-            model.addAttribute("token", token);
-            model.addAttribute("username", username);
-            return "pages/auth/reset_password_form";
-        }
+        try {
+            // Validar coincidencia de contraseñas
+            if (!newPassword.equals(confirmPassword)) {
+                redirectAttributes.addFlashAttribute("error", "Las contraseñas no coinciden.");
+                return "redirect:/user/recovery/" + username + "/" + token;
+            }
 
-        boolean success = recoveryService.resetPassword(username, token, newPassword);
-
-        if (success) {
+            recoveryService.resetPassword(username, token, newPassword);
             redirectAttributes.addFlashAttribute("success",
                     "Contraseña cambiada correctamente. Ahora podés iniciar sesión.");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Token inválido o expirado.");
+
+        } catch (InvalidTokenException e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Token inválido o expirado. Por favor, solicite un nuevo enlace de recuperación.");
+            return "redirect:/user/recovery";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Error al cambiar la contraseña. Por favor, intente nuevamente.");
         }
 
-        return "redirect:pages/auth/login";
+        return "redirect:/login";
     }
 }
