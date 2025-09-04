@@ -134,31 +134,33 @@ public class SubjectMapper {
             return "";
         }
 
-        // Eliminar cualquier texto no numérico (como "hs", "h", etc.)
-        String cleaned = timeStr.replaceAll("[^0-9:]", "").trim();
+        String timeStrOriginal = timeStr.trim();
 
-        // Normalizar separadores (por si usan otro carácter en lugar de :)
-        cleaned = cleaned.replaceAll("[^0-9]+", ":");
-
-        // Eliminar : duplicados y : al inicio/final
-        cleaned = cleaned.replaceAll("^:|:$", "").replaceAll("::+", ":");
-
-        // Dividir en componentes
-        String[] segments = cleaned.split(":");
+        // Eliminar texto no numérico (excepto : y .)
+        String cleaned = timeStr.replaceAll("[^0-9:.]", "").trim();
 
         try {
-            // Obtener horas y minutos (ignorar segundos si existen)
-            int hours = segments.length > 0 ? Integer.parseInt(segments[0]) : 0;
-            int minutes = segments.length > 1 ? Integer.parseInt(segments[1]) : 0;
+            if (cleaned.contains(":")) {
+                // Intentar parsear como hh:mm
+                String[] segments = cleaned.split(":");
+                int hours = segments.length > 0 ? Integer.parseInt(segments[0]) : 0;
+                int minutes = segments.length > 1 ? Integer.parseInt(segments[1]) : 0;
 
-            // Validar rangos
-            hours = Math.max(0, Math.min(hours, 23));
-            minutes = Math.max(0, Math.min(minutes, 59));
+                hours = Math.max(0, Math.min(hours, 23));
+                minutes = Math.max(0, Math.min(minutes, 59));
 
-            // Formatear a dos dígitos cada componente
-            return String.format("%02d:%02d", hours, minutes);
+                return String.format("%02d:%02d", hours, minutes);
+            } else {
+                // Parsear como decimal de Excel
+                double decimalValue = Double.parseDouble(timeStrOriginal);
+                int totalMinutes = (int) Math.round(decimalValue * 24 * 60);
+                int hours = (totalMinutes / 60) % 24;
+                int minutes = totalMinutes % 60;
+
+                return String.format("%02d:%02d", hours, minutes);
+            }
         } catch (NumberFormatException e) {
-            // TODO: mostrar un log de warning
+            System.err.println("Warning: No se pudo parsear la hora -> " + timeStrOriginal);
             return "";
         }
     }
