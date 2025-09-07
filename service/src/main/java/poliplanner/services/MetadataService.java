@@ -1,8 +1,10 @@
 package poliplanner.services;
 
-import java.util.Optional;
-
 import java.text.Normalizer;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -16,49 +18,63 @@ import poliplanner.repositories.MetadataRepository;
 public class MetadataService {
     private final MetadataRepository metadataRepository;
 
-    // Funciona porque solo queremos desambiguar el semestre en la malla, no nos
-    // interesa que otro tipo de datos sobre la materia.
-    public Optional<SubjectsMetadata> findMetadata(Subject subject) {
-        // Limpiar lo que no sean espacios, numeros, letras o guion
-        String name = subject.getNombreAsignatura();
-        String career = subject.getCareer().getName();
-
-        String[] splitedName = name.split("-");
-        String cleanedName = normalizeSubjectName(splitedName[0]); // tomar todo ANTES del guion
-
-        Optional<SubjectsMetadata> result = metadataRepository.findFirstByNameIgnoreCaseAndCareer_Code(cleanedName,
-                career);
-        if (!result.isPresent() && splitedName.length > 1) {
-            cleanedName = normalizeSubjectName(splitedName[1]); // tomar todo DESPUES del guion
-            result = metadataRepository.findFirstByNameIgnoreCaseAndCareer_Code(cleanedName, career);
-        }
-
-        return result;
-    }
-
     /**
-     * Normaliza completamente un nombre de materia:
-     * 1. Elimina (*), (**)
-     * 2. Convierte a minúsculas
-     * 3. Elimina acentos y caracteres diacríticos
-     * 4. Normaliza espacios
-     ***/
-    private static String normalizeSubjectName(String rawName) {
-        if (rawName == null) {
-            return null;
-        }
-
-        return rawName
-                .replaceAll("\\(\\*+\\)", "") // Elimina (*), (**)
-                .trim() // Elimina espacios al inicio/final
-                .toLowerCase() // Convierte a minúsculas
-                .transform(MetadataService::removeDiacritics) // Elimina acentos
-                .replaceAll("\\s+", " "); // Normaliza espacios múltiples
-    }
-
-    /**
-     * Elimina diacríticos y convierte caracteres acentuados a su forma básica
+     * Devuelve un buscador de metadata ya cargado para la carrera dada.
      */
+    public MetadataSearcher newMetadataSearcher(String careerCode) {
+        return new MetadataSearcher(careerCode);
+    }
+
+    /**
+     * Clase interna que encapsula la metadata y permite búsquedas rápidas en
+     * memoria.
+     */
+    public class MetadataSearcher {
+
+        private final Map<String, SubjectsMetadata> metadataMap;
+
+        public MetadataSearcher(String careerCode) {
+            // Cargar toda la metadata de la carrera de la DB
+            List<SubjectsMetadata> allMetadata = metadataRepository.findByCareer_Code(careerCode);
+
+            // Normalizar nombres y mapear
+            metadataMap = allMetadata.stream()
+                    .collect(Collectors.toMap(
+                            m -> normalizeSubjectName(m.getName()),
+                            m -> m,
+                            (a, b) -> a // en caso de duplicados, se queda con el primero
+                    ));
+        }
+
+        /**
+         * Busca la metadata de una materia en memoria.
+         */
+        public Optional<SubjectsMetadata> findMetadata(Subject subject) {
+            String name = subject.getNombreAsignatura();
+            String[] splitedName = name.split("-");
+            String cleanedName = normalizeSubjectName(splitedName[0]);
+
+            SubjectsMetadata meta = metadataMap.get(cleanedName);
+            if (meta == null && splitedName.length > 1) {
+                cleanedName = normalizeSubjectName(splitedName[1]);
+                meta = metadataMap.get(cleanedName);
+            }
+
+            return Optional.ofNullable(meta);
+        }
+    }
+
+    private static String normalizeSubjectName(String rawName) {
+        if (rawName == null)
+            return null;
+        return rawName
+                .replaceAll("\\(\\*+\\)", "")
+                .trim()
+                .toLowerCase()
+                .transform(MetadataService::removeDiacritics)
+                .replaceAll("\\s+", " ");
+    }
+
     private static String removeDiacritics(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("\\p{M}", "");
