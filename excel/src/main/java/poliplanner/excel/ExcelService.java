@@ -89,7 +89,7 @@ public class ExcelService {
             List<SubjectCsvDTO> subjects = entry.getValue();
 
             try {
-                persistSubjects(careerName, subjects, version);
+                persistCareerSubjects(careerName, subjects, version);
             } catch (Exception e) {
                 logger.error("Error procesando carrera: {}", careerName, e);
                 throw new ExcelPersistenceException("Error procesando: " + careerName, e);
@@ -101,11 +101,11 @@ public class ExcelService {
     // ======== Private methods ============
     // =====================================
 
-    private void persistSubjects(String careerName, List<SubjectCsvDTO> subjectsCsv, SheetVersion version) {
+    private void persistCareerSubjects(String careerName, List<SubjectCsvDTO> subjectsCsv, SheetVersion version) {
         Career carrera = careerService.create(careerName, version);
         MetadataSearcher metadata = metadataService.newMetadataSearcher(careerName);
-
         List<Subject> subjects = new ArrayList<>();
+
         for (SubjectCsvDTO rawSubject : subjectsCsv) {
             Subject subject = SubjectMapper.mapToSubject(rawSubject);
             subject.setCareer(carrera);
@@ -113,7 +113,6 @@ public class ExcelService {
             // Desambiguar semestre de materia
             if (subject.getSemestre() == 0) {
                 Optional<SubjectsMetadata> maybeMeta = metadata.findMetadata(subject);
-
                 if (maybeMeta.isPresent()) {
                     SubjectsMetadata meta = maybeMeta.get();
                     subject.setSemestre(meta.getSemester());

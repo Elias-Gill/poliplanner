@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ import poliplanner.repositories.MetadataRepository;
 @RequiredArgsConstructor
 public class MetadataService {
     private final MetadataRepository metadataRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(MetadataService.class);
 
     /**
      * Devuelve un buscador de metadata ya cargado para la carrera dada.
@@ -37,13 +41,16 @@ public class MetadataService {
             // Cargar toda la metadata de la carrera de la DB
             List<SubjectsMetadata> allMetadata = metadataRepository.findByCareer_Code(careerCode);
 
-            // Normalizar nombres y mapear
+            // Crear un hashmap para consultas
             metadataMap = allMetadata.stream()
                     .collect(Collectors.toMap(
-                            m -> normalizeSubjectName(m.getName()),
+                            m -> m.getName(),
                             m -> m,
-                            (a, b) -> a // en caso de duplicados, se queda con el primero
-                    ));
+                            (a, b) -> {
+                                // Se queda con el primero si hay duplicados
+                                logger.warn("Duplicado encontrado en tabla de metadatos: {}", a.getName());
+                                return a;
+                            }));
         }
 
         /**

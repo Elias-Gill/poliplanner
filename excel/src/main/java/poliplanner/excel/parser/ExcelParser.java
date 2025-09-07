@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.CellType;
@@ -99,22 +97,23 @@ public class ExcelParser {
             List<Row> sheetRows = sheet.read();
             Row headerRow = searchHeadersRow(sheetRows);
 
-            // Este metodo es 1 based, asi que ahora esta apuntando a la fila inmediatamente
-            // debajo de los encabezados.
+            if (headerRow == null) {
+                return List.of();
+            }
+
             Integer startingRow = headerRow.getRowNum();
             Integer startingCell = calculateStartingCell(headerRow);
-
             Layout layout = findFittingLayout(headerRow);
 
             List<SubjectCsvDTO> subjects = new ArrayList<>();
-            for (Integer i = startingRow; i < sheetRows.size(); i++) {
+            for (int i = startingRow; i < sheetRows.size(); i++) {
                 Row row = sheetRows.get(i);
-                SubjectCsvDTO subject = parseRow(row, layout, startingCell);
 
-                // Legamos al final de las materias
-                if (null == subject) {
+                if (isEmptyRow(row) || layout.headers.size() > row.getCellCount()) {
                     break;
                 }
+
+                SubjectCsvDTO subject = parseRow(row, layout, startingCell);
                 subjects.add(subject);
             }
 
@@ -141,47 +140,44 @@ public class ExcelParser {
      *                     encabezados
      * @param startingCell Número de celda (basado en 1) donde comienzan los datos a
      *                     parsear
-     * @return Objeto SubjectCsvDTO poblado con los datos de la fila, o null si:
-     *         - La fila está vacía (según isEmptyRow)
-     *         - El layout tiene más encabezados que celdas disponibles en la fila
+     * @return Objeto SubjectCsvDTO poblado con los datos de la fila.
      * 
      * @throws ClassCastException Si el contenido de alguna celda no puede
      *                            convertirse a String
      * @see Layout
      * @see SubjectCsvDTO
-     * @see #isEmptyRow(Row)
      */
     private static SubjectCsvDTO parseRow(Row rowData, Layout layout, Integer startingCell) {
-        if (layout.headers.size() > rowData.getCellCount() || isEmptyRow(rowData)) {
-            return null;
-        }
-
         SubjectCsvDTO dto = new SubjectCsvDTO();
-        Integer currentCell = startingCell - 1;
+        int currentCell = startingCell - 1;
+
         for (String layoutField : layout.headers) {
             currentCell++;
+            if (currentCell >= rowData.getCellCount()) {
+                break;
+            }
+
             Cell rowCell = rowData.getCell(currentCell);
             if (rowCell == null) {
                 continue;
             }
 
-            String cellValue = (String) rowCell.getText();
-            // Mapear a su respectivo elemento del DTO
-            fieldMapper.getOrDefault(layoutField, (d, v) -> {
-            }).accept(dto, cellValue);
+            String cellValue = rowCell.getText();
+            BiConsumer<SubjectCsvDTO, String> mapper = fieldMapper.get(layoutField);
+            if (mapper != null) {
+                mapper.accept(dto, cellValue);
+            }
         }
 
         return dto;
     }
 
     private static Row searchHeadersRow(List<Row> rows) {
-        for (Row r : rows) {
-            if (r.getCellCount() < 0 || !isHeader(r)) {
-                continue;
+        for (Row row : rows) {
+            if (isHeader(row)) {
+                return row;
             }
-            return r;
         }
-
         return null;
     }
 
@@ -207,64 +203,80 @@ public class ExcelParser {
     }
 
     private boolean layoutMatchesRow(Layout layout, List<Cell> cells) {
-        int currentCell = -1;
-        for (int i = 0; i < layout.headers.size(); i++) {
-            currentCell++;
-            String actual = getStringCellValueSafe(cells, currentCell).trim();
+        int cellIndex = 0;
+        int headerIndex = 0;
 
-            if (actual.isEmpty()) {
-                i--;
+        while (headerIndex < layout.headers.size() && cellIndex < cells.size()) {
+            Cell cell = cells.get(cellIndex);
+            String cellValue = (cell != null) ? cell.getText().trim().toLowerCase() : "";
+            cellIndex++;
+
+            if (cellValue.isEmpty()) {
                 continue;
             }
 
-            List<String> expectedPatterns = layout.patterns.get(layout.headers.get(i));
-            if (expectedPatterns.stream().noneMatch(actual::contains)) {
+            String header = layout.headers.get(headerIndex);
+            List<String> expectedPatterns = layout.patterns.get(header);
+
+            boolean matches = false;
+            for (String pattern : expectedPatterns) {
+                if (cellValue.contains(pattern)) {
+                    matches = true;
+                    break;
+                }
+            }
+
+            if (!matches) {
                 return false;
             }
+            headerIndex++;
         }
-        return true;
+
+        return headerIndex == layout.headers.size();
     }
 
     // =====================================
     // ======== Utility methods ============
     // =====================================
 
-    private String getStringCellValueSafe(List<Cell> cells, int index) {
-        if (index >= cells.size() || cells.get(index) == null) {
-            return "";
-        }
-        return cells.get(index).getText().toLowerCase();
-    }
-
     // Determina la fila del Excel de encabezados buscando la celda que
     // contenga el texto "ítem" o "item" (case insensitive).
-    private static boolean isHeader(Row r) {
-        // Implementación con Stream que:
-        // 1. Filtra solo celdas de tipo STRING (not null)
-        // 2. Normaliza el contenido (minúsculas y sin espacios)
-        // 3. Early return al encontrar una coincidencia
-        return r.stream()
-                .filter(Objects::nonNull)
-                .filter(cell -> cell.getType() == CellType.STRING)
-                .map(cell -> ((String) cell.getValue()).toLowerCase().trim())
-                .anyMatch(HEADER_KEYWORDS::contains);
+    private static boolean isHeader(Row row) {
+        for (Cell cell : row) {
+            if (cell != null && cell.getType() == CellType.STRING) {
+                String value = ((String) cell.getValue()).toLowerCase().trim();
+                if (HEADER_KEYWORDS.contains(value)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
-    private static boolean isEmptyRow(Row r) {
-        return r.stream()
-                .noneMatch(cell -> cell != null
-                        && cell.getValue() != null
-                        && !cell.getValue().toString().trim().isEmpty());
+    private static boolean isEmptyRow(Row row) {
+        if (row == null) {
+            return true;
+        }
+
+        for (Cell cell : row) {
+            if (cell != null && cell.getValue() != null) {
+                String value = cell.getValue().toString().trim();
+                if (!value.isEmpty()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    private Integer calculateStartingCell(Row r) {
-        return IntStream.range(0, r.getCellCount())
-                .filter(i -> {
-                    Cell cell = r.getCell(i);
-                    return cell != null && !cell.getText().trim().isEmpty();
-                })
-                .findFirst()
-                .orElse(0);
+    private Integer calculateStartingCell(Row row) {
+        for (int i = 0; i < row.getCellCount(); i++) {
+            Cell cell = row.getCell(i);
+            if (cell != null && !cell.getText().trim().isEmpty()) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private static Map<String, BiConsumer<SubjectCsvDTO, String>> createFieldMappers() {
