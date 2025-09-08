@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,14 +34,20 @@ public class GoogleDriveHelper {
 
     private final String GOOGLE_API_KEY = System.getenv("GOOGLE_API_KEY");
 
+    private final static Logger logger = LoggerFactory.getLogger(GoogleDriveHelper.class);
+
     // ================================
     // ======== Public API ============
     // ================================
 
     public List<ExcelDownloadSource> listSourcesInUrl(String url) {
+        logger.info("Buscando en google drive: {}", url);
+
         String folderId = extractFolderId(url);
-        if (folderId == null)
+        if (folderId == null) {
+            logger.warn("No se pudo extraer el folder id");
             return null;
+        }
 
         try {
             List<Map<String, Object>> files = listFilesInFolder(folderId);
@@ -57,9 +66,12 @@ public class GoogleDriveHelper {
                     sources.add(new ExcelDownloadSource(downloadUrl, name, fileDate));
                 }
             }
+
+            logger.warn("Sources extraidas exitosamente");
             return sources;
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Error al consultar la API de Google Drive: " + e.getMessage(), e);
+            logger.error("Error al consultar la API de Google Drive: {}", e.getMessage());
+            return null;
         }
     }
 
