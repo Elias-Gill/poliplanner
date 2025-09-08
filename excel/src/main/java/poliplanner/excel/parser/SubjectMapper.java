@@ -82,17 +82,23 @@ public class SubjectMapper {
     }
 
     private static Integer convertStringToNumber(String str) {
-        if (str == null) {
-            return 0;
-        }
-
-        String cleanedStr = str.replaceAll("[^0-9]", "");
-        if (str.isBlank() || str.isEmpty()) {
+        if (str == null || str.isBlank()) {
             return 0;
         }
 
         try {
-            return Integer.parseInt(cleanedStr);
+            // Reemplazar comas por puntos y remover caracteres no numéricos
+            String cleaned = str.replace(',', '.')
+                    .replaceAll("[^0-9.-]", "");
+
+            // Verificar si queda algo para parsear
+            if (cleaned.isEmpty() || cleaned.equals("-") || cleaned.equals(".")) {
+                return 0;
+            }
+
+            // Parsear y redondear
+            return (int) Math.round(Double.parseDouble(cleaned));
+
         } catch (Exception e) {
             return 0;
         }
