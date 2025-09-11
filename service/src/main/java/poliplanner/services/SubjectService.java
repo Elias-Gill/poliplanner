@@ -4,7 +4,6 @@ import poliplanner.models.SheetVersion;
 import poliplanner.models.Subject;
 import poliplanner.repositories.SubjectRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.util.LinkedHashMap;

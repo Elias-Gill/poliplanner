@@ -58,7 +58,7 @@ public class MetadataService {
          */
         public Optional<SubjectsMetadata> findMetadata(Subject subject) {
             String name = subject.getNombreAsignatura();
-            String[] splitedName = name.split("-");
+            String[] splitedName = name.contains("-") ? name.split("-") : new String[] { name };
             String cleanedName = normalizeSubjectName(splitedName[0]);
 
             SubjectsMetadata meta = metadataMap.get(cleanedName);
@@ -74,12 +74,44 @@ public class MetadataService {
     private static String normalizeSubjectName(String rawName) {
         if (rawName == null)
             return null;
-        return rawName
-                .replaceAll("\\(\\*+\\)", "")
-                .trim()
-                .toLowerCase()
-                .transform(MetadataService::removeDiacritics)
-                .replaceAll("\\s+", " ");
+
+        // 1. Quitar paréntesis con asteriscos manualmente
+        int length = rawName.length();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            char c = rawName.charAt(i);
+            if (c == '(' && i + 1 < length && rawName.charAt(i + 1) == '*') {
+                // Saltar hasta el cierre del paréntesis
+                while (i < length && rawName.charAt(i) != ')')
+                    i++;
+            } else {
+                sb.append(c);
+            }
+        }
+
+        // 2. Trim y pasar a minúsculas
+        String cleaned = sb.toString().trim().toLowerCase();
+
+        // 3. Quitar diacríticos
+        cleaned = removeDiacritics(cleaned);
+
+        // 4. Reemplazar múltiples espacios por uno solo
+        sb.setLength(0);
+        boolean lastWasSpace = false;
+        for (int i = 0; i < cleaned.length(); i++) {
+            char c = cleaned.charAt(i);
+            if (Character.isWhitespace(c)) {
+                if (!lastWasSpace) {
+                    sb.append(' ');
+                    lastWasSpace = true;
+                }
+            } else {
+                sb.append(c);
+                lastWasSpace = false;
+            }
+        }
+
+        return sb.toString();
     }
 
     private static String removeDiacritics(String text) {

@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import org.dhatim.fastexcel.reader.Cell;
@@ -31,11 +30,9 @@ import org.slf4j.LoggerFactory;
 
 @Component
 public class ExcelParser {
-
     private static final Logger LOG = LoggerFactory.getLogger(ExcelParser.class);
-    private List<Layout> layouts;
 
-    private static final Map<String, BiConsumer<SubjectCsvDTO, String>> fieldMapper = createFieldMappers();
+    private List<Layout> layouts;
     private static final Set<String> HEADER_KEYWORDS = Set.of("ítem", "item");
 
     public ExcelParser() {
@@ -128,10 +125,10 @@ public class ExcelParser {
      * layout especificado.
      * 
      * <p>
-     * La función recorre cada celda de la fila a partir de la posición startingCell
-     * y asigna los valores a las propiedades correspondientes del DTO basándose en
-     * los encabezados definidos en el layout.
-     * La función maneja todos los campos definidos en SubjectCsvDTO:
+     * La función recorre cada fila y mapea los encabezados correspondientes del DTO
+     * basándose en los encabezados definidos en el layout. Los valores se asignan
+     * usando los setters del DTO, aplicando automáticamente sanitización (incluida
+     * en dichos setters. Por ejemplo conversión de números, fechas o horas).
      * </p>
      * 
      * @param rowData      La fila de Excel a parsear (objeto Row de la librería
@@ -140,8 +137,8 @@ public class ExcelParser {
      *                     encabezados
      * @param startingCell Número de celda (basado en 1) donde comienzan los datos a
      *                     parsear
-     * @return Objeto SubjectCsvDTO poblado con los datos de la fila.
-     * 
+     * @return Objeto SubjectCsvDTO poblado con los datos de la fila, con
+     *         sanitización aplicada
      * @throws ClassCastException Si el contenido de alguna celda no puede
      *                            convertirse a String
      * @see Layout
@@ -163,9 +160,149 @@ public class ExcelParser {
             }
 
             String cellValue = rowCell.getText();
-            BiConsumer<SubjectCsvDTO, String> mapper = fieldMapper.get(layoutField);
-            if (mapper != null) {
-                mapper.accept(dto, cellValue);
+
+            // Settear el valor del encabezado en el dto usando setters
+            switch (layoutField) {
+                // Info general
+                case "departamento":
+                    dto.setDepartamento(cellValue);
+                    break;
+                case "asignatura":
+                    dto.setNombreAsignatura(cellValue);
+                    break;
+                case "nivel":
+                    dto.setSemestre(cellValue);
+                    break;
+                case "semestre":
+                    dto.setSemestre(cellValue); // usa convertStringToNumber internamente
+                    break;
+                case "seccion":
+                    dto.setSeccion(cellValue);
+                    break;
+
+                // Info del docente
+                case "titulo":
+                    dto.setTituloProfesor(cellValue);
+                    break;
+                case "apellido":
+                    dto.setApellidoProfesor(cellValue);
+                    break;
+                case "nombre":
+                    dto.setNombreProfesor(cellValue);
+                    break;
+                case "correo":
+                    dto.setEmailProfesor(cellValue);
+                    break;
+
+                // Primer parcial
+                case "diaParcial1":
+                    dto.setParcial1Fecha(cellValue);
+                    break;
+                case "horaParcial1":
+                    dto.setParcial1Hora(cellValue);
+                    break;
+                case "aulaParcial1":
+                    dto.setParcial1Aula(cellValue);
+                    break;
+
+                // Segundo parcial
+                case "diaParcial2":
+                    dto.setParcial2Fecha(cellValue);
+                    break;
+                case "horaParcial2":
+                    dto.setParcial2Hora(cellValue);
+                    break;
+                case "aulaParcial2":
+                    dto.setParcial2Aula(cellValue);
+                    break;
+
+                // Primer final
+                case "diaFinal1":
+                    dto.setFinal1Fecha(cellValue);
+                    break;
+                case "horaFinal1":
+                    dto.setFinal1Hora(cellValue);
+                    break;
+                case "aulaFinal1":
+                    dto.setFinal1Aula(cellValue);
+                    break;
+
+                // Segundo final
+                case "diaFinal2":
+                    dto.setFinal2Fecha(cellValue);
+                    break;
+                case "horaFinal2":
+                    dto.setFinal2Hora(cellValue);
+                    break;
+                case "aulaFinal2":
+                    dto.setFinal2Aula(cellValue);
+                    break;
+
+                // Revisiones
+                case "revisionDia":
+                    dto.setFinal1RevFecha(cellValue);
+                    dto.setFinal2RevFecha(cellValue);
+                    break;
+                case "revisionHora":
+                    dto.setFinal1RevHora(cellValue);
+                    dto.setFinal2RevHora(cellValue);
+                    break;
+
+                // Comité
+                case "mesaPresidente":
+                    dto.setComitePresidente(cellValue);
+                    break;
+                case "mesaMiembro1":
+                    dto.setComiteMiembro1(cellValue);
+                    break;
+                case "mesaMiembro2":
+                    dto.setComiteMiembro2(cellValue);
+                    break;
+
+                // Horario semanal
+                case "aulaLunes":
+                    dto.setAulaLunes(cellValue);
+                    break;
+                case "horaLunes":
+                    dto.setLunes(cellValue);
+                    break;
+                case "aulaMartes":
+                    dto.setAulaMartes(cellValue);
+                    break;
+                case "horaMartes":
+                    dto.setMartes(cellValue);
+                    break;
+                case "aulaMiercoles":
+                    dto.setAulaMiercoles(cellValue);
+                    break;
+                case "horaMiercoles":
+                    dto.setMiercoles(cellValue);
+                    break;
+                case "aulaJueves":
+                    dto.setAulaJueves(cellValue);
+                    break;
+                case "horaJueves":
+                    dto.setJueves(cellValue);
+                    break;
+                case "aulaViernes":
+                    dto.setAulaViernes(cellValue);
+                    break;
+                case "horaViernes":
+                    dto.setViernes(cellValue);
+                    break;
+                case "aulaSabado":
+                    dto.setAulaSabado(cellValue);
+                    break;
+                case "horaSabado":
+                    dto.setSabado(cellValue);
+                    break;
+                case "fechasSabado":
+                    dto.setFechasSabadoNoche(cellValue);
+                    break;
+
+                default:
+                    // Ignorar campos que no nos importan
+                    break;
             }
         }
 
@@ -277,74 +414,5 @@ public class ExcelParser {
             }
         }
         return 0;
-    }
-
-    private static Map<String, BiConsumer<SubjectCsvDTO, String>> createFieldMappers() {
-        Map<String, BiConsumer<SubjectCsvDTO, String>> mappers = new HashMap<>();
-
-        // Info general
-        mappers.put("departamento", (dto, val) -> dto.departamento = val);
-        mappers.put("asignatura", (dto, val) -> dto.nombreAsignatura = val);
-        mappers.put("nivel", (dto, val) -> dto.nivel = val);
-        mappers.put("semestre", (dto, val) -> dto.semestre = val);
-        mappers.put("seccion", (dto, val) -> dto.seccion = val);
-
-        // Info del docente
-        mappers.put("titulo", (dto, val) -> dto.tituloProfesor = val);
-        mappers.put("apellido", (dto, val) -> dto.apellidoProfesor = val);
-        mappers.put("nombre", (dto, val) -> dto.nombreProfesor = val);
-        mappers.put("correo", (dto, val) -> dto.emailProfesor = val);
-
-        // Primer parcial
-        mappers.put("diaParcial1", (dto, val) -> dto.parcial1Fecha = val);
-        mappers.put("horaParcial1", (dto, val) -> dto.parcial1Hora = val);
-        mappers.put("aulaParcial1", (dto, val) -> dto.parcial1Aula = val);
-
-        // Segundo parcial
-        mappers.put("diaParcial2", (dto, val) -> dto.parcial2Fecha = val);
-        mappers.put("horaParcial2", (dto, val) -> dto.parcial2Hora = val);
-        mappers.put("aulaParcial2", (dto, val) -> dto.parcial2Aula = val);
-
-        // Primer Final
-        mappers.put("diaFinal1", (dto, val) -> dto.final1Fecha = val);
-        mappers.put("horaFinal1", (dto, val) -> dto.final1Hora = val);
-        mappers.put("aulaFinal1", (dto, val) -> dto.final1Aula = val);
-
-        // Segundo Final
-        mappers.put("diaFinal2", (dto, val) -> dto.final2Fecha = val);
-        mappers.put("horaFinal2", (dto, val) -> dto.final2Hora = val);
-        mappers.put("aulaFinal2", (dto, val) -> dto.final2Aula = val);
-
-        // Revisiones
-        mappers.put("revisionDia", (dto, val) -> {
-            dto.final1RevFecha = val;
-            dto.final2RevFecha = val;
-        });
-        mappers.put("revisionHora", (dto, val) -> {
-            dto.final1RevHora = val;
-            dto.final2RevHora = val;
-        });
-
-        // Comité
-        mappers.put("mesaPresidente", (dto, val) -> dto.comitePresidente = val);
-        mappers.put("mesaMiembro1", (dto, val) -> dto.comiteMiembro1 = val);
-        mappers.put("mesaMiembro2", (dto, val) -> dto.comiteMiembro2 = val);
-
-        // Horario semanal
-        mappers.put("aulaLunes", (dto, val) -> dto.aulaLunes = val);
-        mappers.put("horaLunes", (dto, val) -> dto.lunes = val);
-        mappers.put("aulaMartes", (dto, val) -> dto.aulaMartes = val);
-        mappers.put("horaMartes", (dto, val) -> dto.martes = val);
-        mappers.put("aulaMiercoles", (dto, val) -> dto.aulaMiercoles = val);
-        mappers.put("horaMiercoles", (dto, val) -> dto.miercoles = val);
-        mappers.put("aulaJueves", (dto, val) -> dto.aulaJueves = val);
-        mappers.put("horaJueves", (dto, val) -> dto.jueves = val);
-        mappers.put("aulaViernes", (dto, val) -> dto.aulaViernes = val);
-        mappers.put("horaViernes", (dto, val) -> dto.viernes = val);
-        mappers.put("aulaSabado", (dto, val) -> dto.aulaSabado = val);
-        mappers.put("horaSabado", (dto, val) -> dto.sabado = val);
-        mappers.put("fechasSabado", (dto, val) -> dto.fechasSabadoNoche = val);
-
-        return mappers;
     }
 }
