@@ -24,7 +24,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "subjects_metadata", indexes = @Index(columnList = "name"))
+@Table(name = "subjects_metadata", indexes = @Index(columnList = "name, career_id"))
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
