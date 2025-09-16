@@ -6,14 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.dhatim.fastexcel.reader.Cell;
 import org.dhatim.fastexcel.reader.CellType;
@@ -33,12 +28,14 @@ import org.slf4j.LoggerFactory;
 
 @Component
 public class ExcelParser {
-
     private static final Logger LOG = LoggerFactory.getLogger(ExcelParser.class);
-    private List<Layout> layouts;
 
-    private static final Map<String, BiConsumer<SubjectCsvDTO, String>> fieldMapper = createFieldMappers();
+    private List<Layout> layouts;
     private static final Set<String> HEADER_KEYWORDS = Set.of("ítem", "item");
+
+    private ReadableWorkbook wb;
+    private List<Sheet> sheets;
+    private Integer currentSheet = -1;
 
     public ExcelParser() {
         try {
@@ -53,32 +50,11 @@ public class ExcelParser {
     // ======== Public API ============
     // ================================
 
-    public Map<String, List<SubjectCsvDTO>> parseExcel(File file) throws ExcelParserException {
-        try (InputStream is = new FileInputStream(file);
-                ReadableWorkbook wb = new ReadableWorkbook(is)) {
-
+    public void parseExcel(File file) throws ExcelParserException {
+        try (InputStream is = new FileInputStream(file)) {
             LOG.info("Parsing file: {}", file.toString());
-
-            Map<String, List<SubjectCsvDTO>> result = new HashMap<>();
-            for (Sheet sheet : wb.getSheets().toList()) {
-                // Ignorar hojas "basura"
-                String career = sheet.getName();
-                if (career.contains("odigos")
-                        || career.contains("ódigos")
-                        || career.contains("Asignaturas")
-                        || career.contains("Homologadas")
-                        || career.contains("Homólogas")
-                        || career.equalsIgnoreCase("códigos")) {
-                    LOG.info("Ignoring sheet: {}", career);
-                    continue;
-                }
-                LOG.info("Parsing sheet: {}", career);
-
-                List<SubjectCsvDTO> subjects = parseSheet(sheet);
-                result.put(career, subjects);
-            }
-
-            return result;
+            this.wb = new ReadableWorkbook(is);
+            this.sheets = wb.getSheets().toList();
         } catch (FileNotFoundException e) {
             throw new ExcelParserConfigurationException("File not found: " + file, e);
         } catch (IOException e) {
@@ -89,32 +65,77 @@ public class ExcelParser {
         }
     }
 
+    public boolean hasSheet() {
+        while (true) {
+            this.currentSheet++;
+            if (this.sheets.size() <= this.currentSheet) {
+                return false;
+            }
+
+            Sheet sheet = this.sheets.get(this.currentSheet);
+            String career = sheet.getName();
+
+            // Ignorar hojas "basura"
+            if (career.contains("odigos")
+                    || career.contains("ódigos")
+                    || career.contains("Asignaturas")
+                    || career.contains("Homologadas")
+                    || career.contains("Homólogas")
+                    || career.equalsIgnoreCase("códigos")) {
+                LOG.info("Ignoring sheet: {}", career);
+                continue;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    public ParsingResult parseCurrentSheet() {
+        Sheet sheet = this.sheets.get(this.currentSheet);
+        String career = sheet.getName();
+        ParsingResult result = new ParsingResult();
+
+        LOG.info("Parsing sheet: {}", career);
+
+        List<SubjectcDTO> subjects = parseSheet(sheet);
+        result.career = career;
+        result.subjects = subjects;
+
+        return result;
+    }
+
     // =====================================
     // ======== Private methods ============
     // =====================================
 
+    public class ParsingResult {
+        public String career;
+        public List<SubjectcDTO> subjects;
+    }
+
     // NOTE: expuesto solo en el paquete para testing
-    List<SubjectCsvDTO> parseSheet(Sheet sheet) {
+    List<SubjectcDTO> parseSheet(Sheet sheet) {
         try {
             List<Row> sheetRows = sheet.read();
             Row headerRow = searchHeadersRow(sheetRows);
 
-            // Este metodo es 1 based, asi que ahora esta apuntando a la fila inmediatamente
-            // debajo de los encabezados.
+            if (headerRow == null) {
+                return List.of();
+            }
+
             Integer startingRow = headerRow.getRowNum();
             Integer startingCell = calculateStartingCell(headerRow);
-
             Layout layout = findFittingLayout(headerRow);
 
-            List<SubjectCsvDTO> subjects = new ArrayList<>();
-            for (Integer i = startingRow; i < sheetRows.size(); i++) {
+            List<SubjectcDTO> subjects = new ArrayList<>();
+            for (int i = startingRow; i < sheetRows.size(); i++) {
                 Row row = sheetRows.get(i);
-                SubjectCsvDTO subject = parseRow(row, layout, startingCell);
 
-                // Legamos al final de las materias
-                if (null == subject) {
+                if (isEmptyRow(row) || layout.headers.size() > row.getCellCount()) {
                     break;
                 }
+
+                SubjectcDTO subject = parseRow(row, layout, startingCell);
                 subjects.add(subject);
             }
 
@@ -129,10 +150,10 @@ public class ExcelParser {
      * layout especificado.
      * 
      * <p>
-     * La función recorre cada celda de la fila a partir de la posición startingCell
-     * y asigna los valores a las propiedades correspondientes del DTO basándose en
-     * los encabezados definidos en el layout.
-     * La función maneja todos los campos definidos en SubjectCsvDTO:
+     * La función recorre cada fila y mapea los encabezados correspondientes del DTO
+     * basándose en los encabezados definidos en el layout. Los valores se asignan
+     * usando los setters del DTO, aplicando automáticamente sanitización (incluida
+     * en dichos setters. Por ejemplo conversión de números, fechas o horas).
      * </p>
      * 
      * @param rowData      La fila de Excel a parsear (objeto Row de la librería
@@ -141,47 +162,184 @@ public class ExcelParser {
      *                     encabezados
      * @param startingCell Número de celda (basado en 1) donde comienzan los datos a
      *                     parsear
-     * @return Objeto SubjectCsvDTO poblado con los datos de la fila, o null si:
-     *         - La fila está vacía (según isEmptyRow)
-     *         - El layout tiene más encabezados que celdas disponibles en la fila
-     * 
+     * @return Objeto SubjectCsvDTO poblado con los datos de la fila, con
+     *         sanitización aplicada
      * @throws ClassCastException Si el contenido de alguna celda no puede
      *                            convertirse a String
      * @see Layout
-     * @see SubjectCsvDTO
-     * @see #isEmptyRow(Row)
+     * @see SubjectcDTO
      */
-    private static SubjectCsvDTO parseRow(Row rowData, Layout layout, Integer startingCell) {
-        if (layout.headers.size() > rowData.getCellCount() || isEmptyRow(rowData)) {
-            return null;
-        }
+    private static SubjectcDTO parseRow(Row rowData, Layout layout, Integer startingCell) {
+        SubjectcDTO dto = new SubjectcDTO();
+        int currentCell = startingCell - 1;
 
-        SubjectCsvDTO dto = new SubjectCsvDTO();
-        Integer currentCell = startingCell - 1;
         for (String layoutField : layout.headers) {
             currentCell++;
+            if (currentCell >= rowData.getCellCount()) {
+                break;
+            }
+
             Cell rowCell = rowData.getCell(currentCell);
             if (rowCell == null) {
                 continue;
             }
 
-            String cellValue = (String) rowCell.getText();
-            // Mapear a su respectivo elemento del DTO
-            fieldMapper.getOrDefault(layoutField, (d, v) -> {
-            }).accept(dto, cellValue);
+            String cellValue = rowCell.getText();
+
+            // Settear el valor del encabezado en el dto usando setters
+            switch (layoutField) {
+                // Info general
+                case "departamento":
+                    dto.setDepartamento(cellValue);
+                    break;
+                case "asignatura":
+                    dto.setNombreAsignatura(cellValue);
+                    break;
+                case "nivel":
+                    dto.setSemestre(cellValue);
+                    break;
+                case "semestre":
+                    dto.setSemestre(cellValue); // usa convertStringToNumber internamente
+                    break;
+                case "seccion":
+                    dto.setSeccion(cellValue);
+                    break;
+
+                // Info del docente
+                case "titulo":
+                    dto.setTituloProfesor(cellValue);
+                    break;
+                case "apellido":
+                    dto.setApellidoProfesor(cellValue);
+                    break;
+                case "nombre":
+                    dto.setNombreProfesor(cellValue);
+                    break;
+                case "correo":
+                    dto.setEmailProfesor(cellValue);
+                    break;
+
+                // Primer parcial
+                case "diaParcial1":
+                    dto.setParcial1Fecha(cellValue);
+                    break;
+                case "horaParcial1":
+                    dto.setParcial1Hora(cellValue);
+                    break;
+                case "aulaParcial1":
+                    dto.setParcial1Aula(cellValue);
+                    break;
+
+                // Segundo parcial
+                case "diaParcial2":
+                    dto.setParcial2Fecha(cellValue);
+                    break;
+                case "horaParcial2":
+                    dto.setParcial2Hora(cellValue);
+                    break;
+                case "aulaParcial2":
+                    dto.setParcial2Aula(cellValue);
+                    break;
+
+                // Primer final
+                case "diaFinal1":
+                    dto.setFinal1Fecha(cellValue);
+                    break;
+                case "horaFinal1":
+                    dto.setFinal1Hora(cellValue);
+                    break;
+                case "aulaFinal1":
+                    dto.setFinal1Aula(cellValue);
+                    break;
+
+                // Segundo final
+                case "diaFinal2":
+                    dto.setFinal2Fecha(cellValue);
+                    break;
+                case "horaFinal2":
+                    dto.setFinal2Hora(cellValue);
+                    break;
+                case "aulaFinal2":
+                    dto.setFinal2Aula(cellValue);
+                    break;
+
+                // Revisiones
+                case "revisionDia":
+                    dto.setFinal1RevFecha(cellValue);
+                    dto.setFinal2RevFecha(cellValue);
+                    break;
+                case "revisionHora":
+                    dto.setFinal1RevHora(cellValue);
+                    dto.setFinal2RevHora(cellValue);
+                    break;
+
+                // Comité
+                case "mesaPresidente":
+                    dto.setComitePresidente(cellValue);
+                    break;
+                case "mesaMiembro1":
+                    dto.setComiteMiembro1(cellValue);
+                    break;
+                case "mesaMiembro2":
+                    dto.setComiteMiembro2(cellValue);
+                    break;
+
+                // Horario semanal
+                case "aulaLunes":
+                    dto.setAulaLunes(cellValue);
+                    break;
+                case "horaLunes":
+                    dto.setLunes(cellValue);
+                    break;
+                case "aulaMartes":
+                    dto.setAulaMartes(cellValue);
+                    break;
+                case "horaMartes":
+                    dto.setMartes(cellValue);
+                    break;
+                case "aulaMiercoles":
+                    dto.setAulaMiercoles(cellValue);
+                    break;
+                case "horaMiercoles":
+                    dto.setMiercoles(cellValue);
+                    break;
+                case "aulaJueves":
+                    dto.setAulaJueves(cellValue);
+                    break;
+                case "horaJueves":
+                    dto.setJueves(cellValue);
+                    break;
+                case "aulaViernes":
+                    dto.setAulaViernes(cellValue);
+                    break;
+                case "horaViernes":
+                    dto.setViernes(cellValue);
+                    break;
+                case "aulaSabado":
+                    dto.setAulaSabado(cellValue);
+                    break;
+                case "horaSabado":
+                    dto.setSabado(cellValue);
+                    break;
+                case "fechasSabado":
+                    dto.setFechasSabadoNoche(cellValue);
+                    break;
+
+                default:
+                    // Ignorar campos que no nos importan
+                    break;
+            }
         }
 
         return dto;
     }
 
     private static Row searchHeadersRow(List<Row> rows) {
-        for (Row r : rows) {
-            if (r.getCellCount() < 0 || !isHeader(r)) {
-                continue;
+        for (Row row : rows) {
+            if (isHeader(row)) {
+                return row;
             }
-            return r;
         }
-
         return null;
     }
 
@@ -207,132 +365,79 @@ public class ExcelParser {
     }
 
     private boolean layoutMatchesRow(Layout layout, List<Cell> cells) {
-        int currentCell = -1;
-        for (int i = 0; i < layout.headers.size(); i++) {
-            currentCell++;
-            String actual = getStringCellValueSafe(cells, currentCell).trim();
+        int cellIndex = 0;
+        int headerIndex = 0;
 
-            if (actual.isEmpty()) {
-                i--;
+        while (headerIndex < layout.headers.size() && cellIndex < cells.size()) {
+            Cell cell = cells.get(cellIndex);
+            String cellValue = (cell != null) ? cell.getText().trim().toLowerCase() : "";
+            cellIndex++;
+
+            if (cellValue.isEmpty()) {
                 continue;
             }
 
-            List<String> expectedPatterns = layout.patterns.get(layout.headers.get(i));
-            if (expectedPatterns.stream().noneMatch(actual::contains)) {
+            String header = layout.headers.get(headerIndex);
+            List<String> expectedPatterns = layout.patterns.get(header);
+
+            boolean matches = false;
+            for (String pattern : expectedPatterns) {
+                if (cellValue.contains(pattern)) {
+                    matches = true;
+                    break;
+                }
+            }
+
+            if (!matches) {
                 return false;
             }
+            headerIndex++;
         }
-        return true;
+
+        return headerIndex == layout.headers.size();
     }
 
     // =====================================
     // ======== Utility methods ============
     // =====================================
 
-    private String getStringCellValueSafe(List<Cell> cells, int index) {
-        if (index >= cells.size() || cells.get(index) == null) {
-            return "";
-        }
-        return cells.get(index).getText().toLowerCase();
-    }
-
     // Determina la fila del Excel de encabezados buscando la celda que
     // contenga el texto "ítem" o "item" (case insensitive).
-    private static boolean isHeader(Row r) {
-        // Implementación con Stream que:
-        // 1. Filtra solo celdas de tipo STRING (not null)
-        // 2. Normaliza el contenido (minúsculas y sin espacios)
-        // 3. Early return al encontrar una coincidencia
-        return r.stream()
-                .filter(Objects::nonNull)
-                .filter(cell -> cell.getType() == CellType.STRING)
-                .map(cell -> ((String) cell.getValue()).toLowerCase().trim())
-                .anyMatch(HEADER_KEYWORDS::contains);
+    private static boolean isHeader(Row row) {
+        for (Cell cell : row) {
+            if (cell != null && cell.getType() == CellType.STRING) {
+                String value = ((String) cell.getValue()).toLowerCase().trim();
+                if (HEADER_KEYWORDS.contains(value)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
-    private static boolean isEmptyRow(Row r) {
-        return r.stream()
-                .noneMatch(cell -> cell != null
-                        && cell.getValue() != null
-                        && !cell.getValue().toString().trim().isEmpty());
+    private static boolean isEmptyRow(Row row) {
+        if (row == null) {
+            return true;
+        }
+
+        for (Cell cell : row) {
+            if (cell != null && cell.getValue() != null) {
+                String value = cell.getValue().toString().trim();
+                if (!value.isEmpty()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    private Integer calculateStartingCell(Row r) {
-        return IntStream.range(0, r.getCellCount())
-                .filter(i -> {
-                    Cell cell = r.getCell(i);
-                    return cell != null && !cell.getText().trim().isEmpty();
-                })
-                .findFirst()
-                .orElse(0);
-    }
-
-    private static Map<String, BiConsumer<SubjectCsvDTO, String>> createFieldMappers() {
-        Map<String, BiConsumer<SubjectCsvDTO, String>> mappers = new HashMap<>();
-
-        // Info general
-        mappers.put("departamento", (dto, val) -> dto.departamento = val);
-        mappers.put("asignatura", (dto, val) -> dto.nombreAsignatura = val);
-        mappers.put("nivel", (dto, val) -> dto.nivel = val);
-        mappers.put("semestre", (dto, val) -> dto.semestre = val);
-        mappers.put("seccion", (dto, val) -> dto.seccion = val);
-
-        // Info del docente
-        mappers.put("titulo", (dto, val) -> dto.tituloProfesor = val);
-        mappers.put("apellido", (dto, val) -> dto.apellidoProfesor = val);
-        mappers.put("nombre", (dto, val) -> dto.nombreProfesor = val);
-        mappers.put("correo", (dto, val) -> dto.emailProfesor = val);
-
-        // Primer parcial
-        mappers.put("diaParcial1", (dto, val) -> dto.parcial1Fecha = val);
-        mappers.put("horaParcial1", (dto, val) -> dto.parcial1Hora = val);
-        mappers.put("aulaParcial1", (dto, val) -> dto.parcial1Aula = val);
-
-        // Segundo parcial
-        mappers.put("diaParcial2", (dto, val) -> dto.parcial2Fecha = val);
-        mappers.put("horaParcial2", (dto, val) -> dto.parcial2Hora = val);
-        mappers.put("aulaParcial2", (dto, val) -> dto.parcial2Aula = val);
-
-        // Primer Final
-        mappers.put("diaFinal1", (dto, val) -> dto.final1Fecha = val);
-        mappers.put("horaFinal1", (dto, val) -> dto.final1Hora = val);
-        mappers.put("aulaFinal1", (dto, val) -> dto.final1Aula = val);
-
-        // Segundo Final
-        mappers.put("diaFinal2", (dto, val) -> dto.final2Fecha = val);
-        mappers.put("horaFinal2", (dto, val) -> dto.final2Hora = val);
-        mappers.put("aulaFinal2", (dto, val) -> dto.final2Aula = val);
-
-        // Revisiones
-        mappers.put("revisionDia", (dto, val) -> {
-            dto.final1RevFecha = val;
-            dto.final2RevFecha = val;
-        });
-        mappers.put("revisionHora", (dto, val) -> {
-            dto.final1RevHora = val;
-            dto.final2RevHora = val;
-        });
-
-        // Comité
-        mappers.put("mesaPresidente", (dto, val) -> dto.comitePresidente = val);
-        mappers.put("mesaMiembro1", (dto, val) -> dto.comiteMiembro1 = val);
-        mappers.put("mesaMiembro2", (dto, val) -> dto.comiteMiembro2 = val);
-
-        // Horario semanal
-        mappers.put("aulaLunes", (dto, val) -> dto.aulaLunes = val);
-        mappers.put("horaLunes", (dto, val) -> dto.lunes = val);
-        mappers.put("aulaMartes", (dto, val) -> dto.aulaMartes = val);
-        mappers.put("horaMartes", (dto, val) -> dto.martes = val);
-        mappers.put("aulaMiercoles", (dto, val) -> dto.aulaMiercoles = val);
-        mappers.put("horaMiercoles", (dto, val) -> dto.miercoles = val);
-        mappers.put("aulaJueves", (dto, val) -> dto.aulaJueves = val);
-        mappers.put("horaJueves", (dto, val) -> dto.jueves = val);
-        mappers.put("aulaViernes", (dto, val) -> dto.aulaViernes = val);
-        mappers.put("horaViernes", (dto, val) -> dto.viernes = val);
-        mappers.put("aulaSabado", (dto, val) -> dto.aulaSabado = val);
-        mappers.put("horaSabado", (dto, val) -> dto.sabado = val);
-        mappers.put("fechasSabado", (dto, val) -> dto.fechasSabadoNoche = val);
-
-        return mappers;
+    private Integer calculateStartingCell(Row row) {
+        for (int i = 0; i < row.getCellCount(); i++) {
+            Cell cell = row.getCell(i);
+            if (cell != null && !cell.getText().trim().isEmpty()) {
+                return i;
+            }
+        }
+        return 0;
     }
 }

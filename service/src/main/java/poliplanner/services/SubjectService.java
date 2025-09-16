@@ -4,7 +4,6 @@ import poliplanner.models.SheetVersion;
 import poliplanner.models.Subject;
 import poliplanner.repositories.SubjectRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.util.LinkedHashMap;
@@ -21,9 +20,12 @@ public class SubjectService {
     private final SubjectRepository subjectRepository;
     private final SheetVersionService versionService;
 
-    @Transactional
     public Subject create(Subject subject) {
         return subjectRepository.save(subject);
+    }
+
+    public void bulkCreate(List<Subject> subject) {
+        subjectRepository.saveAll(subject);
     }
 
     /**

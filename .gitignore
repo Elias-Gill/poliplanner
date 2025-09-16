@@ -69,3 +69,6 @@ npm-debug.log
 .env
 logs/
 *.log
+
+profiling.jfr
+profiling_*.jfr

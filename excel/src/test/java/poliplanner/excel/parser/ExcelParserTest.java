@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
@@ -15,11 +17,13 @@ import org.springframework.core.io.ClassPathResource;
 
 public class ExcelParserTest {
     final private ClassPathResource CLASSPATH_TEST_EXCEL = new ClassPathResource("testExcel.xlsx");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
 
     @Test
     void testParseSheet() throws Exception {
         try (InputStream is = CLASSPATH_TEST_EXCEL.getInputStream();
                 ReadableWorkbook wb = new ReadableWorkbook(is)) {
+
             List<Sheet> sheets = wb.getSheets().toList();
 
             Sheet sheet = null;
@@ -34,16 +38,16 @@ public class ExcelParserTest {
                 throw new RuntimeException("Cannot find 'IIN' sheet inside testExcel.xlsx");
             }
 
-            List<SubjectCsvDTO> subjects = new ExcelParser().parseSheet(sheet);
+            List<SubjectcDTO> subjects = new ExcelParser().parseSheet(sheet);
 
             assertNotNull(subjects, "La lista de materias no debería estar vacía");
             assertFalse(subjects.isEmpty(), "La lista de materias no debería estar vacía");
 
             // Primera entrada
-            SubjectCsvDTO first = subjects.get(0);
+            SubjectcDTO first = subjects.get(0);
             assertEquals("DCB", first.departamento);
             assertEquals("Algebra Lineal", first.nombreAsignatura);
-            assertEquals("2", first.semestre);
+            assertEquals(Integer.valueOf(2), first.semestre);
             assertEquals("MI", first.seccion);
             assertEquals("Lic.", first.tituloProfesor);
             assertEquals("Villasanti Flores", first.apellidoProfesor);
@@ -51,17 +55,17 @@ public class ExcelParserTest {
             assertEquals("", first.emailProfesor);
 
             // Última entrada
-            SubjectCsvDTO last = subjects.get(subjects.size() - 1);
+            SubjectcDTO last = subjects.get(subjects.size() - 1);
             assertEquals("DG", last.departamento);
             assertEquals("Técnicas de Organización y Métodos", last.nombreAsignatura);
-            assertEquals("5", last.semestre);
+            assertEquals(Integer.valueOf(5), last.semestre);
             assertEquals("NA", last.seccion);
             assertEquals("Ms.", last.tituloProfesor);
             assertEquals("Ramírez Barboza", last.apellidoProfesor);
             assertEquals("Estela Mary", last.nombreProfesor);
             assertEquals("emramirez@pol.una.py", last.emailProfesor);
 
-            assertEquals("Mar 17/09/24", last.parcial1Fecha);
+            assertEquals(LocalDate.parse("17/09/24", DATE_FORMATTER), last.parcial1Fecha);
 
             assertEquals("Ms. Estela Mary Ramírez Barboza", last.comitePresidente);
             assertEquals("Lic. Zulma Lucía Demattei Ortíz", last.comiteMiembro1);
