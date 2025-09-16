@@ -38,13 +38,13 @@ public class ExcelParserTest {
                 throw new RuntimeException("Cannot find 'IIN' sheet inside testExcel.xlsx");
             }
 
-            List<SubjectCsvDTO> subjects = new ExcelParser().parseSheet(sheet);
+            List<SubjectcDTO> subjects = new ExcelParser().parseSheet(sheet);
 
             assertNotNull(subjects, "La lista de materias no debería estar vacía");
             assertFalse(subjects.isEmpty(), "La lista de materias no debería estar vacía");
 
             // Primera entrada
-            SubjectCsvDTO first = subjects.get(0);
+            SubjectcDTO first = subjects.get(0);
             assertEquals("DCB", first.departamento);
             assertEquals("Algebra Lineal", first.nombreAsignatura);
             assertEquals(Integer.valueOf(2), first.semestre);
@@ -55,7 +55,7 @@ public class ExcelParserTest {
             assertEquals("", first.emailProfesor);
 
             // Última entrada
-            SubjectCsvDTO last = subjects.get(subjects.size() - 1);
+            SubjectcDTO last = subjects.get(subjects.size() - 1);
             assertEquals("DG", last.departamento);
             assertEquals("Técnicas de Organización y Métodos", last.nombreAsignatura);
             assertEquals(Integer.valueOf(5), last.semestre);

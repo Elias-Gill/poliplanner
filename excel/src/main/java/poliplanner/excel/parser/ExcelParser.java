@@ -6,9 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,6 +33,10 @@ public class ExcelParser {
     private List<Layout> layouts;
     private static final Set<String> HEADER_KEYWORDS = Set.of("ítem", "item");
 
+    private ReadableWorkbook wb;
+    private List<Sheet> sheets;
+    private Integer currentSheet = -1;
+
     public ExcelParser() {
         try {
             JsonLayoutLoader loader = new JsonLayoutLoader();
@@ -48,32 +50,11 @@ public class ExcelParser {
     // ======== Public API ============
     // ================================
 
-    public Map<String, List<SubjectCsvDTO>> parseExcel(File file) throws ExcelParserException {
-        try (InputStream is = new FileInputStream(file);
-                ReadableWorkbook wb = new ReadableWorkbook(is)) {
-
+    public void parseExcel(File file) throws ExcelParserException {
+        try (InputStream is = new FileInputStream(file)) {
             LOG.info("Parsing file: {}", file.toString());
-
-            Map<String, List<SubjectCsvDTO>> result = new HashMap<>();
-            for (Sheet sheet : wb.getSheets().toList()) {
-                // Ignorar hojas "basura"
-                String career = sheet.getName();
-                if (career.contains("odigos")
-                        || career.contains("ódigos")
-                        || career.contains("Asignaturas")
-                        || career.contains("Homologadas")
-                        || career.contains("Homólogas")
-                        || career.equalsIgnoreCase("códigos")) {
-                    LOG.info("Ignoring sheet: {}", career);
-                    continue;
-                }
-                LOG.info("Parsing sheet: {}", career);
-
-                List<SubjectCsvDTO> subjects = parseSheet(sheet);
-                result.put(career, subjects);
-            }
-
-            return result;
+            this.wb = new ReadableWorkbook(is);
+            this.sheets = wb.getSheets().toList();
         } catch (FileNotFoundException e) {
             throw new ExcelParserConfigurationException("File not found: " + file, e);
         } catch (IOException e) {
@@ -84,12 +65,56 @@ public class ExcelParser {
         }
     }
 
+    public boolean hasSheet() {
+        while (true) {
+            this.currentSheet++;
+            if (this.sheets.size() <= this.currentSheet) {
+                return false;
+            }
+
+            Sheet sheet = this.sheets.get(this.currentSheet);
+            String career = sheet.getName();
+
+            // Ignorar hojas "basura"
+            if (career.contains("odigos")
+                    || career.contains("ódigos")
+                    || career.contains("Asignaturas")
+                    || career.contains("Homologadas")
+                    || career.contains("Homólogas")
+                    || career.equalsIgnoreCase("códigos")) {
+                LOG.info("Ignoring sheet: {}", career);
+                continue;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    public ParsingResult parseCurrentSheet() {
+        Sheet sheet = this.sheets.get(this.currentSheet);
+        String career = sheet.getName();
+        ParsingResult result = new ParsingResult();
+
+        LOG.info("Parsing sheet: {}", career);
+
+        List<SubjectcDTO> subjects = parseSheet(sheet);
+        result.career = career;
+        result.subjects = subjects;
+
+        return result;
+    }
+
     // =====================================
     // ======== Private methods ============
     // =====================================
 
+    public class ParsingResult {
+        public String career;
+        public List<SubjectcDTO> subjects;
+    }
+
     // NOTE: expuesto solo en el paquete para testing
-    List<SubjectCsvDTO> parseSheet(Sheet sheet) {
+    List<SubjectcDTO> parseSheet(Sheet sheet) {
         try {
             List<Row> sheetRows = sheet.read();
             Row headerRow = searchHeadersRow(sheetRows);
@@ -102,7 +127,7 @@ public class ExcelParser {
             Integer startingCell = calculateStartingCell(headerRow);
             Layout layout = findFittingLayout(headerRow);
 
-            List<SubjectCsvDTO> subjects = new ArrayList<>();
+            List<SubjectcDTO> subjects = new ArrayList<>();
             for (int i = startingRow; i < sheetRows.size(); i++) {
                 Row row = sheetRows.get(i);
 
@@ -110,7 +135,7 @@ public class ExcelParser {
                     break;
                 }
 
-                SubjectCsvDTO subject = parseRow(row, layout, startingCell);
+                SubjectcDTO subject = parseRow(row, layout, startingCell);
                 subjects.add(subject);
             }
 
@@ -142,10 +167,10 @@ public class ExcelParser {
      * @throws ClassCastException Si el contenido de alguna celda no puede
      *                            convertirse a String
      * @see Layout
-     * @see SubjectCsvDTO
+     * @see SubjectcDTO
      */
-    private static SubjectCsvDTO parseRow(Row rowData, Layout layout, Integer startingCell) {
-        SubjectCsvDTO dto = new SubjectCsvDTO();
+    private static SubjectcDTO parseRow(Row rowData, Layout layout, Integer startingCell) {
+        SubjectcDTO dto = new SubjectcDTO();
         int currentCell = startingCell - 1;
 
         for (String layoutField : layout.headers) {

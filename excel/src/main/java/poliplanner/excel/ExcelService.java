@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -18,8 +16,9 @@ import lombok.RequiredArgsConstructor;
 import poliplanner.excel.exception.ExcelPersistenceException;
 import poliplanner.excel.exception.ExcelSynchronizationException;
 import poliplanner.excel.parser.ExcelParser;
-import poliplanner.excel.parser.SubjectCsvDTO;
+import poliplanner.excel.parser.SubjectcDTO;
 import poliplanner.excel.parser.SubjectMapper;
+import poliplanner.excel.parser.ExcelParser.ParsingResult;
 import poliplanner.excel.sources.ExcelDownloadSource;
 import poliplanner.excel.sources.WebScrapper;
 import poliplanner.models.Career;
@@ -45,7 +44,13 @@ public class ExcelService {
     private final WebScrapper scrapper;
     private final ExcelParser parser;
 
-    // Expuesto para el endpoint '/sync/ci'.
+    /**
+     * Expuesto para el endpoint '/sync/ci'.
+     * <p>
+     * Realiza la busqueda y descarga de la ultima version de excel disponible hasta
+     * el momento. De existir, parsea dicho archivo y luego realiza la persistencia
+     * de los datos de las materias disponibles.
+     */
     public boolean autonomousExcelSync() {
         try {
             logger.info("Iniciando actualizacion de excel");
@@ -75,18 +80,23 @@ public class ExcelService {
         }
     }
 
-    // Expuesto para actualizacion manual con el endpoint '/sync'.
+    /**
+     * Expuesto para actualizacion manual con el endpoint '/sync'.
+     * <p>
+     * Realiza el parseado y persistencia de las hojas del excel proporcionado como
+     * parametro.
+     */
     @Transactional
     public void parseAndPersistExcel(File excelFile, String url) throws ExcelPersistenceException {
         logger.info("Iniciando conversion y parseado del excel");
 
         SheetVersion version = versionService.create(excelFile.toString(), url);
+        parser.parseExcel(excelFile);
 
-        Map<String, List<SubjectCsvDTO>> entries = parser.parseExcel(excelFile);
-
-        for (Entry<String, List<SubjectCsvDTO>> entry : entries.entrySet()) {
-            String careerName = entry.getKey();
-            List<SubjectCsvDTO> subjects = entry.getValue();
+        while (parser.hasSheet()) {
+            ParsingResult result = parser.parseCurrentSheet();
+            String careerName = result.career;
+            List<SubjectcDTO> subjects = result.subjects;
 
             try {
                 persistCareerSubjects(careerName, subjects, version);
@@ -101,12 +111,24 @@ public class ExcelService {
     // ======== Private methods ============
     // =====================================
 
-    private void persistCareerSubjects(String careerName, List<SubjectCsvDTO> subjectsCsv, SheetVersion version) {
+    /**
+     * Persiste todas las asignaturas de una carrera a partir de sus datos en
+     * formato DTO, transformándolos en entidades de dominio y completando
+     * información faltante con metadata cuando sea posible utilizando el
+     * {@link MetadataSearcher}.
+     *
+     * @param careerName    nombre de la carrera a la que pertenecen las
+     *                      asignaturas.
+     * @param SubjectcsDTOs lista de asignaturas en formato {@link SubjectcDTO}.
+     * @param version       versión de la hoja (plan de estudios) asociada a la
+     *                      carrera.
+     */
+    private void persistCareerSubjects(String careerName, List<SubjectcDTO> subjectsDTOs, SheetVersion version) {
         Career carrera = careerService.create(careerName, version);
         MetadataSearcher metadata = metadataService.newMetadataSearcher(careerName);
         List<Subject> subjects = new ArrayList<>();
 
-        for (SubjectCsvDTO rawSubject : subjectsCsv) {
+        for (SubjectcDTO rawSubject : subjectsDTOs) {
             Subject subject = SubjectMapper.mapToSubject(rawSubject);
             subject.setCareer(carrera);
 

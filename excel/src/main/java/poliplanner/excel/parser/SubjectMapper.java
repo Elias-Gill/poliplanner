@@ -6,7 +6,7 @@ import poliplanner.models.Subject;
 
 @Component
 public class SubjectMapper {
-    public static Subject mapToSubject(SubjectCsvDTO subjectCsv) {
+    public static Subject mapToSubject(SubjectcDTO subjectCsv) {
         if (subjectCsv == null) {
             return null;
         }

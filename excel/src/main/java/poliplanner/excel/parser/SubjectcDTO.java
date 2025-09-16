@@ -6,7 +6,7 @@ import java.time.format.DateTimeParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SubjectCsvDTO {
+public class SubjectcDTO {
     // Info general
     public String departamento;
     public String nombreAsignatura;
