@@ -72,36 +72,42 @@ public class MetadataService {
     }
 
     private static String normalizeSubjectName(String rawName) {
-        if (rawName == null)
-            return null;
+        if (rawName == null) return null;
 
-        // 1. Quitar paréntesis con asteriscos manualmente
-        int length = rawName.length();
-        StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            char c = rawName.charAt(i);
-            if (c == '(' && i + 1 < length && rawName.charAt(i + 1) == '*') {
-                // Saltar hasta el cierre del paréntesis
-                while (i < length && rawName.charAt(i) != ')')
-                    i++;
-            } else {
-                sb.append(c);
-            }
-        }
-
-        // 2. Trim y pasar a minúsculas
-        String cleaned = sb.toString().trim().toLowerCase();
-
-        // 3. Quitar diacríticos
-        cleaned = removeDiacritics(cleaned);
-
-        // 4. Reemplazar múltiples espacios por uno solo
-        sb.setLength(0);
+        StringBuilder sb = new StringBuilder(rawName.length());
+        boolean inParenthesis = false;
+        boolean skipParenthesis = false;
         boolean lastWasSpace = false;
-        for (int i = 0; i < cleaned.length(); i++) {
-            char c = cleaned.charAt(i);
+
+        for (int i = 0; i < rawName.length(); i++) {
+            char c = rawName.charAt(i);
+
+            // detectar inicio de paréntesis con *
+            if (c == '(' && i + 1 < rawName.length() && rawName.charAt(i + 1) == '*') {
+                inParenthesis = true;
+                skipParenthesis = true;
+                continue;
+            }
+
+            // salir del paréntesis
+            if (c == ')' && inParenthesis) {
+                inParenthesis = false;
+                skipParenthesis = false;
+                continue;
+            }
+
+            if (skipParenthesis) continue;
+
+            // minuscula
+            c = Character.toLowerCase(c);
+
+            // quitar diacríticos en el carácter actual
+            c = removeDiacriticChar(c);
+            if (c == 0) continue; // si la normalización devolvió nada útil
+
+            // normalizar espacios: no añadir espacio inicial
             if (Character.isWhitespace(c)) {
-                if (!lastWasSpace) {
+                if (!lastWasSpace && sb.length() > 0) {
                     sb.append(' ');
                     lastWasSpace = true;
                 }
@@ -111,11 +117,12 @@ public class MetadataService {
             }
         }
 
-        return sb.toString();
+        // trim de los extremos para garantizar eliminación de espacios iniciales y finales
+        return sb.toString().trim();
     }
 
-    private static String removeDiacritics(String text) {
-        return Normalizer.normalize(text, Normalizer.Form.NFD)
-                .replaceAll("\\p{M}", "");
+    private static char removeDiacriticChar(char c) {
+        String norm = java.text.Normalizer.normalize(String.valueOf(c), java.text.Normalizer.Form.NFD);
+        return norm.replaceAll("\\p{M}", "").charAt(0);
     }
 }
