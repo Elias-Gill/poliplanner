@@ -12,15 +12,20 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class WebScrapper {
+    private static final Logger logger = LoggerFactory.getLogger(WebScrapper.class);
+    
     private static final Pattern DIRECT_DOWNLOAD_PATTERN = Pattern
             .compile(".*(?i)(horario|clases|examen(?:es)?|exame|exam)[\\w\\-_.]*\\.xlsx$");
     private static final Pattern GOOGLE_DRIVE_FOLDER_PATTERN = Pattern.compile(
-            "^https://drive\\.google\\.com/(?:drive/)?folders/[\\w-]+", Pattern.CASE_INSENSITIVE);
+            "^https://drive\\.google\\.com/(?:drive/(?:u/\\d+/)?folders|folders)/[\\w-]+", Pattern.CASE_INSENSITIVE);
     private static final Pattern GOOGLE_SPREADSHEET_PATTERN = Pattern.compile(
             "^https://docs\\.google\\.com/spreadsheets/d/[\\w-]+", Pattern.CASE_INSENSITIVE);
 
@@ -34,7 +39,6 @@ public class WebScrapper {
 
     public ExcelDownloadSource findLatestDownloadSource() throws IOException {
         Document doc = Jsoup.connect(TARGET_URL).timeout(10000).get();
-
         return findLatestDownloadSourceInDoc(doc);
     }
 
@@ -42,11 +46,13 @@ public class WebScrapper {
         List<ExcelDownloadSource> sources = extractSourcesFromDoc(doc);
 
         if (sources == null || sources.isEmpty()) {
+            logger.warn("No sources found");
             return null;
         }
 
         ExcelDownloadSource latestSource = sources.get(0);
         for (ExcelDownloadSource source : sources) {
+            logger.info("Found source: {}", source);
             if (source.uploadDate().isAfter(latestSource.uploadDate())) {
                 latestSource = source;
             }

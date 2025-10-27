@@ -46,4 +46,12 @@ public class SheetVersion {
     public String getParsedAtFormatted() {
         return parsedAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
+
+    @Override
+    public String toString() {
+        return "id=" + id +
+            ", fileName='" + fileName +
+            ", url='" + url +
+            ", parsedAt=" + (parsedAt != null ? getParsedAtFormatted() : "null");
+    }
 }

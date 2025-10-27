@@ -60,7 +60,7 @@ public class ExcelService {
             if (source == null || !isNewerVersion(latestVersion, source))
                 return false;
 
-            logger.info("Descargando latest source: {}", source.toString());
+            logger.info("Descargando latest source: {}", source);
             File excelFile = source.downloadThisSource();
 
             logger.info("Descarga exitosa. Iniciando parseo y persistencia");
@@ -153,13 +153,13 @@ public class ExcelService {
     private boolean isNewerVersion(SheetVersion latestVersion, ExcelDownloadSource source) {
         LocalDate latestVersionDate = latestVersion.getParsedAt().toLocalDate();
         if (source.uploadDate().isBefore(latestVersionDate)) {
-            logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.getUrl());
+            logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.toString());
             return false;
         }
 
         // Si se parsearon el mismo dia, verificar el url de descarga
         if (latestVersion.getUrl().equals(source.url())) {
-            logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.getUrl());
+            logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.toString());
             return false;
         }
 
