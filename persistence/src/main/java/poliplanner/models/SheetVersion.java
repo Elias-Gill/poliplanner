@@ -44,7 +44,7 @@ public class SheetVersion {
     }
 
     public String getParsedAtFormatted() {
-        return parsedAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        return parsedAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 
     @Override

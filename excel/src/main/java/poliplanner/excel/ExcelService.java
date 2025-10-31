@@ -42,7 +42,6 @@ public class ExcelService {
     private final MetadataService metadataService;
 
     private final WebScrapper scrapper;
-    private final ExcelParser parser;
 
     /**
      * Expuesto para el endpoint '/sync/ci'.
@@ -88,23 +87,27 @@ public class ExcelService {
      */
     @Transactional
     public void parseAndPersistExcel(File excelFile, String url) throws ExcelPersistenceException {
-        logger.info("Iniciando conversion y parseado del excel");
-
         SheetVersion version = versionService.create(excelFile.toString(), url);
+        logger.info("Iniciando conversion");
+        ExcelParser parser = new ExcelParser();
         parser.parseExcel(excelFile);
+        logger.info("Conversion terminada");
 
+        int cacheHits = 0;
         while (parser.hasSheet()) {
             ParsingResult result = parser.parseCurrentSheet();
             String careerName = result.career;
             List<SubjectcDTO> subjects = result.subjects;
 
             try {
-                persistCareerSubjects(careerName, subjects, version);
+                cacheHits += persistCareerSubjects(careerName, subjects, version);
             } catch (Exception e) {
                 logger.error("Error procesando carrera: {}", careerName, e);
                 throw new ExcelPersistenceException("Error procesando: " + careerName, e);
             }
         }
+
+        logger.info("Total cache hits: {}", cacheHits);
     }
 
     // =====================================
@@ -123,9 +126,14 @@ public class ExcelService {
      * @param version       versión de la hoja (plan de estudios) asociada a la
      *                      carrera.
      */
-    private void persistCareerSubjects(String careerName, List<SubjectcDTO> subjectsDTOs, SheetVersion version) {
+    private int persistCareerSubjects(String careerName, List<SubjectcDTO> subjectsDTOs, SheetVersion version) {
+        logger.info("Persisting career: {}", careerName);
         Career carrera = careerService.create(careerName, version);
+
+        logger.info("Loading metadata");
         MetadataSearcher metadata = metadataService.newMetadataSearcher(careerName);
+        logger.info("Metadata loaded");
+
         List<Subject> subjects = new ArrayList<>();
 
         for (SubjectcDTO rawSubject : subjectsDTOs) {
@@ -146,23 +154,27 @@ public class ExcelService {
 
             subjects.add(subject);
         }
+        logger.info("Cache Hits: {}", metadata.cacheHits);
 
+        logger.info("Subjects created, persisting");
         subjectService.bulkCreate(subjects);
+        logger.info("All subjects persisted");
+
+        return metadata.cacheHits;
     }
 
     private boolean isNewerVersion(SheetVersion latestVersion, ExcelDownloadSource source) {
         LocalDate latestVersionDate = latestVersion.getParsedAt().toLocalDate();
-        if (source.uploadDate().isBefore(latestVersionDate)) {
-            logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.toString());
-            return false;
+        if (source.uploadDate().isAfter(latestVersionDate)) {
+            return true;
         }
 
         // Si se parsearon el mismo dia, verificar el url de descarga
-        if (latestVersion.getUrl().equals(source.url())) {
-            logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.toString());
-            return false;
+        if (!latestVersion.getUrl().equals(source.url())) {
+            return true;
         }
 
-        return true;
+        logger.info("Excel ya se encuentra en su ultima version: " + latestVersion.toString());
+        return false;
     }
 }

@@ -101,6 +101,8 @@ public class ExcelParser {
         result.career = career;
         result.subjects = subjects;
 
+        LOG.info("Sheet parsed succesfully", career);
+
         return result;
     }
 
