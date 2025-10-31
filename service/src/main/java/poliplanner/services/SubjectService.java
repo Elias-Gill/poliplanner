@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,12 +23,24 @@ public class SubjectService {
     private final SubjectRepository subjectRepository;
     private final SheetVersionService versionService;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     public Subject create(Subject subject) {
         return subjectRepository.save(subject);
     }
 
-    public void bulkCreate(List<Subject> subject) {
-        subjectRepository.saveAll(subject);
+    public void bulkCreate(List<Subject> subjects) {
+        for (int i = 0; i < subjects.size(); i++) {
+            entityManager.persist(subjects.get(i));
+            if (i % 100 == 0) { // batch size
+                entityManager.flush();
+                entityManager.clear();
+            }
+        }
+        // The remaining ones
+        entityManager.flush();
+        entityManager.clear();
     }
 
     /**

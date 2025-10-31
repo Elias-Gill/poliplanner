@@ -40,8 +40,9 @@ ENV JAVA_OPTS="\
 -XX:+UseShenandoahGC \
 -XX:+UseStringDeduplication \
 -Xss256k \
--Xmx350m \
+-Xmx300m \
 -Xms100m \
+-XX:MaxMetaspaceSize=64m \
 -XX:MaxRAM=380m \
 -Djava.awt.headless=true \
 -Dfile.encoding=UTF-8"
