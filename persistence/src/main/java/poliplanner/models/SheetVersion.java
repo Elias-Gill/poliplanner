@@ -1,20 +1,21 @@
 package poliplanner.models;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "sheet_version")
@@ -49,9 +50,13 @@ public class SheetVersion {
 
     @Override
     public String toString() {
-        return "id=" + id +
-            ", fileName='" + fileName +
-            ", url='" + url +
-            ", parsedAt=" + (parsedAt != null ? getParsedAtFormatted() : "null");
+        return "id="
+                + id
+                + ", fileName='"
+                + fileName
+                + ", url='"
+                + url
+                + ", parsedAt="
+                + (parsedAt != null ? getParsedAtFormatted() : "null");
     }
 }

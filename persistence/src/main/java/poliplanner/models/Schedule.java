@@ -1,10 +1,5 @@
 package poliplanner.models;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,9 +12,15 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "schedules")
@@ -44,11 +45,17 @@ public class Schedule {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_sheet_version", referencedColumnName = "version_id", nullable = false)
+    @JoinColumn(
+            name = "schedule_sheet_version",
+            referencedColumnName = "version_id",
+            nullable = false)
     private SheetVersion version;
 
     @ManyToMany
-    @JoinTable(name = "schedule_subjects", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
+    @JoinTable(
+            name = "schedule_subjects",
+            joinColumns = @JoinColumn(name = "schedule_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id"))
     @OrderBy("parcial1Fecha ASC")
     private List<Subject> subjects;
 

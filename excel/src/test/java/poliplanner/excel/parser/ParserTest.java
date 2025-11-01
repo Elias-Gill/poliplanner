@@ -6,14 +6,14 @@ import jdk.jfr.Recording;
 import jdk.jfr.consumer.RecordedEvent;
 import jdk.jfr.consumer.RecordingFile;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.core.io.ClassPathResource;
 
 public class ParserTest {
     private final File CLASSPATH_TEST_EXCEL;
@@ -63,7 +63,8 @@ public class ParserTest {
             ExcelParser parser = new ExcelParser();
 
             // Verifica que no se lance ninguna excepción al parsear
-            assertDoesNotThrow(() -> parser.parseExcel(CLASSPATH_TEST_EXCEL),
+            assertDoesNotThrow(
+                    () -> parser.parseExcel(CLASSPATH_TEST_EXCEL),
                     "El parser debería procesar el archivo sin lanzar excepciones");
 
             recording.stop();
@@ -75,7 +76,10 @@ public class ParserTest {
         System.out.println("Eventos capturados: " + events.size());
         events.stream()
                 .limit(15)
-                .forEach(e -> System.out.println(e.getEventType().getName() + " @ " + e.getStartTime()));
+                .forEach(
+                        e ->
+                                System.out.println(
+                                        e.getEventType().getName() + " @ " + e.getStartTime()));
 
         System.out.println("Grabado JFR en: " + jfrFile.toAbsolutePath());
     }

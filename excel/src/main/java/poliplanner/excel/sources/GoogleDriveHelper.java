@@ -1,5 +1,11 @@
 package poliplanner.excel.sources;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -12,29 +18,27 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class GoogleDriveHelper {
-    private static final String FOLDER_METADATA_URL_FORMAT = "https://www.googleapis.com/drive/v3/files?q='%s'+in+parents&key=%s";
-    private static final String DOWNLOAD_URL_FORMAT = "https://drive.google.com/uc?export=download&id=%s";
+    private static final String FOLDER_METADATA_URL_FORMAT =
+            "https://www.googleapis.com/drive/v3/files?q='%s'+in+parents&key=%s";
+    private static final String DOWNLOAD_URL_FORMAT =
+            "https://drive.google.com/uc?export=download&id=%s";
     private static final Pattern FOLDER_ID_PATTERN = Pattern.compile("folders/([a-zA-Z0-9_-]+)");
 
-    private static final Pattern SPREADSHEET_ID_PATTERN = Pattern.compile("spreadsheets/d/([a-zA-Z0-9_-]+)");
-    private static final String FILE_METADATA_URL_FORMAT = "https://www.googleapis.com/drive/v3/files/%s?fields=name&key=%s";
-    private static final String SPREADSHEET_EXPORT_URL_FORMAT = "https://docs.google.com/spreadsheets/d/%s/export?format=xlsx";
+    private static final Pattern SPREADSHEET_ID_PATTERN =
+            Pattern.compile("spreadsheets/d/([a-zA-Z0-9_-]+)");
+    private static final String FILE_METADATA_URL_FORMAT =
+            "https://www.googleapis.com/drive/v3/files/%s?fields=name&key=%s";
+    private static final String SPREADSHEET_EXPORT_URL_FORMAT =
+            "https://docs.google.com/spreadsheets/d/%s/export?format=xlsx";
 
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private final String GOOGLE_API_KEY = System.getenv("GOOGLE_API_KEY");
 
-    private final static Logger logger = LoggerFactory.getLogger(GoogleDriveHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(GoogleDriveHelper.class);
 
     // ================================
     // ======== Public API ============
@@ -77,26 +81,24 @@ public class GoogleDriveHelper {
 
     public ExcelDownloadSource getSourceFromSpreadsheetLink(String url) {
         String spreadsheetId = extractSpreadsheetId(url);
-        if (spreadsheetId == null)
-            return null;
+        if (spreadsheetId == null) return null;
 
         try {
             Map<String, Object> metadata = fetchSpreadsheetMetadata(spreadsheetId);
 
             String name = (String) metadata.get("name");
-            if (name == null || !name.toLowerCase().contains("exame"))
-                return null;
+            if (name == null || !name.toLowerCase().contains("exame")) return null;
 
             String downloadUrl = String.format(SPREADSHEET_EXPORT_URL_FORMAT, spreadsheetId);
             LocalDate fileDate = DateStractor.extractDateFromFilename(name);
 
-            if (fileDate == null)
-                return null;
+            if (fileDate == null) return null;
 
             return new ExcelDownloadSource(downloadUrl, name, fileDate);
 
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Error al obtener Spreadsheet desde Google Sheets: " + e.getMessage(), e);
+            throw new RuntimeException(
+                    "Error al obtener Spreadsheet desde Google Sheets: " + e.getMessage(), e);
         }
     }
 
@@ -127,12 +129,10 @@ public class GoogleDriveHelper {
 
         String url = String.format(FOLDER_METADATA_URL_FORMAT, folderId, GOOGLE_API_KEY);
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .GET()
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response =
+                httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         Map<String, Object> json = objectMapper.readValue(response.body(), Map.class);
         return (List<Map<String, Object>>) json.getOrDefault("files", List.of());
@@ -144,15 +144,14 @@ public class GoogleDriveHelper {
             throws IOException, InterruptedException {
         String url = String.format(FILE_METADATA_URL_FORMAT, spreadsheetId, GOOGLE_API_KEY);
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .GET()
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response =
+                httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() != 200)
-            throw new IOException("No se pudo obtener metadata del spreadsheet: " + response.body());
+            throw new IOException(
+                    "No se pudo obtener metadata del spreadsheet: " + response.body());
 
         return objectMapper.readValue(response.body(), Map.class);
     }

@@ -5,8 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DateStractor {
-    private static final Pattern DATE_PATTERN = Pattern.compile("(\\d{2})(\\d{2})(\\d{2,4})\\.xlsx?$",
-            Pattern.CASE_INSENSITIVE);
+    private static final Pattern DATE_PATTERN =
+            Pattern.compile("(\\d{2})(\\d{2})(\\d{2,4})\\.xlsx?$", Pattern.CASE_INSENSITIVE);
 
     public static LocalDate extractDateFromFilename(String fileName) {
         Matcher dateMatcher = DATE_PATTERN.matcher(fileName);

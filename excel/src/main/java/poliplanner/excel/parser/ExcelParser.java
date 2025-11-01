@@ -1,5 +1,20 @@
 package poliplanner.excel.parser;
 
+import org.dhatim.fastexcel.reader.Cell;
+import org.dhatim.fastexcel.reader.CellType;
+import org.dhatim.fastexcel.reader.ReadableWorkbook;
+import org.dhatim.fastexcel.reader.Row;
+import org.dhatim.fastexcel.reader.Sheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import poliplanner.excel.exception.ExcelParserConfigurationException;
+import poliplanner.excel.exception.ExcelParserException;
+import poliplanner.excel.exception.ExcelParserInputException;
+import poliplanner.excel.exception.LayoutMatchException;
+import poliplanner.excel.parser.JsonLayoutLoader.Layout;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,22 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.dhatim.fastexcel.reader.Cell;
-import org.dhatim.fastexcel.reader.CellType;
-import org.dhatim.fastexcel.reader.ReadableWorkbook;
-import org.dhatim.fastexcel.reader.Row;
-import org.dhatim.fastexcel.reader.Sheet;
-import org.springframework.stereotype.Component;
-
-import poliplanner.excel.exception.ExcelParserConfigurationException;
-import poliplanner.excel.parser.JsonLayoutLoader.Layout;
-import poliplanner.excel.exception.ExcelParserException;
-import poliplanner.excel.exception.ExcelParserInputException;
-import poliplanner.excel.exception.LayoutMatchException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Component
 public class ExcelParser {
@@ -148,26 +147,19 @@ public class ExcelParser {
     }
 
     /**
-     * Parsea una fila de Excel y la convierte en un objeto SubjectCsvDTO según el
-     * layout especificado.
-     * 
-     * <p>
-     * La función recorre cada fila y mapea los encabezados correspondientes del DTO
-     * basándose en los encabezados definidos en el layout. Los valores se asignan
-     * usando los setters del DTO, aplicando automáticamente sanitización (incluida
-     * en dichos setters. Por ejemplo conversión de números, fechas o horas).
-     * </p>
-     * 
-     * @param rowData      La fila de Excel a parsear (objeto Row de la librería
-     *                     FastExcel)
-     * @param layout       Objeto Layout que define la estructura y mapeo de los
-     *                     encabezados
-     * @param startingCell Número de celda (basado en 1) donde comienzan los datos a
-     *                     parsear
-     * @return Objeto SubjectCsvDTO poblado con los datos de la fila, con
-     *         sanitización aplicada
-     * @throws ClassCastException Si el contenido de alguna celda no puede
-     *                            convertirse a String
+     * Parsea una fila de Excel y la convierte en un objeto SubjectCsvDTO según el layout
+     * especificado.
+     *
+     * <p>La función recorre cada fila y mapea los encabezados correspondientes del DTO basándose en
+     * los encabezados definidos en el layout. Los valores se asignan usando los setters del DTO,
+     * aplicando automáticamente sanitización (incluida en dichos setters. Por ejemplo conversión de
+     * números, fechas o horas).
+     *
+     * @param rowData La fila de Excel a parsear (objeto Row de la librería FastExcel)
+     * @param layout Objeto Layout que define la estructura y mapeo de los encabezados
+     * @param startingCell Número de celda (basado en 1) donde comienzan los datos a parsear
+     * @return Objeto SubjectCsvDTO poblado con los datos de la fila, con sanitización aplicada
+     * @throws ClassCastException Si el contenido de alguna celda no puede convertirse a String
      * @see Layout
      * @see SubjectcDTO
      */
@@ -346,15 +338,13 @@ public class ExcelParser {
     }
 
     /**
-     * Busca y devuelve el primer {@link Layout} cuyo conjunto de encabezados
-     * coincida con los valores de las celdas en la fila dada. La comparación de
-     * encabezados se hace ignorando mayúsculas y minúsculas, y permitiendo celdas
-     * vacías (se ignoran).
-     * 
+     * Busca y devuelve el primer {@link Layout} cuyo conjunto de encabezados coincida con los
+     * valores de las celdas en la fila dada. La comparación de encabezados se hace ignorando
+     * mayúsculas y minúsculas, y permitiendo celdas vacías (se ignoran).
+     *
      * @param r Fila de entrada cuyas celdas se usan para verificar coincidencias.
      * @return El {@link Layout} que coincide con la fila.
-     * @throws IllegalArgumentException Si no se encuentra ningún Layout que
-     *                                  coincida.
+     * @throws IllegalArgumentException Si no se encuentra ningún Layout que coincida.
      */
     private Layout findFittingLayout(Row r) {
         List<Cell> cells = r.stream().collect(Collectors.toList());
@@ -362,8 +352,10 @@ public class ExcelParser {
         return layouts.stream()
                 .filter(layout -> layoutMatchesRow(layout, cells))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "No matching layout found for row: " + r));
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "No matching layout found for row: " + r));
     }
 
     private boolean layoutMatchesRow(Layout layout, List<Cell> cells) {

@@ -1,8 +1,8 @@
 package poliplanner.repositories;
 
-import poliplanner.models.Schedule;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import poliplanner.models.Schedule;
 
 import java.util.List;
 

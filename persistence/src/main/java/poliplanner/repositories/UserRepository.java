@@ -1,8 +1,8 @@
 package poliplanner.repositories;
 
-import poliplanner.models.User;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import poliplanner.models.User;
 
 import java.util.Optional;
 

@@ -1,18 +1,18 @@
 package poliplanner.services;
 
-import java.util.Optional;
-import java.util.regex.Pattern;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import poliplanner.services.exception.ServiceBadArgumentsException;
-import poliplanner.services.exception.InternalServerErrorException;
-import poliplanner.services.exception.UserNameAlreadyExistsException;
 import poliplanner.models.User;
 import poliplanner.repositories.UserRepository;
+import poliplanner.services.exception.InternalServerErrorException;
+import poliplanner.services.exception.ServiceBadArgumentsException;
+import poliplanner.services.exception.UserNameAlreadyExistsException;
 
-import lombok.RequiredArgsConstructor;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +28,8 @@ public class UserService {
 
     public User registerUser(String username, String rawPassword)
             throws UserNameAlreadyExistsException,
-            ServiceBadArgumentsException,
-            InternalServerErrorException {
+                    ServiceBadArgumentsException,
+                    InternalServerErrorException {
 
         if (username == null) {
             throw new ServiceBadArgumentsException("El nombre de usuario no puede estar vacio.");
@@ -44,7 +44,8 @@ public class UserService {
         validateRawPassword(rawPassword);
 
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new UserNameAlreadyExistsException("El nombre de usuario '" + username + "' ya está en uso.");
+            throw new UserNameAlreadyExistsException(
+                    "El nombre de usuario '" + username + "' ya está en uso.");
         }
 
         User newUser = new User();
@@ -66,7 +67,8 @@ public class UserService {
 
         if (!VALID_USERNAME_PATTERN.matcher(username).matches()) {
             throw new ServiceBadArgumentsException(
-                    "El nombre de usuario solo puede contener letras minúsculas, números, '-' o '_'.");
+                    "El nombre de usuario solo puede contener letras minúsculas, números, '-' o"
+                        + " '_'.");
         }
 
         return username.toLowerCase();
@@ -74,7 +76,8 @@ public class UserService {
 
     static void validateRawPassword(String rawPassword) throws ServiceBadArgumentsException {
         if (rawPassword.length() < 6) {
-            throw new ServiceBadArgumentsException("La contraseña debe contener al menos 6 caracteres.");
+            throw new ServiceBadArgumentsException(
+                    "La contraseña debe contener al menos 6 caracteres.");
         }
     }
 }

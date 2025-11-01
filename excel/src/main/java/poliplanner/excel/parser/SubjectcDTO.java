@@ -280,8 +280,7 @@ public class SubjectcDTO {
 
         try {
             // Reemplazar comas por puntos y remover caracteres no numéricos
-            String cleaned = str.replace(',', '.')
-                    .replaceAll("[^0-9.-]", "");
+            String cleaned = str.replace(',', '.').replaceAll("[^0-9.-]", "");
 
             // Verificar si queda algo para parsear
             if (cleaned.isEmpty() || cleaned.equals("-") || cleaned.equals(".")) {
@@ -297,8 +296,9 @@ public class SubjectcDTO {
     }
 
     // DATE cleaner pattern
-    private static final Pattern DATE_PATTERN = Pattern.compile(
-            "(?i)^(lun|mar|mi[ée]|jue|vie|s[áa]b|dom)?\\s*(\\d{1,2})[/-](\\d{1,2})[/-](\\d{2})$");
+    private static final Pattern DATE_PATTERN =
+            Pattern.compile(
+                    "(?i)^(lun|mar|mi[ée]|jue|vie|s[áa]b|dom)?\\s*(\\d{1,2})[/-](\\d{1,2})[/-](\\d{2})$");
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
 

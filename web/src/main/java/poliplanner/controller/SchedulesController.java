@@ -1,8 +1,8 @@
 package poliplanner.controller;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
+import jakarta.servlet.http.HttpSession;
+
+import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,53 +17,47 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriUtils;
 
-import poliplanner.services.exception.ServiceBadArgumentsException;
-import poliplanner.services.exception.InternalServerErrorException;
-import poliplanner.services.exception.InvalidScheduleException;
-import poliplanner.services.exception.SubjectNotFoundException;
-import poliplanner.services.exception.UserNotFoundException;
 import poliplanner.models.Career;
 import poliplanner.models.Subject;
 import poliplanner.services.CareerService;
 import poliplanner.services.ScheduleService;
 import poliplanner.services.SubjectService;
+import poliplanner.services.exception.InternalServerErrorException;
+import poliplanner.services.exception.InvalidScheduleException;
+import poliplanner.services.exception.ServiceBadArgumentsException;
+import poliplanner.services.exception.SubjectNotFoundException;
+import poliplanner.services.exception.UserNotFoundException;
 
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Controlador responsable del flujo de creación de un nuevo horario académico.
- * <p>
  *
- * El proceso se divide en dos pasos principales:
+ * <p>El proceso se divide en dos pasos principales:
  *
- * 1. Selección de carrera y descripción del horario:
- * - GET /schedule/new: muestra un formulario con la lista de carreras
- * disponibles, muestra la informacion de la ultima plantilla excel parseada y
- * pide el ingreso de un nuevo nombre para el horario.
- * - POST /schedule/new: recibe la carrera seleccionada y la descripción,
- * luego redirige al siguiente paso pasando los datos como parámetros.
- * <p>
+ * <p>1. Selección de carrera y descripción del horario: - GET /schedule/new: muestra un formulario
+ * con la lista de carreras disponibles, muestra la informacion de la ultima plantilla excel
+ * parseada y pide el ingreso de un nuevo nombre para el horario. - POST /schedule/new: recibe la
+ * carrera seleccionada y la descripción, luego redirige al siguiente paso pasando los datos como
+ * parámetros.
  *
- * 2. Selección de materias:
- * - GET /schedule/new/details: muestra las materias correspondientes a la
- * carrera elegida y permite al usuario armar su horario seleccionando
- * asignaturas.
- * - POST /schedule/new/details: recibe la lista de materias seleccionadas y
- * crea el horario en la base de datos.
- * <p>
+ * <p>2. Selección de materias: - GET /schedule/new/details: muestra las materias correspondientes a
+ * la carrera elegida y permite al usuario armar su horario seleccionando asignaturas. - POST
+ * /schedule/new/details: recibe la lista de materias seleccionadas y crea el horario en la base de
+ * datos.
  *
- * Nota: Se usa el nombre de usuario autenticado para asociar el horario
- * <p>
+ * <p>Nota: Se usa el nombre de usuario autenticado para asociar el horario
  *
- * Esto permite una experiencia de usuario sencilla y facilita la
- * validacion progresiva de los datos ingresados.
+ * <p>Esto permite una experiencia de usuario sencilla y facilita la validacion progresiva de los
+ * datos ingresados.
  */
 @Controller
 @RequestMapping("/schedule")
 @RequiredArgsConstructor
 public class SchedulesController {
-    private final static Logger logger = LoggerFactory.getLogger(SchedulesController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SchedulesController.class);
 
     private final ScheduleService scheduleService;
     private final SubjectService subjectService;
@@ -92,29 +86,35 @@ public class SchedulesController {
             RedirectAttributes redirectAttributes) {
 
         if (careerId == null || description == null || description.trim().isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Debe ingresar una descripción y seleccionar una carrera.");
+            redirectAttributes.addFlashAttribute(
+                    "error", "Debe ingresar una descripción y seleccionar una carrera.");
             return "redirect:/schedule/new";
         }
 
         // Pasar como query params
-        return "redirect:/schedule/new/details?careerId=" + careerId + "&description="
+        return "redirect:/schedule/new/details?careerId="
+                + careerId
+                + "&description="
                 + UriUtils.encode(description, StandardCharsets.UTF_8);
     }
 
     // Mostrar formulario de detalle con materias
     @GetMapping("/new/details")
-    public String showScheduleDetailForm(Model model,
+    public String showScheduleDetailForm(
+            Model model,
             @RequestParam(name = "careerId", required = false) Long careerId,
             @RequestParam(name = "description", required = false) String description,
             RedirectAttributes redirectAttributes) {
 
         if (careerId == null || description == null || description.trim().isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Información incompleta. Por favor, vuelva a empezar.");
+            redirectAttributes.addFlashAttribute(
+                    "error", "Información incompleta. Por favor, vuelva a empezar.");
             return "redirect:/schedule/new";
         }
 
         try {
-            Map<Integer, Map<String, List<Subject>>> subjects = subjectService.findByCareer(careerId);
+            Map<Integer, Map<String, List<Subject>>> subjects =
+                    subjectService.findByCareer(careerId);
 
             model.addAttribute("subjects", subjects);
             model.addAttribute("description", description);
@@ -138,8 +138,10 @@ public class SchedulesController {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (subjectIds == null || subjectIds.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Debes seleccionar al menos una materia.");
-            return "redirect:/schedule/new/details?description=" + UriUtils.encode(description, StandardCharsets.UTF_8);
+            redirectAttributes.addFlashAttribute(
+                    "error", "Debes seleccionar al menos una materia.");
+            return "redirect:/schedule/new/details?description="
+                    + UriUtils.encode(description, StandardCharsets.UTF_8);
         }
 
         try {
@@ -148,11 +150,13 @@ public class SchedulesController {
             return "redirect:/";
         } catch (UserNotFoundException e) {
             session.invalidate();
-            redirectAttributes.addFlashAttribute("error", "El usuario no existe. Inicia sesión nuevamente.");
+            redirectAttributes.addFlashAttribute(
+                    "error", "El usuario no existe. Inicia sesión nuevamente.");
             return "redirect:/login";
         } catch (InvalidScheduleException | SubjectNotFoundException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/schedule/new/details?description=" + UriUtils.encode(description, StandardCharsets.UTF_8);
+            return "redirect:/schedule/new/details?description="
+                    + UriUtils.encode(description, StandardCharsets.UTF_8);
         } catch (Exception e) {
             logger.error("Error al crear el horario", e);
             redirectAttributes.addFlashAttribute("error", "Error interno. Intenta más tarde.");
@@ -161,7 +165,8 @@ public class SchedulesController {
     }
 
     @PostMapping("/{id}/delete")
-    public String deleteSchedule(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String deleteSchedule(
+            @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             scheduleService.deleteSchedule(id, username);
@@ -169,8 +174,8 @@ public class SchedulesController {
         } catch (ServiceBadArgumentsException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (InternalServerErrorException e) {
-            redirectAttributes.addFlashAttribute("error",
-                    "Un error interno acaba de ocurrir. Por favor inténtalo más tarde.");
+            redirectAttributes.addFlashAttribute(
+                    "error", "Un error interno acaba de ocurrir. Por favor inténtalo más tarde.");
             logger.error("Error eliminando horario: " + e.getMessage(), e);
         }
 
@@ -178,15 +183,17 @@ public class SchedulesController {
     }
 
     @PostMapping("/{id}/migrate")
-    public String migrateSubjectsExcel(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String migrateSubjectsExcel(
+            @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             List<Subject> notMigrated = scheduleService.migrateSubjects(username, id);
             if (notMigrated.isEmpty()) {
-                redirectAttributes.addFlashAttribute("success", "Horario migrado satisfactoriamente");
+                redirectAttributes.addFlashAttribute(
+                        "success", "Horario migrado satisfactoriamente");
             } else {
-                StringBuilder warningMessage = new StringBuilder(
-                        "Las siguientes materias no pudieron ser migradas:<ul>");
+                StringBuilder warningMessage =
+                        new StringBuilder("Las siguientes materias no pudieron ser migradas:<ul>");
                 for (Subject s : notMigrated) {
                     warningMessage.append("<li>").append(s.getNombreAsignatura()).append("</li>");
                 }
@@ -197,8 +204,8 @@ public class SchedulesController {
         } catch (ServiceBadArgumentsException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (InternalServerErrorException e) {
-            redirectAttributes.addFlashAttribute("error",
-                    "Un error interno acaba de ocurrir. Por favor inténtalo más tarde.");
+            redirectAttributes.addFlashAttribute(
+                    "error", "Un error interno acaba de ocurrir. Por favor inténtalo más tarde.");
             logger.error("Error migrando horario: {}", e.getMessage());
         }
 

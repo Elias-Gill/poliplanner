@@ -1,24 +1,21 @@
 package poliplanner.excel;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
+
+import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import poliplanner.excel.exception.ExcelPersistenceException;
 import poliplanner.excel.exception.ExcelSynchronizationException;
 import poliplanner.excel.parser.ExcelParser;
-import poliplanner.excel.parser.SubjectcDTO;
-import poliplanner.excel.parser.SubjectMapper;
 import poliplanner.excel.parser.ExcelParser.ParsingResult;
+import poliplanner.excel.parser.SubjectMapper;
+import poliplanner.excel.parser.SubjectcDTO;
 import poliplanner.excel.sources.ExcelDownloadSource;
 import poliplanner.excel.sources.WebScrapper;
 import poliplanner.models.Career;
@@ -27,37 +24,46 @@ import poliplanner.models.Subject;
 import poliplanner.models.metadata.SubjectsMetadata;
 import poliplanner.services.CareerService;
 import poliplanner.services.MetadataService;
+import poliplanner.services.MetadataService.MetadataSearcher;
 import poliplanner.services.SheetVersionService;
 import poliplanner.services.SubjectService;
-import poliplanner.services.MetadataService.MetadataSearcher;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ExcelService {
-    private final static Logger logger = LoggerFactory.getLogger(ExcelService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExcelService.class);
 
     private final SubjectService subjectService;
     private final CareerService careerService;
     private final SheetVersionService versionService;
     private final MetadataService metadataService;
 
+    @PersistenceContext private EntityManager entityManager;
+
     private final WebScrapper scrapper;
 
     /**
      * Expuesto para el endpoint '/sync/ci'.
-     * <p>
-     * Realiza la busqueda y descarga de la ultima version de excel disponible hasta
-     * el momento. De existir, parsea dicho archivo y luego realiza la persistencia
-     * de los datos de las materias disponibles.
+     *
+     * <p>Realiza la busqueda y descarga de la ultima version de excel disponible hasta el momento.
+     * De existir, parsea dicho archivo y luego realiza la persistencia de los datos de las materias
+     * disponibles.
      */
+    @Transactional
     public boolean autonomousExcelSync() {
         try {
             logger.info("Iniciando actualizacion de excel");
             ExcelDownloadSource source = scrapper.findLatestDownloadSource();
             SheetVersion latestVersion = versionService.findLatest();
 
-            if (source == null || !isNewerVersion(latestVersion, source))
-                return false;
+            if (source == null || !isNewerVersion(latestVersion, source)) return false;
 
             logger.info("Descargando latest source: {}", source);
             File excelFile = source.downloadThisSource();
@@ -81,62 +87,91 @@ public class ExcelService {
 
     /**
      * Expuesto para actualizacion manual con el endpoint '/sync'.
-     * <p>
-     * Realiza el parseado y persistencia de las hojas del excel proporcionado como
-     * parametro.
+     *
+     * <p>Realiza el parseado y persistencia de las hojas del excel proporcionado como parametro.
      */
     @Transactional
     public void parseAndPersistExcel(File excelFile, String url) throws ExcelPersistenceException {
         SheetVersion version = versionService.create(excelFile.toString(), url);
-        logger.info("Iniciando conversion");
+
+        logger.info("Iniciando conversion del archivo Excel");
+        logMemoryUsage("Inicio parseAndPersistExcel");
+
         ExcelParser parser = new ExcelParser();
         parser.parseExcel(excelFile);
-        logger.info("Conversion terminada");
+        logger.info("Conversion terminada - archivo parseado");
 
-        int cacheHits = 0;
+        int totalCacheHits = 0;
+        int totalSubjectsProcessed = 0;
+        int careerCount = 0;
+
+        // Procesar cada hoja (carrera)
         while (parser.hasSheet()) {
+            careerCount++;
             ParsingResult result = parser.parseCurrentSheet();
             String careerName = result.career;
             List<SubjectcDTO> subjects = result.subjects;
 
+            logger.info(
+                    "Procesando carrera {}: {} con {} materias",
+                    careerCount,
+                    careerName,
+                    subjects.size());
+
             try {
-                cacheHits += persistCareerSubjects(careerName, subjects, version);
+                int careerCacheHits = persistCareerSubjects(careerName, subjects, version);
+                totalCacheHits += careerCacheHits;
+                totalSubjectsProcessed += subjects.size();
+
+                logger.info(
+                        "Carrera {} completada - Cache hits: {}/{} ({:.1f}%)",
+                        careerName,
+                        careerCacheHits,
+                        subjects.size(),
+                        (careerCacheHits * 100.0 / subjects.size()));
+
+                // Limpieza de memoria después de cada carrera
+                cleanUpAfterCareer();
+
             } catch (Exception e) {
                 logger.error("Error procesando carrera: {}", careerName, e);
                 throw new ExcelPersistenceException("Error procesando: " + careerName, e);
             }
         }
 
-        logger.info("Total cache hits: {}", cacheHits);
+        logger.info(
+                "Procesamiento completado - Total: {} carreras, {} materias, {} cache hits"
+                    + " ({:.1f}%)",
+                careerCount,
+                totalSubjectsProcessed,
+                totalCacheHits,
+                (totalCacheHits * 100.0 / totalSubjectsProcessed));
+
+        logMemoryUsage("Fin parseAndPersistExcel");
     }
 
-    // =====================================
-    // ======== Private methods ============
-    // =====================================
-
     /**
-     * Persiste todas las asignaturas de una carrera a partir de sus datos en
-     * formato DTO, transformándolos en entidades de dominio y completando
-     * información faltante con metadata cuando sea posible utilizando el
-     * {@link MetadataSearcher}.
-     *
-     * @param careerName    nombre de la carrera a la que pertenecen las
-     *                      asignaturas.
-     * @param SubjectcsDTOs lista de asignaturas en formato {@link SubjectcDTO}.
-     * @param version       versión de la hoja (plan de estudios) asociada a la
-     *                      carrera.
+     * Persiste todas las asignaturas de una carrera con procesamiento por lotes para optimizar
+     * memoria y performance.
      */
-    private int persistCareerSubjects(String careerName, List<SubjectcDTO> subjectsDTOs, SheetVersion version) {
-        logger.info("Persisting career: {}", careerName);
+    private int persistCareerSubjects(
+            String careerName, List<SubjectcDTO> subjectsDTOs, SheetVersion version) {
+        logMemoryUsage("Inicio persistCareerSubjects: " + careerName);
+
         Career carrera = careerService.create(careerName, version);
 
-        logger.info("Loading metadata");
+        logger.debug("Cargando metadata para carrera: {}", careerName);
         MetadataSearcher metadata = metadataService.newMetadataSearcher(careerName);
-        logger.info("Metadata loaded");
+        logger.debug("Metadata cargada");
 
-        List<Subject> subjects = new ArrayList<>();
+        int batchSize = 30; // Tamaño de lote optimizado para memoria
+        int cacheHits = 0;
+        int subjectsPersisted = 0;
 
-        for (SubjectcDTO rawSubject : subjectsDTOs) {
+        List<Subject> currentBatch = new ArrayList<>(batchSize);
+
+        for (int i = 0; i < subjectsDTOs.size(); i++) {
+            SubjectcDTO rawSubject = subjectsDTOs.get(i);
             Subject subject = SubjectMapper.mapToSubject(rawSubject);
             subject.setCareer(carrera);
 
@@ -146,22 +181,116 @@ public class ExcelService {
                 if (maybeMeta.isPresent()) {
                     SubjectsMetadata meta = maybeMeta.get();
                     subject.setSemestre(meta.getSemester());
+                    cacheHits++;
                 } else {
-                    logger.warn("No metadata found: {} - {}", subject.getNombreAsignatura(),
-                            subject.getCareer().getName());
+                    logger.warn(
+                            "No metadata found: {} - {}",
+                            subject.getNombreAsignatura(),
+                            careerName);
                 }
             }
 
-            subjects.add(subject);
+            currentBatch.add(subject);
+            subjectsPersisted++;
+
+            // Procesar lote cuando esté lleno o sea el último elemento
+            if (currentBatch.size() >= batchSize || i == subjectsDTOs.size() - 1) {
+                processBatch(currentBatch, carrera);
+                currentBatch.clear();
+
+                // Limpieza periódica del EntityManager
+                if (subjectsPersisted % (batchSize * 3) == 0) {
+                    cleanEntityManager();
+                    // Re-attach career después del clear
+                    carrera = entityManager.merge(carrera);
+                }
+            }
         }
-        logger.info("Cache Hits: {}", metadata.cacheHits);
 
-        logger.info("Subjects created, persisting");
-        subjectService.bulkCreate(subjects);
-        logger.info("All subjects persisted");
+        logger.debug(
+                "Persistencia completada para {}: {} materias, {} cache hits",
+                careerName,
+                subjectsPersisted,
+                cacheHits);
 
-        return metadata.cacheHits;
+        logMemoryUsage("Fin persistCareerSubjects: " + careerName);
+
+        return cacheHits;
     }
+
+    /** Procesa un lote de materias de manera eficiente. */
+    private void processBatch(List<Subject> batch, Career carrera) {
+        for (Subject subject : batch) {
+            entityManager.persist(subject);
+        }
+
+        // Flush y clear periódico para liberar memoria
+        entityManager.flush();
+        entityManager.clear();
+
+        logger.trace("Procesado lote de {} materias", batch.size());
+    }
+
+    /** Limpieza del EntityManager para liberar memoria. */
+    private void cleanEntityManager() {
+        entityManager.flush();
+        entityManager.clear();
+
+        // Sugerir garbage collection (no bloqueante)
+        if (isMemoryPressureHigh()) {
+            System.gc();
+        }
+    }
+
+    /** Verifica si hay presión alta en la memoria. */
+    private boolean isMemoryPressureHigh() {
+        Runtime runtime = Runtime.getRuntime();
+        long usedMemory = runtime.totalMemory() - runtime.freeMemory();
+        long maxMemory = runtime.maxMemory();
+
+        // Considerar presión alta si usamos más del 70% del heap
+        return (usedMemory * 100 / maxMemory) > 70;
+    }
+
+    /** Limpieza después de procesar una carrera completa. */
+    private void cleanUpAfterCareer() {
+        // Limpieza exhaustiva del EntityManager
+        entityManager.flush();
+        entityManager.clear();
+
+        // Forzar garbage collection después de cada carrera
+        System.gc();
+
+        // Pequeña pausa para permitir que el GC trabaje
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        logMemoryUsage("Después de limpieza de carrera");
+    }
+
+    /** Log del uso de memoria para monitoreo. */
+    private void logMemoryUsage(String stage) {
+        if (logger.isDebugEnabled()) {
+            Runtime runtime = Runtime.getRuntime();
+            long usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024);
+            long maxMemory = runtime.maxMemory() / (1024 * 1024);
+            long freeMemory = runtime.freeMemory() / (1024 * 1024);
+
+            logger.debug(
+                    "Memoria en {}: Usados={}MB, Libres={}MB, Max={}MB",
+                    stage,
+                    usedMemory,
+                    freeMemory,
+                    maxMemory);
+        }
+    }
+
+    // =====================================
+    // ======== Private methods ============
+    // =====================================
 
     private boolean isNewerVersion(SheetVersion latestVersion, ExcelDownloadSource source) {
         LocalDate latestVersionDate = latestVersion.getParsedAt().toLocalDate();

@@ -1,24 +1,25 @@
 package poliplanner.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import jakarta.transaction.Transactional;
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
-import poliplanner.services.exception.ServiceBadArgumentsException;
-import poliplanner.services.exception.InternalServerErrorException;
-import poliplanner.services.exception.InvalidScheduleException;
-import poliplanner.services.exception.SubjectNotFoundException;
-import poliplanner.services.exception.UserNotFoundException;
 import poliplanner.models.Schedule;
 import poliplanner.models.SheetVersion;
 import poliplanner.models.Subject;
 import poliplanner.models.User;
 import poliplanner.repositories.ScheduleRepository;
+import poliplanner.services.exception.InternalServerErrorException;
+import poliplanner.services.exception.InvalidScheduleException;
+import poliplanner.services.exception.ServiceBadArgumentsException;
+import poliplanner.services.exception.SubjectNotFoundException;
+import poliplanner.services.exception.UserNotFoundException;
 
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +56,10 @@ public class ScheduleService {
 
     @Transactional
     public void create(String username, String description, List<Long> subjectIds)
-            throws UserNotFoundException, InvalidScheduleException, SubjectNotFoundException, InternalError {
+            throws UserNotFoundException,
+                    InvalidScheduleException,
+                    SubjectNotFoundException,
+                    InternalError {
 
         Optional<User> userOpt = userService.findByUsername(username);
         if (userOpt.isEmpty()) {
@@ -102,13 +106,15 @@ public class ScheduleService {
 
         // Ver que el usuario sea el dueno del horario
         if (!schedule.getUser().getUsername().equals(username)) {
-            throw new ServiceBadArgumentsException("No tienes autorizacion para eliminar este horario");
+            throw new ServiceBadArgumentsException(
+                    "No tienes autorizacion para eliminar este horario");
         }
 
         try {
             scheduleRepository.delete(schedule);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Error interno del servidor al borrar el horario: ", e);
+            throw new InternalServerErrorException(
+                    "Error interno del servidor al borrar el horario: ", e);
         }
     }
 
@@ -117,11 +123,17 @@ public class ScheduleService {
         SheetVersion latestVersion = sheetVersionService.findLatest();
 
         // Verificar que el usuario sea dueño del horario
-        Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new ServiceBadArgumentsException("Horario con id='" + scheduleId + "' no existe"));
+        Schedule schedule =
+                scheduleRepository
+                        .findById(scheduleId)
+                        .orElseThrow(
+                                () ->
+                                        new ServiceBadArgumentsException(
+                                                "Horario con id='" + scheduleId + "' no existe"));
 
         if (!schedule.getUser().getUsername().equals(username)) {
-            throw new ServiceBadArgumentsException("No tienes autorizacion para modificar este horario");
+            throw new ServiceBadArgumentsException(
+                    "No tienes autorizacion para modificar este horario");
         }
 
         // Crear una nueva lista mutable para los subjects actualizados
@@ -133,7 +145,8 @@ public class ScheduleService {
             String subjectName = oldSubject.getNombreAsignatura();
             String section = oldSubject.getSeccion();
 
-            Subject newSubject = subjectService.getLatestByNameAndSection(subjectName, section).orElse(null);
+            Subject newSubject =
+                    subjectService.getLatestByNameAndSection(subjectName, section).orElse(null);
 
             if (newSubject != null) {
                 if (newSubject.getCareer().getVersion().equals(latestVersion)) {

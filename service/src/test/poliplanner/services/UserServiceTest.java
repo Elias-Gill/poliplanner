@@ -16,20 +16,16 @@ import poliplanner.exception.BadArgumentsException;
 import poliplanner.exception.UserNameAlreadyExistsException;
 import poliplanner.models.User;
 import poliplanner.repositories.UserRepository;
-import poliplanner.services.UserService;
 
 @SpringBootTest
 @Transactional
 @Rollback
 public class UserServiceTest {
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @Test
     void testRegisterUser_success() throws Exception {
@@ -40,7 +36,8 @@ public class UserServiceTest {
         userRepository.findByUsername(username).ifPresent(user -> userRepository.delete(user));
 
         // Throws si es que se pasa un nombre invalido
-        assertThrows(BadArgumentsException.class,
+        assertThrows(
+                BadArgumentsException.class,
                 () -> userService.registerUser(username.toUpperCase(), rawPassword));
 
         // Creacion valida
@@ -64,19 +61,27 @@ public class UserServiceTest {
         user.setPassword(passwordEncoder.encode(rawPassword));
         userRepository.save(user);
 
-        UserNameAlreadyExistsException ex = assertThrows(
-                UserNameAlreadyExistsException.class,
-                () -> userService.registerUser(username, rawPassword));
+        UserNameAlreadyExistsException ex =
+                assertThrows(
+                        UserNameAlreadyExistsException.class,
+                        () -> userService.registerUser(username, rawPassword));
 
         assertTrue(ex.getMessage().contains("ya está en uso"));
     }
 
     @Test
     void testRegisterUser_badArguments() {
-        assertThrows(BadArgumentsException.class, () -> userService.registerUser(null, "password123"));
-        assertThrows(BadArgumentsException.class, () -> userService.registerUser("validuser", null));
-        assertThrows(BadArgumentsException.class, () -> userService.registerUser("", "password123"));
-        assertThrows(BadArgumentsException.class, () -> userService.registerUser("invalid user!", "password123"));
-        assertThrows(BadArgumentsException.class, () -> userService.registerUser("validuser", "123")); // password corto
+        assertThrows(
+                BadArgumentsException.class, () -> userService.registerUser(null, "password123"));
+        assertThrows(
+                BadArgumentsException.class, () -> userService.registerUser("validuser", null));
+        assertThrows(
+                BadArgumentsException.class, () -> userService.registerUser("", "password123"));
+        assertThrows(
+                BadArgumentsException.class,
+                () -> userService.registerUser("invalid user!", "password123"));
+        assertThrows(
+                BadArgumentsException.class,
+                () -> userService.registerUser("validuser", "123")); // password corto
     }
 }

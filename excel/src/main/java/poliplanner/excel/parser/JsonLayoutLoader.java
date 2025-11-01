@@ -36,7 +36,8 @@ public class JsonLayoutLoader {
     }
 
     // Constructor central
-    public JsonLayoutLoader(ResourceLoader resourceLoader, ObjectMapper objectMapper, String resourcePattern) {
+    public JsonLayoutLoader(
+            ResourceLoader resourceLoader, ObjectMapper objectMapper, String resourcePattern) {
         this.resourceLoader = resourceLoader;
         this.objectMapper = objectMapper;
         this.resourcePattern = resourcePattern;
@@ -59,9 +60,9 @@ public class JsonLayoutLoader {
     public List<Layout> loadJsonLayouts() throws IOException {
         List<Layout> layouts = new ArrayList<>();
 
-        Resource[] resources = ResourcePatternUtils
-                .getResourcePatternResolver(resourceLoader)
-                .getResources(resourcePattern);
+        Resource[] resources =
+                ResourcePatternUtils.getResourcePatternResolver(resourceLoader)
+                        .getResources(resourcePattern);
 
         if (resources.length == 0) {
             System.err.println("No se encontraron archivos JSON en: " + resourcePattern);
@@ -70,12 +71,15 @@ public class JsonLayoutLoader {
 
         for (Resource resource : resources) {
             try {
-                Map<String, List<Map<String, Object>>> json = objectMapper.readValue(
-                        resource.getInputStream(), Map.class);
+                Map<String, List<Map<String, Object>>> json =
+                        objectMapper.readValue(resource.getInputStream(), Map.class);
                 List<Map<String, Object>> lista = json.get("lista");
 
                 if (lista == null) {
-                    System.err.println("Formato inválido en: " + resource.getFilename() + " - Falta la clave 'lista'");
+                    System.err.println(
+                            "Formato inválido en: "
+                                    + resource.getFilename()
+                                    + " - Falta la clave 'lista'");
                     continue;
                 }
 
@@ -96,7 +100,11 @@ public class JsonLayoutLoader {
 
                 layouts.add(new Layout(resource.getFilename(), headers, patterns));
             } catch (IOException e) {
-                System.err.println("Error al leer el archivo JSON: " + resource.getFilename() + " - " + e.getMessage());
+                System.err.println(
+                        "Error al leer el archivo JSON: "
+                                + resource.getFilename()
+                                + " - "
+                                + e.getMessage());
             }
         }
 

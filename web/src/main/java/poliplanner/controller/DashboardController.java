@@ -1,6 +1,8 @@
 package poliplanner.controller;
 
-import java.util.List;
+import jakarta.servlet.http.HttpServletResponse;
+
+import lombok.AllArgsConstructor;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -13,8 +15,7 @@ import poliplanner.models.SheetVersion;
 import poliplanner.services.ScheduleService;
 import poliplanner.services.SheetVersionService;
 
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -22,8 +23,9 @@ public class DashboardController {
     private final ScheduleService scheduleService;
     private final SheetVersionService versionService;
 
-    private static String newVersionMessage = "📢 ¡Nueva versión del Excel disponible!. Actualiza tu horario usando nuestra "
-            + "<a href=\"#bottom\">herramienta de migración</a>.";
+    private static String newVersionMessage =
+            "📢 ¡Nueva versión del Excel disponible!. Actualiza tu horario usando nuestra "
+                    + "<a href=\"#bottom\">herramienta de migración</a>.";
 
     @GetMapping("/")
     public String home(
@@ -53,7 +55,10 @@ public class DashboardController {
         }
 
         model.addAttribute("selectedSchedule", selectedSchedule);
-        if (selectedSchedule.getVersion().getParsedAt().isBefore(latestSheetVersion.getParsedAt())) {
+        if (selectedSchedule
+                .getVersion()
+                .getParsedAt()
+                .isBefore(latestSheetVersion.getParsedAt())) {
             model.addAttribute("hasNewExcel", newVersionMessage);
         }
 

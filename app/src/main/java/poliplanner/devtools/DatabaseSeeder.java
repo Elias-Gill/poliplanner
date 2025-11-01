@@ -1,13 +1,13 @@
 package poliplanner.devtools;
 
-import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor

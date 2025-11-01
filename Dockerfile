@@ -37,13 +37,17 @@ RUN ls -R BOOT-INF/classes/poliplanner
 
 # Variables de memoria optimizadas para arranque rápido
 ENV JAVA_OPTS="\
--XX:+UseShenandoahGC \
+-XX:+UseSerialGC \                    # GC más simple, menos memoria
 -XX:+UseStringDeduplication \
--Xss256k \
--Xmx300m \
--Xms100m \
--XX:MaxMetaspaceSize=64m \
--XX:MaxRAM=380m \
+-Xss128k \                           # Stack size reducido
+-Xmx200m \                           # Heap máximo reducido
+-Xms50m \                            # Heap inicial mínimo
+-XX:MaxMetaspaceSize=40m \           # Metaspace reducido
+-XX:MaxRAM=250m \
+-XX:+UnlockExperimentalVMOptions \
+-XX:+UseEpsilonGC \                  # O usar Epsilon GC si no hay allocation
+-XX:+AlwaysPreTouch \                # Pre-touch memory
+-Dspring.jmx.enabled=false \
 -Djava.awt.headless=true \
 -Dfile.encoding=UTF-8"
 

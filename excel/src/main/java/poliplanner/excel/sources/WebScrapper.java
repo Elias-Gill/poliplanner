@@ -1,35 +1,39 @@
 package poliplanner.excel.sources;
 
+import lombok.RequiredArgsConstructor;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.springframework.stereotype.Service;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import lombok.RequiredArgsConstructor;
-
 @Service
 @RequiredArgsConstructor
 public class WebScrapper {
     private static final Logger logger = LoggerFactory.getLogger(WebScrapper.class);
-    
-    private static final Pattern DIRECT_DOWNLOAD_PATTERN = Pattern
-            .compile(".*(?i)(horario|clases|examen(?:es)?|exame|exam)[\\w\\-_.]*\\.xlsx$");
-    private static final Pattern GOOGLE_DRIVE_FOLDER_PATTERN = Pattern.compile(
-            "^https://drive\\.google\\.com/(?:drive/(?:u/\\d+/)?folders|folders)/[\\w-]+", Pattern.CASE_INSENSITIVE);
-    private static final Pattern GOOGLE_SPREADSHEET_PATTERN = Pattern.compile(
-            "^https://docs\\.google\\.com/spreadsheets/d/[\\w-]+", Pattern.CASE_INSENSITIVE);
 
-    private static final String TARGET_URL = "https://www.pol.una.py/academico/horarios-de-clases-y-examenes/";
+    private static final Pattern DIRECT_DOWNLOAD_PATTERN =
+            Pattern.compile(".*(?i)(horario|clases|examen(?:es)?|exame|exam)[\\w\\-_.]*\\.xlsx$");
+    private static final Pattern GOOGLE_DRIVE_FOLDER_PATTERN =
+            Pattern.compile(
+                    "^https://drive\\.google\\.com/(?:drive/(?:u/\\d+/)?folders|folders)/[\\w-]+",
+                    Pattern.CASE_INSENSITIVE);
+    private static final Pattern GOOGLE_SPREADSHEET_PATTERN =
+            Pattern.compile(
+                    "^https://docs\\.google\\.com/spreadsheets/d/[\\w-]+",
+                    Pattern.CASE_INSENSITIVE);
+
+    private static final String TARGET_URL =
+            "https://www.pol.una.py/academico/horarios-de-clases-y-examenes/";
 
     private final GoogleDriveHelper googleHelper;
 
@@ -82,7 +86,8 @@ public class WebScrapper {
                     sources.addAll(extractedSources);
                 }
             } else if (isGoogleSpreadsheetUrl(url)) {
-                ExcelDownloadSource extractedSource = googleHelper.getSourceFromSpreadsheetLink(url);
+                ExcelDownloadSource extractedSource =
+                        googleHelper.getSourceFromSpreadsheetLink(url);
                 if (extractedSource != null) {
                     sources.add(extractedSource);
                 }

@@ -1,9 +1,8 @@
 package poliplanner.devtools;
 
-import java.io.File;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import jakarta.transaction.Transactional;
+
+import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,14 +11,17 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import poliplanner.excel.ExcelService;
 import poliplanner.models.Subject;
 import poliplanner.models.User;
 import poliplanner.repositories.SubjectRepository;
 import poliplanner.repositories.UserRepository;
 import poliplanner.services.ScheduleService;
+
+import java.io.File;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,11 +57,12 @@ public class DatabaseSeederService {
     }
 
     private void clean() throws Exception {
-        repositories.forEach(repo -> {
-            if (repo instanceof CrudRepository) {
-                ((CrudRepository<?, ?>) repo).deleteAll();
-            }
-        });
+        repositories.forEach(
+                repo -> {
+                    if (repo instanceof CrudRepository) {
+                        ((CrudRepository<?, ?>) repo).deleteAll();
+                    }
+                });
     }
 
     private void seed() throws Exception {
@@ -74,20 +77,23 @@ public class DatabaseSeederService {
         }
 
         // Cargar materias al horario
-        List<Long> subjectIds = subjectRepository.findAll()
-                .stream()
-                .limit(3)
-                .map(Subject::getId)
-                .collect(Collectors.toList());
+        List<Long> subjectIds =
+                subjectRepository.findAll().stream()
+                        .limit(3)
+                        .map(Subject::getId)
+                        .collect(Collectors.toList());
 
         // Crear usuario de pruebas
-        User user = userRepo.findByUsername("pruebas").orElseGet(() -> {
-            User newUser = new User();
-            newUser.setUsername("pruebas");
-            newUser.setPassword(passwordEncoder.encode("123"));
-            newUser.setRoles(Set.of("USER"));
-            return userRepo.save(newUser);
-        });
+        User user =
+                userRepo.findByUsername("pruebas")
+                        .orElseGet(
+                                () -> {
+                                    User newUser = new User();
+                                    newUser.setUsername("pruebas");
+                                    newUser.setPassword(passwordEncoder.encode("123"));
+                                    newUser.setRoles(Set.of("USER"));
+                                    return userRepo.save(newUser);
+                                });
 
         // Crear horario con los IDs REALES
         scheduleService.create(user.getUsername(), "Horario de pruebas", subjectIds);

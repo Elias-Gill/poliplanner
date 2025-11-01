@@ -1,7 +1,6 @@
 package poliplanner.controller;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import lombok.AllArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +17,17 @@ import org.springframework.web.multipart.MultipartFile;
 import poliplanner.excel.ExcelService;
 import poliplanner.security.TokenValidator;
 
-import lombok.AllArgsConstructor;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Controller
 @AllArgsConstructor
 public class ExcelSyncController {
     ExcelService service;
 
-    @Autowired
-    TokenValidator tokenValidator;
+    @Autowired TokenValidator tokenValidator;
 
-    private final static Logger logger = LoggerFactory.getLogger(ExcelSyncController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExcelSyncController.class);
 
     @GetMapping("/sync")
     public String showSyncForm() {
@@ -39,23 +38,18 @@ public class ExcelSyncController {
     /**
      * Sincroniza el archivo Excel más reciente disponible desde la web de origen.
      *
-     * <p>
-     * Este endpoint está protegido mediante autenticación con un token tipo Bearer
-     * pasado en el header `Authorization`. El valor esperado debe coincidir con la
-     * variable de entorno {@code UPDATE_KEY}.
+     * <p>Este endpoint está protegido mediante autenticación con un token tipo Bearer pasado en el
+     * header `Authorization`. El valor esperado debe coincidir con la variable de entorno {@code
+     * UPDATE_KEY}.
      *
-     * <p>
-     * Al recibir una solicitud válida, descarga el nuevo Excel, lo convierte a CSV,
-     * lo parsea, y actualiza la base de datos con la nueva información.
+     * <p>Al recibir una solicitud válida, descarga el nuevo Excel, lo convierte a CSV, lo parsea, y
+     * actualiza la base de datos con la nueva información.
      *
-     * @param authHeader
-     *                   Header HTTP de autorización con el token Bearer.
-     * @param file
-     *                   El nuevo archivo subido de manera manual.
-     * @return {@code 200 OK} si la sincronización fue exitosa,
-     *         {@code 403 Forbidden} si el token es incorrecto o no está presente,
-     *         {@code 500 Internal Server Error} si ocurre un error durante la
-     *         sincronización.
+     * @param authHeader Header HTTP de autorización con el token Bearer.
+     * @param file El nuevo archivo subido de manera manual.
+     * @return {@code 200 OK} si la sincronización fue exitosa, {@code 403 Forbidden} si el token es
+     *     incorrecto o no está presente, {@code 500 Internal Server Error} si ocurre un error
+     *     durante la sincronización.
      */
     @PostMapping("/sync")
     public ResponseEntity<?> manualExcelSync(
@@ -121,7 +115,8 @@ public class ExcelSyncController {
                         .body("Version de excel actualizada a la nueva version disponible");
             }
 
-            return ResponseEntity.status(HttpStatus.OK).body("Excel ya se encuentra en su ultima version");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Excel ya se encuentra en su ultima version");
         } catch (Exception e) {
             logger.error("Error al sincronizar Excel", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -1,9 +1,5 @@
 package poliplanner.models;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -15,9 +11,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -37,8 +38,7 @@ public class User {
     private String password;
 
     // NOTE: solo se usa para el formulario de registro
-    @Transient
-    private String confirmedPassword;
+    @Transient private String confirmedPassword;
 
     // NOTE: requerido para que spring-security no se queje
     @ElementCollection(fetch = FetchType.EAGER)

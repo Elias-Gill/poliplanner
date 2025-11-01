@@ -4,19 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.dhatim.fastexcel.reader.ReadableWorkbook;
+import org.dhatim.fastexcel.reader.Sheet;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
+
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.dhatim.fastexcel.reader.ReadableWorkbook;
-import org.dhatim.fastexcel.reader.Sheet;
-import org.junit.jupiter.api.Test;
-
-import org.springframework.core.io.ClassPathResource;
-
 public class ExcelParserTest {
-    final private ClassPathResource CLASSPATH_TEST_EXCEL = new ClassPathResource("testExcel.xlsx");
+    private final ClassPathResource CLASSPATH_TEST_EXCEL = new ClassPathResource("testExcel.xlsx");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
 
     @Test
