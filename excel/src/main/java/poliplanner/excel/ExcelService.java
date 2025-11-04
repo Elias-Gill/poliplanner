@@ -124,7 +124,7 @@ public class ExcelService {
                 totalSubjectsProcessed += subjects.size();
 
                 logger.info(
-                        "Carrera {} completada - Cache hits: {}/{} ({:.1f}%)",
+                        "Carrera {} completada - Cache hits: {}/{}",
                         careerName,
                         careerCacheHits,
                         subjects.size(),
@@ -140,8 +140,7 @@ public class ExcelService {
         }
 
         logger.info(
-                "Procesamiento completado - Total: {} carreras, {} materias, {} cache hits"
-                    + " ({:.1f}%)",
+                "Procesamiento completado - Total: {} carreras, {} materias, {} cache hits",
                 careerCount,
                 totalSubjectsProcessed,
                 totalCacheHits,
@@ -164,7 +163,7 @@ public class ExcelService {
         MetadataSearcher metadata = metadataService.newMetadataSearcher(careerName);
         logger.debug("Metadata cargada");
 
-        int batchSize = 30; // Tamaño de lote optimizado para memoria
+        int batchSize = 50;
         int cacheHits = 0;
         int subjectsPersisted = 0;
 

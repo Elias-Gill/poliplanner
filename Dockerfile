@@ -1,35 +1,56 @@
-# 1. Build con JDK estándar
-FROM eclipse-temurin:21-jdk AS build
-WORKDIR /app
+# ---------- Etapa de Build ----------
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
+WORKDIR /poliplanner
 
-RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
-
+# Copiar solo POMs para cachear dependencias
 COPY pom.xml .
 COPY app/pom.xml app/
 COPY service/pom.xml service/
 COPY persistence/pom.xml persistence/
 COPY excel/pom.xml excel/
 COPY web/pom.xml web/
-
 RUN mvn dependency:go-offline -B
+
+# Copiar código y compilar solo el módulo app
 COPY . .
+RUN mvn clean package -DskipTests -pl app -am
 
-RUN mvn -DskipTests package -pl app -am
+# Explotar el JAR en la etapa de build y verificar contenido
+RUN mkdir exploded && cd exploded && jar -xf ../app/target/*.jar && ls -R .
 
-# 2. Crear binario nativo
-FROM ghcr.io/graalvm/native-image:21 AS native
-WORKDIR /app
-COPY --from=build /app/app/target/*.jar app.jar
+# ---------- Etapa de Producción ----------
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /poliplanner
 
-ENV USE_CONTAINER_SUPPORT=false
-ENV JAVA_TOOL_OPTIONS="-XX:-UseContainerSupport"
+# Crear usuario no root
+RUN adduser -D springuser
+# Darle permisos a springuser en /poliplanner
+RUN chown -R springuser:springuser /poliplanner
+# Cambiar a usuario no root
+USER springuser
 
-RUN native-image -H:-UseContainerSupport --no-fallback -jar app.jar poliplanner
+# Copiar el JAR ya explotado desde la etapa de build
+COPY --from=build --chown=springuser:springuser /poliplanner/exploded .
 
-# 3. Imagen final
-FROM gcr.io/distroless/java21-debian12
-WORKDIR /app
-COPY --from=native /app/poliplanner .
-USER 1000
+# Verificar contenido copiado (para depuración)
+RUN ls -R BOOT-INF/classes/poliplanner
+
+# Variables de memoria optimizadas para arranque rápido
+ENV JAVA_OPTS="\
+-XX:+UseSerialGC \
+-XX:+UseStringDeduplication \
+-Xmx200m \
+-Xms50m \
+-XX:MaxRAM=300m \
+-XX:+UnlockExperimentalVMOptions \
+-XX:+AlwaysPreTouch \
+-Dspring.jmx.enabled=false \
+-Djava.awt.headless=true \
+-Dfile.encoding=UTF-8"
+
 EXPOSE 8080
-ENTRYPOINT ["./poliplanner"]
+
+# Usar la clase principal con un classpath explícito
+ENTRYPOINT ["sh", "-c", \
+"java $JAVA_OPTS -cp BOOT-INF/classes:BOOT-INF/lib/* poliplanner.PoliPlanner --spring.profiles.active=prod --spring.main.lazy-initialization=true"]
+
