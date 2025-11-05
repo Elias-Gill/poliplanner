@@ -1,8 +1,8 @@
-name: Actualizar Excel todos los dias a las 14hs UTC
+name: Actualizar Excel cada 2 días a las 18hs UTC
 
 on:
   schedule:
-    - cron: '0 14 * * *'  # A las 00:00 y 12:00 UTC
+    - cron: '0 18 */2 * *'  # Cada 2 días a las 18:00 UTC
 
 jobs:
   actualizar-excel:
@@ -10,5 +10,5 @@ jobs:
     steps:
       - name: Llamar al endpoint protegido
         run: |
-          curl -X POST "https://poliplanner.fly.dev/sync/ci" -H "Authorization: Bearer ${{ secrets.ADMIN_PASSWORD }}"
-          
+          curl -X POST "https://poliplanner.fly.dev/sync/ci" \
+            -H "Authorization: Bearer ${{ secrets.ADMIN_PASSWORD }}"
