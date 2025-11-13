@@ -11,9 +11,8 @@ import poliplanner.models.metadata.SubjectsMetadata;
 import poliplanner.repositories.MetadataRepository;
 
 import java.util.List;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,42 +31,41 @@ public class MetadataService {
      * cache eficiente.
      */
     public class MetadataSearcher {
-        private final Map<String, LightMetadata> metadataMap;
+        private final List<LightMetadata> metadataList;
 
-        // Cache optimizado de 2 elementos (LRU simple)
+        // Cache optimizado de 2 elementos (LRU simple) - SIN Optional overhead
         private String lastRawName1;
-        private Optional<LightMetadata> lastResult1;
+        private LightMetadata lastResult1;
         private String lastRawName2;
-        private Optional<LightMetadata> lastResult2;
+        private LightMetadata lastResult2;
         public int cacheHits = 0;
 
         public MetadataSearcher(String careerCode) {
             // Cargar solo los campos necesarios para ahorrar memoria
             List<Object[]> results = metadataRepository.findNameAndSemesterByCareerCode(careerCode);
 
-            // HashMap con capacidad inicial optimizada
-            metadataMap = new HashMap<>(results.size() * 2);
+            // ArrayList con capacidad exacta
+            metadataList = new ArrayList<>(results.size());
 
             for (Object[] result : results) {
                 String name = (String) result[0];
                 Integer semester = (Integer) result[1];
-                // Usar objeto ligero en lugar de entidad completa
-                metadataMap.put(name, new LightMetadata(name, semester));
+                metadataList.add(new LightMetadata(name, semester));
             }
 
             logger.debug(
-                    "Loaded {} metadata entries for career: {}", metadataMap.size(), careerCode);
+                    "Loaded {} metadata entries for career: {}", metadataList.size(), careerCode);
         }
 
         /**
-         * Busca la metadata de una materia en memoria con cache optimizado. El cache de 2 elementos
-         * es muy efectivo porque las materias se procesan en orden alfabético.
+         * Busca la metadata de una materia en memoria con cache optimizado.
+         * Sin Optional overhead - retorna null si no encuentra
          */
-        public Optional<SubjectsMetadata> findMetadata(Subject subject) {
+        public SubjectsMetadata findMetadata(Subject subject) {
             String name = subject.getNombreAsignatura();
             if (name == null) {
                 logger.error("Subject sin nombre: {}", subject);
-                return Optional.empty();
+                return null;
             }
 
             // Verificación rápida del cache - solo compara los primeros caracteres
@@ -82,56 +80,47 @@ public class MetadataService {
                 return convertToSubjectMetadata(lastResult2);
             }
 
-            // Cache miss - búsqueda normal
-            String firstPart = extractFirstPart(name);
+            // Cache miss - búsqueda lineal optimizada
+            int dashIndex = name.indexOf('-');
+            String firstPart = (dashIndex > 0) ? name.substring(0, dashIndex) : name;
             String cleanedName = normalizeSubjectName(firstPart);
 
-            LightMetadata meta = metadataMap.get(cleanedName);
+            LightMetadata meta = findInList(cleanedName);
 
             // Búsqueda alternativa si no se encuentra en la primera parte
-            if (meta == null && name.contains("-")) {
-                String secondPart = extractSecondPart(name);
+            if (meta == null && dashIndex > 0) {
+                String secondPart = name.substring(dashIndex + 1);
                 cleanedName = normalizeSubjectName(secondPart);
-                meta = metadataMap.get(cleanedName);
+                meta = findInList(cleanedName);
             }
 
-            // Actualizar cache (LRU simple)
-            updateCache(name, Optional.ofNullable(meta));
+            // Actualizar cache (LRU simple) - SIN Optional overhead
+            updateCache(name, meta);
 
-            return convertToSubjectMetadata(Optional.ofNullable(meta));
+            return convertToSubjectMetadata(meta);
         }
 
         /**
          * Verificación optimizada de cache hit. Compara solo los primeros 10 caracteres para mayor
          * velocidad.
          */
-        private boolean isCacheHit(String currentName, String cachedName) {
-            if (currentName == null || cachedName == null) return false;
-
-            int minLength = Math.min(currentName.length(), cachedName.length());
-            int compareLength = Math.min(minLength, 10); // Solo comparar primeros 10 chars
-
-            for (int i = 0; i < compareLength; i++) {
-                if (currentName.charAt(i) != cachedName.charAt(i)) {
-                    return false;
+        private LightMetadata findInList(String cleanedName) {
+            int size = metadataList.size();
+            // Loop estándar - más rápido que enhanced for para ArrayList
+            for (int i = 0; i < size; i++) {
+                LightMetadata meta = metadataList.get(i);
+                if (meta.name.equals(cleanedName)) {
+                    return meta;
                 }
             }
-            return true;
+            return null;
         }
 
-        private String extractFirstPart(String name) {
-            int dashIndex = name.indexOf('-');
-            return dashIndex > 0 ? name.substring(0, dashIndex) : name;
+        private boolean isCacheHit(String currentName, String cachedName) {
+            return cachedName.startsWith(currentName);
         }
 
-        private String extractSecondPart(String name) {
-            int dashIndex = name.indexOf('-');
-            return dashIndex > 0 && dashIndex + 1 < name.length()
-                    ? name.substring(dashIndex + 1)
-                    : name;
-        }
-
-        private void updateCache(String name, Optional<LightMetadata> result) {
+        private void updateCache(String name, LightMetadata result) {
             lastRawName2 = lastRawName1;
             lastResult2 = lastResult1;
             lastRawName1 = name;
@@ -140,22 +129,23 @@ public class MetadataService {
 
         private void swapCacheEntries() {
             String tempName = lastRawName1;
-            Optional<LightMetadata> tempResult = lastResult1;
+            LightMetadata tempResult = lastResult1;
             lastRawName1 = lastRawName2;
             lastResult1 = lastResult2;
             lastRawName2 = tempName;
             lastResult2 = tempResult;
         }
 
-        private Optional<SubjectsMetadata> convertToSubjectMetadata(
-                Optional<LightMetadata> lightMeta) {
-            return lightMeta.map(
-                    meta -> {
-                        SubjectsMetadata subjectMeta = new SubjectsMetadata();
-                        subjectMeta.setName(meta.name);
-                        subjectMeta.setSemester(meta.semester);
-                        return subjectMeta;
-                    });
+        /**
+         * Conversión directa sin Optional - retorna null si meta es null
+         */
+        private SubjectsMetadata convertToSubjectMetadata(LightMetadata lightMeta) {
+            if (lightMeta == null) return null;
+            
+            SubjectsMetadata subjectMeta = new SubjectsMetadata();
+            subjectMeta.setName(lightMeta.name);
+            subjectMeta.setSemester(lightMeta.semester);
+            return subjectMeta;
         }
 
         /**
@@ -172,21 +162,12 @@ public class MetadataService {
             for (int i = 0; i < rawName.length(); i++) {
                 char c = rawName.charAt(i);
 
-                // Manejo optimizado de paréntesis
-                if (c == '(' && i + 1 < rawName.length() && rawName.charAt(i + 1) == '*') {
-                    inParenthesis = true;
-                    i++; // Saltar el '*' también
+                // Saltar asteriscos y paréntesis
+                if (c == '*' || c == '(' || c == ')') {
                     continue;
                 }
 
-                if (c == ')' && inParenthesis) {
-                    inParenthesis = false;
-                    continue;
-                }
-
-                if (inParenthesis) continue;
-
-                // Convertir a minúscula y remover diacríticos en una sola operación
+                // Convertir a minúscula
                 c = Character.toLowerCase(c);
                 c = removeDiacriticChar(c);
                 if (c == 0) continue;

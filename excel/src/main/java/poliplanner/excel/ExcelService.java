@@ -176,9 +176,8 @@ public class ExcelService {
 
             // Desambiguar semestre de materia
             if (subject.getSemestre() == 0) {
-                Optional<SubjectsMetadata> maybeMeta = metadata.findMetadata(subject);
-                if (maybeMeta.isPresent()) {
-                    SubjectsMetadata meta = maybeMeta.get();
+                SubjectsMetadata meta = metadata.findMetadata(subject);
+                if (meta != null) {
                     subject.setSemestre(meta.getSemester());
                     cacheHits++;
                 } else {
